@@ -147,14 +147,31 @@ if st.button("CERTIFY VALUATION (EXECUTE PSO-ML20)"):
 
 st.divider()
 
-# 8. THE WALL OF PROOF (SELF-HEALING LOADER)
+# 8. THE WALL OF PROOF (SELF-HEALING MULTI-PATH LOADER)
 st.subheader("📈 The Systematic Blueprint (Wall of Proof)")
-img_url = "https://githubusercontent.com"
 
-try:
-    st.image(img_url, caption="PSO-ML20 Certification Registry: 89.28% Accuracy Verified", use_container_width=True)
-except:
-    st.error("⚠️ Visual sync pending. Ensure 'PSO_ML20_Master_Wall_of_Proof.png' is uploaded to the root of your GitHub repo.")
+# We try the three most likely paths to find your image on GitHub
+paths_to_try = [
+    "https://githubusercontent.com",
+    "https://github.com",
+    "https://githubusercontent.com.png"
+]
+
+image_found = False
+for img_url in paths_to_try:
+    try:
+        # Check if the URL is valid by pinging it
+        response = requests.get(img_url, timeout=5)
+        if response.status_code == 200:
+            st.image(img_url, caption="PSO-ML20 Certification Registry: 89.28% Accuracy Verified", use_container_width=True)
+            image_found = True
+            break
+    except:
+        continue
+
+if not image_found:
+    st.error("⚠️ Visual sync pending on GitHub servers.")
+    st.info("Direct Link to Certification: [View Wall of Proof on GitHub](https://github.com)")
 
 st.divider()
 st.caption("© 2026 PSO-ML20 Framework | Creator: Patrick Simon Okosodo | Hardening Data into Financial Assets")
