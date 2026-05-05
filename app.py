@@ -10,7 +10,7 @@ st.set_page_config(page_title="PSO-ML20 Enterprise", page_icon="🛡️", layout
 if 'authenticated' not in st.session_state: st.session_state['authenticated'] = False
 if 'history' not in st.session_state: st.session_state['history'] = []
 
-# Cloud-Managed Secrets
+# Fetch Secrets with Global Fallbacks
 try:
     MASTER_KEY = st.secrets["ACCESS_KEY"]
     EXPIRY_DATE = st.secrets["EXPIRY_DATE"]
@@ -30,7 +30,7 @@ if not st.session_state['authenticated']:
             else: st.error("❌ ACCESS DENIED.")
     st.stop()
 
-# 3. PREMIUM CSS (Industrial Branding)
+# 3. PREMIUM CSS
 st.markdown("""
     <style>
     .metric-card { background: white; padding: 30px; border-radius: 20px; border-top: 10px solid #1D8348; box-shadow: 0 15px 35px rgba(0,0,0,0.1); text-align: center; }
@@ -38,7 +38,7 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-# 4. SIDEBAR - CONTROL TOWER & BRAIN SELECTION
+# 4. SIDEBAR - CONTROL TOWER
 with st.sidebar:
     st.title("🛡️ PSO-ML20")
     st.status("SYSTEM: HARDENED", state="complete")
@@ -46,11 +46,7 @@ with st.sidebar:
     st.divider()
     
     st.markdown("### 🧠 BRAIN SELECTION")
-    engine_mode = st.selectbox("Select Market Physics", ["USA (King County Demo)", "Nigeria (Lagos Alpha)", "Upload Custom Brain"])
-    
-    if engine_mode == "Upload Custom Brain":
-        uploaded_brain = st.file_uploader("Upload PSO-ML20 .pkl file")
-        if uploaded_brain: st.success("Custom Brain Linked.")
+    engine_mode = st.selectbox("Select Market Physics", ["USA (King County Demo)", "Nigeria (Lagos Alpha)"])
     
     st.divider()
     currency = st.radio("Display Currency", ["USD ($)", "NGN (₦)"], horizontal=True)
@@ -61,7 +57,7 @@ with st.sidebar:
     st.metric("Portfolio Value", f"${total_val:,.0f}")
     if st.button("Clear Audit Cache"): st.session_state['history'] = []; st.rerun()
 
-# 5. INDUSTRIAL INPUT INTERFACE (6 PILLARS OF VALUE)
+# 5. INDUSTRIAL INPUT INTERFACE
 st.title("Enterprise Valuation Terminal")
 st.subheader("📍 Multi-Factor Asset Ingestion")
 
@@ -72,22 +68,28 @@ with st.container():
         grade = st.slider("Construction Grade (1-13)", 1, 13, 7)
     with col2:
         tier = st.selectbox("Location Tier", ["Tier 1 (Prime)", "Tier 2 (Mid-Market)", "Tier 3 (Emerging)"])
-        micro_loc = st.slider("Micro-Location Premium %", -20, 50, 0, help="Refine valuation based on specific street quality or gated security.")
+        micro_loc = st.slider("Micro-Location Premium %", -20, 50, 0)
     with col3:
         yr_built = st.number_input("Year Built", 1900, 2026, 2015)
         amenities = st.multiselect("Premium Features", ["Pool", "Smart Home", "Solar/Inverter", "Gated Security", "Boys Quarters"])
 
 # 6. EXECUTION LOGIC
 if st.button("CERTIFY & EXECUTE PSO-ML20"):
-    with st.status(f"Deploying {engine_mode} Protocols...", expanded=True):
+    with st.status(f"Deploying {engine_mode} Protocols...", expanded=True) as status:
         time.sleep(1)
-        # Logic: Integrated Pricing Engine
+        
+        # BRAIN LOGIC
+        # We adjust the base multiplier depending on the selected country
+        physics_mult = 270 if "USA" in engine_mode else 315 # Lagos carries a higher premium per sqft
+        
         tier_mult = {"Tier 1 (Prime)": 1.5, "Tier 2 (Mid-Market)": 1.0, "Tier 3 (Emerging)": 0.7}
         amenity_bonus = len(amenities) * 15000
-        base_price = (sqft * 270) + (grade * 55000) - ((2026-yr_built) * 2000)
+        
+        base_price = (sqft * physics_mult) + (grade * 55000) - ((2026-yr_built) * 2000)
         final_usd = (base_price * tier_mult[tier] * (1 + micro_loc/100)) + amenity_bonus
         
         st.session_state['history'].append({'Time': datetime.now().strftime('%H:%M'), 'price': final_usd})
+        status.update(label="Asset Valuation Certified!", state="complete", expanded=False)
     
     # 7. OUTPUT DISPLAY
     rate = 1485
@@ -103,34 +105,32 @@ if st.button("CERTIFY & EXECUTE PSO-ML20"):
         </div>
         """, unsafe_allow_html=True)
 
-# 8. DYNAMIC INTEGRITY AUDIT (CHANGES WITH EVERY EXECUTION)
+    # 8. DYNAMIC INTEGRITY AUDIT (ONLY SHOWS AFTER CALCULATION)
+    st.divider()
+    st.subheader("🛡️ Live Integrity Audit: Session Intelligence")
+    
+    risk_level = "LOW" if grade > 5 and yr_built > 2000 else "MODERATE"
+    confidence_score = 90.0 + (grade * 0.5)
+
+    col_a, col_b, col_c = st.columns(3)
+    with col_a:
+        st.metric("Model Confidence", f"{confidence_score:.1f}%", delta="PSO-ML20 Verified")
+    with col_b:
+        st.metric("Market Volatility", risk_level, delta="Phase 15 Guard Active")
+    with col_c:
+        premium_added = (final_usd - (sqft * physics_mult))
+        st.metric("Structural Premium", f"${premium_added:,.0f}", delta="Above Base Physics")
+
+    st.write("📈 **Value Attribution (The 'Why' behind the price)**")
+    impact_data = pd.DataFrame({
+        "Factor": ["Base Space", "Build Quality", "Age Factor", "Location Premium", "Amenities"],
+        "Impact ($)": [sqft * physics_mult, grade * 55000, -(2026-yr_built)*2000, (final_usd * 0.3), amenity_bonus]
+    })
+    st.bar_chart(impact_data.set_index("Factor"))
+
+# 9. PERMANENT SYSTEM CERTIFICATION (AT THE BASE)
 st.divider()
-st.subheader("🛡️ Live Integrity Audit: Session Intelligence")
-
-# Logic to create dynamic metrics based on the current calculation
-risk_level = "LOW" if grade > 5 and yr_built > 2000 else "MODERATE"
-confidence_score = 90.0 + (grade * 0.5) # Higher grade homes usually have more stable data
-
-col_a, col_b, col_c = st.columns(3)
-with col_a:
-    st.metric("Model Confidence", f"{confidence_score:.1f}%", delta="PSO-ML20 Verified")
-with col_b:
-    st.metric("Market Volatility", risk_level, delta="Phase 15 Guard Active")
-with col_c:
-    # Shows the 'Premium' added by the user's specific inputs
-    premium_added = (final_usd - (sqft * 270))
-    st.metric("Structural Premium", f"${premium_added:,.0f}", delta="Above Base Physics")
-
-# DYNAMIC IMPACT CHART (Shows which input pushed the price the most)
-st.write("📈 **Value Attribution (The 'Why' behind the price)**")
-impact_data = pd.DataFrame({
-    "Factor": ["Space (Sqft)", "Quality (Grade)", "Age Factor", "Location/Tier", "Amenities"],
-    "Impact ($)": [sqft * 270, grade * 55000, -(2026-yr_built)*2000, (final_usd * 0.3), len(amenities) * 15000]
-})
-st.bar_chart(impact_data.set_index("Factor"))
-
-# KEEP THE STATIC CHECKLIST BELOW AS THE "CERTIFICATION SEAL"
-with st.expander("View PSO-ML20 Framework Certification (Static Audit)"):
+with st.expander("🛡️ View PSO-ML20 Framework Certification (Static Audit)"):
     audit_steps = {
         "Phase Group": ["01-05: Foundations", "11-14: Intelligence", "15: Risk Guard", "19: Final Stability"],
         "Audit Task": ["Schema Lockdown & Hardware Sync", "Total Eclipse Ablation Audit", "Industrial Outlier Shielding", "K-Fold Variance Certification"],
@@ -138,6 +138,5 @@ with st.expander("View PSO-ML20 Framework Certification (Static Audit)"):
         "Verdict": ["No Ingestion Leakage", "Zero Institutional Bias", "Black Swan Neutralized", "Deterministic Consistency"]
     }
     st.table(pd.DataFrame(audit_steps))
-
 
 st.caption("© 2026 PSO-ML20 Framework | Industrial Data Science | Patrick Simon Okosodo")
