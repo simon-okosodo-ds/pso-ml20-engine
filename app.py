@@ -74,7 +74,8 @@ def generate_pso_pdf(val, sym, sqft, build_type, yr, inventory, images):
     p.setFont("Helvetica", 8)
     p.setFillColorRGB(0.4, 0.4, 0.4) # Grey text
     p.drawString(50, 100, "This document is a certified digital appraisal generated via the PSO-ML20 Systematic Framework.")
-    p.drawString(50, 90, "AI Lead: Patrick Simon Okosodo | B.Eng (Chem) | MLOps Architect")
+    p.drawString(50, 90, "Patrick Simon Okosodo | AI Architect | MLOps Specialist | B.Eng (Chem)")
+
 
     p.showPage()
     p.save()
