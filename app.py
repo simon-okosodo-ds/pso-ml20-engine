@@ -3,6 +3,34 @@ import pandas as pd
 import numpy as np
 import time
 from datetime import datetime
+import io
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
+
+# --- PDF GENERATOR ENGINE ---
+def generate_pso_pdf(val, sym, sqft, grade, yr, amenities):
+    buffer = io.BytesIO()
+    p = canvas.Canvas(buffer, pagesize=letter)
+    p.setFont("Helvetica-Bold", 18)
+    p.drawString(100, 750, "PSO-ML20 INDUSTRIAL VALUATION CERTIFICATE")
+    p.setFont("Helvetica", 12)
+    p.drawString(100, 730, f"Date: {datetime.now().strftime('%Y-%m-%d %H:%M')}")
+    p.line(100, 720, 500, 720)
+    p.setFont("Helvetica-Bold", 14)
+    p.drawString(100, 690, f"CERTIFIED VALUATION: {sym}{val:,.2f}")
+    p.setFont("Helvetica", 11)
+    p.drawString(100, 660, f"Property Size: {sqft} Sqft")
+    p.drawString(100, 645, f"Construction Grade: {grade}/13")
+    p.drawString(100, 630, f"Year Built: {yr}")
+    p.drawString(100, 615, f"Amenities: {', '.join(amenities) if amenities else 'None'}")
+    p.setFont("Helvetica-Oblique", 10)
+    p.drawString(100, 580, "Verdict: ELITE STATUS - Verified via PSO-ML20 Systematic Lifecycle")
+    p.drawString(100, 565, "Architect: Patrick Simon Okosodo | B.Eng (UNIBEN)")
+    p.showPage()
+    p.save()
+    buffer.seek(0)
+    return buffer
+
 
 # 1. ELITE CONFIG & AUTHENTICATION
 st.set_page_config(page_title="PSO-ML20 Enterprise", page_icon="🛡️", layout="wide")
@@ -120,7 +148,15 @@ if st.button("CERTIFY VALUATION (EXECUTE PSO-ML20)"):
     })
     st.bar_chart(impact_df.set_index("Feature"))
     
-    st.download_button("📥 DOWNLOAD VALUATION REPORT (PDF)", data="[REPORT_DATA]", file_name="PSO_ML20_Report.pdf")
+        # GENERATE REAL PDF DATA
+    pdf_report = generate_pso_pdf(val, sym, sqft, yr_built, yr_built, amenities)
+    
+    st.download_button(
+        label="📥 DOWNLOAD OFFICIAL VALUATION REPORT (PDF)",
+        data=pdf_report,
+        file_name=f"PSO_ML20_Report_{datetime.now().strftime('%Y%m%d')}.pdf",
+        mime="application/pdf"
+    )
 
 # 11. PREDICTION HISTORY
 if st.session_state['history']:
