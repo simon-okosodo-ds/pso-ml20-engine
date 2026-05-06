@@ -6,183 +6,144 @@ from datetime import datetime
 import io
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
+from reportlab.lib.utils import ImageReader
 
-# --- PDF GENERATOR ENGINE ---
-def generate_pso_pdf(val, sym, sqft, grade, yr, amenities):
+# --- PDF GENERATOR ENGINE (THE CERTIFICATE) ---
+def generate_pso_pdf(val, sym, sqft, grade, yr, inventory, tech, images):
     buffer = io.BytesIO()
     p = canvas.Canvas(buffer, pagesize=letter)
-    p.setFont("Helvetica-Bold", 18)
-    p.drawString(100, 750, "PSO-ML20 INDUSTRIAL VALUATION CERTIFICATE")
-    p.setFont("Helvetica", 12)
-    p.drawString(100, 730, f"Date: {datetime.now().strftime('%Y-%m-%d %H:%M')}")
-    p.line(100, 720, 500, 720)
-    p.setFont("Helvetica-Bold", 14)
-    p.drawString(100, 690, f"CERTIFIED VALUATION: {sym}{val:,.2f}")
-    p.setFont("Helvetica", 11)
-    p.drawString(100, 660, f"Property Size: {sqft} Sqft")
-    p.drawString(100, 645, f"Construction Grade: {grade}/13")
-    p.drawString(100, 630, f"Year Built: {yr}")
-    p.drawString(100, 615, f"Amenities: {', '.join(amenities) if amenities else 'None'}")
-    p.setFont("Helvetica-Oblique", 10)
-    p.drawString(100, 580, "Verdict: ELITE STATUS - Verified via PSO-ML20 Systematic Lifecycle")
-    p.drawString(100, 565, "Architect: Patrick Simon Okosodo | B.Eng (UNIBEN)")
+    p.setFont("Helvetica-Bold", 16)
+    p.drawString(50, 750, "PSO-ML20 INDUSTRIAL FORENSIC CERTIFICATE")
+    p.setFont("Helvetica", 10)
+    p.drawString(50, 735, f"Issued: {datetime.now().strftime('%Y-%m-%d')} | Ref: PSO-{np.random.randint(100,999)}")
+    p.line(50, 730, 550, 730)
+
+    p.setFont("Helvetica-Bold", 24)
+    p.setFillColorRGB(0.11, 0.51, 0.28) 
+    p.drawString(50, 690, f"CERTIFIED VALUE: {sym}{val:,.2f}")
+    p.setFillColorRGB(0, 0, 0)
+    
+    p.setFont("Helvetica-Bold", 12)
+    p.drawString(50, 650, "PHYSICAL ARCHITECTURE AUDIT:")
+    p.setFont("Helvetica", 10)
+    p.drawString(60, 630, f"• Size: {sqft} Sqft | Grade: {grade}/13 | Built: {yr}")
+    p.drawString(60, 615, f"• Inventory: {inventory['beds']} Beds | {inventory['baths']} Baths | {inventory['parking']} Parking")
+    p.drawString(60, 600, f"• Infrastructure: Solar {tech['solar']} KVA | Security: {tech['sec']}")
+
+    # Visual Evidence Grid
+    y_pos = 450
+    if images.get('ext'):
+        p.drawImage(ImageReader(images['ext']), 50, y_pos, width=140, height=90)
+        p.drawString(50, y_pos-10, "Exterior Evidence")
+    if images.get('kit'):
+        p.drawImage(ImageReader(images['kit']), 210, y_pos, width=140, height=90)
+        p.drawString(210, y_pos-10, "Interior Evidence")
+    
     p.showPage()
     p.save()
     buffer.seek(0)
     return buffer
 
-
-# 1. ELITE CONFIG & AUTHENTICATION
+# 1. AUTHENTICATION & CONFIG
 st.set_page_config(page_title="PSO-ML20 Enterprise", page_icon="🛡️", layout="wide")
 if 'history' not in st.session_state: st.session_state['history'] = []
 if 'authenticated' not in st.session_state: st.session_state['authenticated'] = False
 
-# 2. THE SECURE GATEWAY (Login)
+# 2. LOGIN GATEWAY
 if not st.session_state['authenticated']:
-    st.markdown("<h1 style='text-align: center; color: #2C3E50;'>🛡️ PSO-ML20 SECURE TERMINAL</h1>", unsafe_allow_html=True)
+    st.markdown("<h1 style='text-align: center;'>🛡️ PSO-ML20 SECURE GATEWAY</h1>", unsafe_allow_html=True)
     col1, col2, col3 = st.columns([1,2,1])
     with col2:
-        access_key = st.text_input("ENTER AUTHORIZED ARCHITECT KEY", type="password")
-        if st.button("AUTHORIZE INGRESS"):
-            try: MASTER_KEY = st.secrets["ACCESS_KEY"]
-            except: MASTER_KEY = "ELITE2026"
-            if access_key == MASTER_KEY:
+        access_key = st.text_input("ACCESS KEY", type="password")
+        if st.button("AUTHORIZE"):
+            if access_key == "ELITE2026":
                 st.session_state['authenticated'] = True
                 st.rerun()
-            else: st.error("❌ ACCESS DENIED.")
     st.stop()
 
-# 3. DYNAMIC BRANDING ENGINE (White-Labeling)
+# 3. SIDEBAR (Branding & ROI)
 with st.sidebar:
-    st.markdown("### 🎨 CUSTOM BRANDING")
-    client_logo = st.file_uploader("Upload Company Logo", type=['png', 'jpg'])
-    brand_color = st.color_picker("Company Brand Color", "#1D8348")
+    st.title("🛡️ PSO-ML20 Control")
+    client_logo = st.file_uploader("Company Logo", type=['png', 'jpg'])
+    brand_color = st.color_picker("Brand Color", "#1D8348")
+    currency = st.radio("Currency", ["USD ($)", "NGN (₦)"], horizontal=True)
     st.divider()
-    st.markdown("### 📊 SESSION INTELLIGENCE")
     total_val = sum([x['price'] for x in st.session_state['history']])
-    st.metric("Total Assets Valued", len(st.session_state['history']))
-    st.metric("Total Portfolio Value", f"${total_val:,.0f}")
-    st.divider()
-    currency = st.radio("Display Currency", ["USD ($)", "NGN (₦)"], horizontal=True)
-    if st.button("Reset Session"): st.session_state['history'] = []; st.rerun()
+    st.metric("Assets Valued", len(st.session_state['history']))
+    st.metric("Session ROI", f"${total_val:,.0f}")
 
-# 4. PREMIUM UI STYLING
-st.markdown(f"""
-    <style>
-    @import url('https://googleapis.com');
-    html, body, [class*="css"] {{ font-family: 'Inter', sans-serif; background-color: #F4F7F6; }}
-    
-    /* THE BUTTON */
-    .stButton>button {{ background: {brand_color}; color: white; border-radius: 12px; height: 3.5em; font-weight: bold; width: 100%; }}
-    
-    /* THE METRIC CARD */
-    .metric-card {{ background: white; padding: 30px; border-radius: 20px; border-top: 10px solid {brand_color}; box-shadow: 0 15px 35px rgba(0,0,0,0.1); text-align: center; }}
+# 4. CUSTOM STYLING
+st.markdown(f"<style>.stButton>button {{ background: {brand_color}; color: white; border-radius: 12px; height: 3.5em; font-weight: bold; width: 100%; }} .metric-card {{ background: white; padding: 30px; border-radius: 20px; border-top: 10px solid {brand_color}; box-shadow: 0 15px 35px rgba(0,0,0,0.1); text-align: center; }} [data-testid='stMetricValue'] {{ font-size: 26px !important; }}</style>", unsafe_allow_html=True)
 
-    /* FONT SIZE REDUCTION FOR "VERY HIGH", "$364,000", etc. */
-    [data-testid="stMetricValue"] {{ font-size: 26px !important; font-weight: bold; }}
-    [data-testid="stMetricDelta"] {{ font-size: 14px !important; }}
-    [data-testid="stMetricLabel"] p {{ font-size: 16px !important; color: #7F8C8D; }}
-    
-    </style>
-    """, unsafe_allow_html=True)
+# 5. HEADER
+col_l, col_r = st.columns([1,4])
+if client_logo: col_l.image(client_logo, width=100)
+col_r.title("Industrial Valuation Terminal")
 
+# 6. MANUAL INPUTS & DROPDOWNS
+st.subheader("📍 Forensic Asset Ingestion")
+c1, c2, c3 = st.columns(3)
+sqft = c1.number_input("Property Area (Sqft)", value=2500)
+grade = c2.slider("Build Grade (1-13)", 1, 13, 7)
+yr_built = c3.number_input("Year Built", 1900, 2026, 2018)
 
+# 7. DROPDOWN SELECTORS (MANUAL CLICKING)
+st.subheader("🛠️ Detailed Specifications (Manual Selection)")
+d1, d2 = st.columns(2)
+kitchen_finish = d1.selectbox("Kitchen Finishing Grade", ["Standard", "Imported Marble", "Italian Quartz", "High-Gloss Luxury"])
+pool_type = d2.selectbox("Aquatic Assets", ["None", "Surface Level", "Infinity Edge", "Olympic Standard"])
 
-# 5. HEADER & LOGO
-col_logo, col_title = st.columns([1, 4])
-if client_logo: col_logo.image(client_logo, width=120)
-with col_title:
-    st.title("PSO-ML20 Enterprise Valuation Terminal")
-    st.caption(f"Certified Architect: Patrick Simon Okosodo | {datetime.now().strftime('%Y-%m-%d %H:%M')}")
+# 8. THE 10-POINT VISUAL VAULT (UPLOAD)
+st.subheader("📷 Visual Evidence Vault")
+with st.expander("📂 Click to Upload Proof Photos", expanded=False):
+    v1, v2 = st.columns(2)
+    ext_img = v1.file_uploader("1. Building Face", type=['jpg', 'png'])
+    kit_img = v2.file_uploader("2. Kitchen Detail", type=['jpg', 'png'])
+    pow_img = v1.file_uploader("3. Energy/Inverter Set", type=['jpg', 'png'])
+    bq_img = v2.file_uploader("4. Staff Quarters (BQ)", type=['jpg', 'png'])
 
-# 6. SMART UX: PRESETS
-st.subheader("📍 Instant Market Presets")
-p1, p2, p3 = st.columns(3)
-preset_sqft, preset_grade = 2500, 7
-if p1.button("💎 TIER 1 (PRIME/LEKKI)"): preset_sqft, preset_grade = 5500, 11
-if p2.button("🏠 TIER 2 (MID-MARKET)"): preset_sqft, preset_grade = 2800, 7
-if p3.button("🏗️ TIER 3 (EMERGING)"): preset_sqft, preset_grade = 1400, 4
+# 9. COUNTERS & TECH
+st.subheader("🔢 Physical Inventory & Tech")
+i1, i2, i3, i4 = st.columns(4)
+num_bed = i1.number_input("Bedrooms", 1, 20, 4)
+num_bath = i2.number_input("Bathrooms", 1, 20, 4)
+num_parking = i3.number_input("Parking", 0, 20, 2)
+solar_kva = i4.number_input("Solar (KVA)", 0, 100, 5)
 
-# 7. ASSET INGESTION
-with st.container():
-    c1, c2, c3 = st.columns(3)
-    sqft = c1.number_input("Property Size (Sqft)", value=preset_sqft)
-    grade = c2.slider("Build Quality (1-13)", 1, 13, preset_grade)
-    yr_built = c3.number_input("Year Built", 1900, 2026, 2018)
-    
-    amenities = st.multiselect("Extra Value Features", ["Pool", "Solar/Inverter", "Smart Home", "CCTV/Gated", "Boys Quarters"])
-    uploaded_file = st.file_uploader("📂 BATCH AUDIT (Upload CSV Portfolio)", type=['csv'])
+sec_tier = st.select_slider("Security Architecture", options=["Basic", "Electric Fence", "CCTV Integrated", "Armed Gated"])
 
-# 8. EXECUTION
-if st.button("CERTIFY VALUATION (EXECUTE PSO-ML20)"):
-    with st.status("Hardening Market Signals...", expanded=True) as status:
+# 11. EXECUTION
+if st.button("CERTIFY & EXECUTE PSO-ML20"):
+    with st.status("Applying PSO-ML20 Hardening...", expanded=True):
         time.sleep(1)
-        # Brain Logic
-        tier_mult = {"Tier 1 (Prime)": 1.5, "Tier 2 (Mid-Market)": 1.0, "Tier 3 (Emerging)": 0.75}
-        amenity_val = len(amenities) * 12500
-        base_price = (sqft * 272) + (grade * 52000) - ((2026-yr_built) * 1800)
-        final_usd = base_price + amenity_val
-        st.session_state['history'].append({'Time': datetime.now().strftime('%H:%M:%S'), 'price': final_usd})
-        status.update(label="Certification Complete!", state="complete", expanded=False)
+        # Advanced Logic
+        k_mult = {"Standard": 1, "Imported Marble": 1.1, "Italian Quartz": 1.2, "High-Gloss Luxury": 1.35}
+        p_bonus = {"None": 0, "Surface Level": 25000, "Infinity Edge": 60000, "Olympic Standard": 150000}
+        
+        base = (sqft * 272) + (grade * 52000) - ((2026-yr_built) * 1800)
+        final_usd = (base * k_mult[kitchen_finish]) + p_bonus[pool_type] + (solar_kva * 2000)
+        
+        st.session_state['history'].append({'Time': datetime.now().strftime('%H:%M'), 'price': final_usd})
 
-    st.balloons()
     rate = 1485
     val = final_usd if "USD" in currency else final_usd * rate
     sym = "$" if "USD" in currency else "₦"
-
-    # THE RESULT CERTIFICATE
-    st.markdown(f"""
-        <div class="metric-card">
-            <p style='color: #7F8C8D; text-transform: uppercase; letter-spacing: 2px;'>Official Valuation Certificate</p>
-            <h1 style='color: {brand_color}; font-size: 55px; margin: 0;'>{sym}{val:,.2f}</h1>
-            <p style='margin-top: 10px; color: #2C3E50;'><b>90% Trust Rating</b> | Verified by PSO-ML20 Framework</p>
-        </div>
-        """, unsafe_allow_html=True)
-
-    # 9. DOWN-TO-EARTH LIVE AUDIT (Plain Money Language)
-    st.divider()
-    st.subheader("🛡️ Live Safety Audit: Why this price?")
     
-    col_a, col_b, col_c = st.columns(3)
-    with col_a:
-        st.metric("Calculation Trust", "VERY HIGH", delta="No Guesswork")
-    with col_b:
-        st.metric("Investment Safety", "STABLE & SECURE", delta="Phase 15 Guard Active")
-    with col_c:
-        extra_value = (grade * 52000) + amenity_val
-        st.metric("Quality Bonus", f"${extra_value:,.0f}", delta="Added Luxury Value")
+    st.balloons()
+    st.markdown(f"<div class='metric-card'><p>Official Certified Valuation</p><h1>{sym}{val:,.2f}</h1></div>", unsafe_allow_html=True)
 
-    # 10. ADVANCED VISUALIZATION (Explain the Model)
-    st.write("📈 **Value Breakdown: What pushed the price up?**")
-    impact_df = pd.DataFrame({
-        "Feature": ["Basic Space", "Build Quality", "Modern Amenities", "Location Factor"],
-        "Value Contribution": [sqft * 272, grade * 52000, amenity_val, final_usd * 0.2]
-    })
-    st.bar_chart(impact_df.set_index("Feature"))
+    # RE-SYNC PDF DATA
+    inventory = {"beds": num_bed, "baths": num_bath, "parking": num_parking}
+    tech = {"solar": solar_kva, "sec": sec_tier}
+    images = {"ext": ext_img, "kit": kit_img}
     
-        # GENERATE REAL PDF DATA
-    pdf_report = generate_pso_pdf(val, sym, sqft, yr_built, yr_built, amenities)
-    
-    st.download_button(
-        label="📥 DOWNLOAD OFFICIAL VALUATION REPORT (PDF)",
-        data=pdf_report,
-        file_name=f"PSO_ML20_Report_{datetime.now().strftime('%Y%m%d')}.pdf",
-        mime="application/pdf"
-    )
+    pdf = generate_pso_pdf(val, sym, sqft, grade, yr_built, inventory, tech, images)
+    st.download_button("📥 DOWNLOAD AUDIT REPORT", data=pdf, file_name="PSO_Certificate.pdf", mime="application/pdf")
 
-# 11. PREDICTION HISTORY
+# 12. HISTORY
 if st.session_state['history']:
     st.divider()
     st.subheader("📜 Recent Valuation History")
-    st.dataframe(pd.DataFrame(st.session_state['history']), use_container_width=True)
+    st.dataframe(pd.DataFrame(st.session_state['history']))
 
-st.divider()
-with st.expander("🛡️ View 20-Phase Systematic Integrity Audit (Technical Proof)"):
-    st.write("Certification of the systematic lifecycle for the current session.")
-    audit_data = {
-        "Group": ["Foundations", "Intelligence", "Risk Guard", "Stability"],
-        "Status": ["✅ SECURE", "✅ DETACHED (0.7591)", "✅ ACTIVE", "✅ ELITE (0.0054)"],
-        "Verdict": ["Clean Data", "Zero Bias", "Safe from Anomalies", "Total Consistency"]
-    }
-    st.table(pd.DataFrame(audit_data))
-st.caption("© 2026 PSO-ML20 Framework | Industrial Data Science | Patrick Simon Okosodo")
+st.caption("© 2026 PSO-ML20 | Industrial Data Science Framework | Patrick Simon Okosodo")
