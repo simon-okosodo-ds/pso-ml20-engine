@@ -71,10 +71,22 @@ st.markdown(f"""
     <style>
     @import url('https://googleapis.com');
     html, body, [class*="css"] {{ font-family: 'Inter', sans-serif; background-color: #F4F7F6; }}
+    
+    /* THE BUTTON */
     .stButton>button {{ background: {brand_color}; color: white; border-radius: 12px; height: 3.5em; font-weight: bold; width: 100%; }}
+    
+    /* THE METRIC CARD */
     .metric-card {{ background: white; padding: 30px; border-radius: 20px; border-top: 10px solid {brand_color}; box-shadow: 0 15px 35px rgba(0,0,0,0.1); text-align: center; }}
+
+    /* FONT SIZE REDUCTION FOR "VERY HIGH", "$364,000", etc. */
+    [data-testid="stMetricValue"] {{ font-size: 26px !important; font-weight: bold; }}
+    [data-testid="stMetricDelta"] {{ font-size: 14px !important; }}
+    [data-testid="stMetricLabel"] p {{ font-size: 16px !important; color: #7F8C8D; }}
+    
     </style>
     """, unsafe_allow_html=True)
+
+
 
 # 5. HEADER & LOGO
 col_logo, col_title = st.columns([1, 4])
