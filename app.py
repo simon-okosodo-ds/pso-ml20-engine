@@ -29,32 +29,52 @@ def analyze_visual_quality(uploaded_file):
 def generate_pso_pdf(val, sym, sqft, build_type, yr, inventory, images):
     buffer = io.BytesIO()
     p = canvas.Canvas(buffer, pagesize=letter)
+    
+    # Header Branding
     p.setFont("Helvetica-Bold", 14)
     p.drawString(50, 750, "OFFICIAL VALUATION CERTIFICATE")
     p.setFont("Helvetica", 9)
-    p.drawString(50, 735, f"Date: {datetime.now().strftime('%Y-%m-%d')} | Reference: PSO-ML20")
+    p.drawString(50, 735, f"Date: {datetime.now().strftime('%Y-%m-%d')} | System Reference: PSO-ML20-V2")
     p.line(50, 730, 550, 730)
     
+    # Currency and Value Logic (Clean ISO Format)
+    currency_label = "NGN " if sym == "₦" else "USD "
     p.setFont("Helvetica-Bold", 20)
-    p.setFillColorRGB(0.11, 0.51, 0.28) 
-        # Logic to handle Naira Symbol in PDF
-    display_sym = sym
-    if sym == "₦":
-        # We use a standard 'N' with a double strike-through effect for PDF compatibility
-        p.drawString(50, 690, f"CERTIFIED VALUE: N{val:,.2f}")
-        p.line(48, 698, 62, 698) # First strike-through
-        p.line(48, 702, 62, 702) # Second strike-through
-    else:
-        p.drawString(50, 690, f"CERTIFIED VALUE: ${val:,.2f}")
-
+    p.setFillColorRGB(0.11, 0.51, 0.28) # Success Green
+    p.drawString(50, 690, f"CERTIFIED VALUE: {currency_label}{val:,.2f}")
     
-    p.setFillColorRGB(0, 0, 0)
+    # Audit Breakdown
+    p.setFillColorRGB(0, 0, 0) # Back to Black
+    p.setFont("Helvetica-Bold", 11)
+    p.drawString(50, 660, "PHYSICAL AUDIT SUMMARY:")
+    
     p.setFont("Helvetica", 10)
-    p.drawString(50, 650, f"Audit Summary: {sqft} Sqft | {build_type} Grade | {inventory['beds']} Bedrooms")
-    
+    p.drawString(60, 640, f"• Property Dimension: {sqft:,.0f} Sqft")
+    p.drawString(60, 625, f"• Building Category: {build_type}")
+    p.drawString(60, 610, f"• Construction Year: {yr}")
+    p.drawString(60, 595, f"• Internal Inventory: {inventory['beds']} Bedrooms | {inventory['baths']} Bathrooms")
+    p.drawString(60, 580, f"• Power Infrastructure: {inventory['solar']} KVA Solar Capacity")
+
+    # Visual Evidence Title
+    p.setFont("Helvetica-Bold", 11)
+    p.drawString(50, 540, "VISUAL EVIDENCE LOG (PRIMARY SCAN):")
+
+    # Image Placement (Primary Front Elevation)
     if images.get('img1'):
-        try: p.drawImage(ImageReader(images['img1']), 50, 480, width=140, height=100)
-        except: pass
+        try:
+            # We place the image with a professional border
+            p.rect(48, 418, 144, 104, fill=0) 
+            p.drawImage(ImageReader(images['img1']), 50, 420, width=140, height=100)
+            p.setFont("Helvetica-Oblique", 8)
+            p.drawString(50, 405, "Fig 1: Main Building Elevation")
+        except Exception:
+            p.drawString(50, 420, "[Visual data encoded but not rendered]")
+
+    # Professional Disclaimer / Signature
+    p.setFont("Helvetica", 8)
+    p.setFillColorRGB(0.4, 0.4, 0.4) # Grey text
+    p.drawString(50, 100, "This document is a certified digital appraisal generated via the PSO-ML20 Systematic Framework.")
+    p.drawString(50, 90, "AI Lead: Patrick Simon Okosodo | B.Eng (Chem) | MLOps Architect")
 
     p.showPage()
     p.save()
