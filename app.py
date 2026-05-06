@@ -145,15 +145,26 @@ st.markdown("</div>", unsafe_allow_html=True)
 st.markdown("<div class='step-container'>", unsafe_allow_html=True)
 st.markdown("#### 02. Forensic Evidence Vault")
 st.warning("**PROTOCOL:** Capture full-view photos from floor-to-ceiling for accurate material analysis.")
+
 with st.expander("Expand 10-Point Upload Portals", expanded=True):
     v1, v2 = st.columns(2)
+    # ROW 1
     img1 = v1.file_uploader("1. Exterior Elevation", type=['jpg', 'png'])
     img2 = v2.file_uploader("2. Compound Paving", type=['jpg', 'png'])
+    # ROW 2
     img3 = v1.file_uploader("3. Living Room View", type=['jpg', 'png'])
     img4 = v2.file_uploader("4. Kitchen Architecture", type=['jpg', 'png'])
+    # ROW 3
     img5 = v1.file_uploader("5. Master Bedroom", type=['jpg', 'png'])
+    img6 = v2.file_uploader("6. Master Bathroom", type=['jpg', 'png'])
+    # ROW 4
+    img7 = v1.file_uploader("7. Corridors & Staircase", type=['jpg', 'png'])
     img8 = v2.file_uploader("8. Energy/Power Unit", type=['jpg', 'png'])
+    # ROW 5
+    img9 = v1.file_uploader("9. Boys Quarters (BQ)", type=['jpg', 'png'])
+    img10 = v2.file_uploader("10. Security & Gatehouse", type=['jpg', 'png'])
 st.markdown("</div>", unsafe_allow_html=True)
+
 
 # --- STEP 3 ---
 st.markdown("<div class='step-container'>", unsafe_allow_html=True)
