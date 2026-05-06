@@ -37,7 +37,16 @@ def generate_pso_pdf(val, sym, sqft, build_type, yr, inventory, images):
     
     p.setFont("Helvetica-Bold", 20)
     p.setFillColorRGB(0.11, 0.51, 0.28) 
-    p.drawString(50, 690, f"CERTIFIED VALUE: {sym}{val:,.2f}")
+        # Logic to handle Naira Symbol in PDF
+    display_sym = sym
+    if sym == "₦":
+        # We use a standard 'N' with a double strike-through effect for PDF compatibility
+        p.drawString(50, 690, f"CERTIFIED VALUE: N{val:,.2f}")
+        p.line(48, 698, 62, 698) # First strike-through
+        p.line(48, 702, 62, 702) # Second strike-through
+    else:
+        p.drawString(50, 690, f"CERTIFIED VALUE: ${val:,.2f}")
+
     
     p.setFillColorRGB(0, 0, 0)
     p.setFont("Helvetica", 10)
