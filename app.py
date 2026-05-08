@@ -154,7 +154,7 @@ with st.sidebar:
 st.markdown(f"<style>.stButton>button {{ background: {brand_color}; color: white; }} .metric-card {{ border-top: 5px solid {brand_color}; }}</style>", unsafe_allow_html=True)
 
 # --- 7. HEADER ---
-# We create 3 columns: Left (Logo), Middle (Title), Right (QR Code)
+# This line creates 3 slots: 1 for logo, 4 for title, 1 for QR
 c_logo, c_title, c_qr = st.columns([1, 4, 1])
 
 if client_logo: 
@@ -164,14 +164,12 @@ with c_title:
     st.title("Executive Valuation Terminal")
     st.write("Professional market analysis powered by Anti-Bias Computer Vision.")
 
-# This is the new part that displays your QR code
 with c_qr:
-    # IMPORTANT: Ensure 'pso_qr_code.png' is uploaded to your GitHub first!
-    st.image("https://githubusercontent.com", 
-             caption="Scan to Verify", width=90)
+    # This is the EXACT raw link to your GitHub image
+    qr_path = "https://githubusercontent.com"
+    st.image(qr_path, caption="Scan to Verify", width=95)
 
 st.markdown("<br>", unsafe_allow_html=True)
-
 
 # --- STEP 1 ---
 st.markdown("<div class='step-container'>", unsafe_allow_html=True)
