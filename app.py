@@ -31,76 +31,72 @@ def generate_pso_pdf(val, sym, sqft, build_type, yr, inventory, images):
     p = canvas.Canvas(buffer, pagesize=letter)
     currency_label = "NGN " if sym == "₦" else "USD "
     
-    # --- 1. BACKGROUND WATERMARK (The Security Layer) ---
+    # --- 1. THE INDUSTRIAL FRAME (Large Faint Box) ---
+    p.setStrokeColorRGB(0.8, 0.8, 0.8) # Faint grey
+    p.setLineWidth(1)
+    # This draws a large box around the entire content (margin of 30 units)
+    p.rect(30, 30, 552, 732, fill=0)
+
+    # --- 2. BACKGROUND WATERMARK ---
     p.saveState()
-    p.setFont("Helvetica-Bold", 60)
-    p.setStrokeColorRGB(0.95, 0.95, 0.95)
-    p.setFillColorRGB(0.95, 0.95, 0.95)
+    p.setFont("Helvetica-Bold", 50)
+    p.setFillColorRGB(0.97, 0.97, 0.97) # Ultra faint
     p.translate(300, 400)
     p.rotate(45)
     p.drawCentredString(0, 0, "PSO-ML20 CERTIFIED")
     p.restoreState()
 
-    # --- 2. HEADER & STAMP ---
+    # --- 3. HEADER ---
     p.setFont("Helvetica-Bold", 14)
-    p.drawString(50, 750, "OFFICIAL VALUATION CERTIFICATE")
-    
-    # The Digital Stamp Box
-    p.setDash(1, 2) # Dotted line
-    p.rect(460, 710, 80, 80, fill=0)
-    p.setFont("Helvetica-Bold", 8)
-    p.drawCentredString(500, 755, "PSO-ML20")
-    p.drawCentredString(500, 745, "INDUSTRIAL")
-    p.drawCentredString(500, 735, "VALIDATED")
-    p.setDash([]) # Reset to solid line
-
+    p.setFillColorRGB(0.1, 0.2, 0.3)
+    p.drawString(60, 720, "OFFICIAL VALUATION CERTIFICATE")
     p.setFont("Helvetica", 9)
-    p.drawString(50, 735, f"Date: {datetime.now().strftime('%Y-%m-%d')} | System: PSO-ML20-GLOBAL-V2")
-    p.line(50, 730, 550, 730)
+    p.drawString(60, 705, f"Date: {datetime.now().strftime('%Y-%m-%d')} | System: PSO-ML20-GLOBAL")
+    p.line(60, 700, 540, 700) # Header underline
     
-    # --- 3. PRICE & PRIMARY DATA ---
-    p.setFont("Helvetica-Bold", 22)
+    # --- 4. THE VALUATION (BIG & BOLD) ---
+    p.setFont("Helvetica-Bold", 24)
     p.setFillColorRGB(0.11, 0.51, 0.28) # Success Green
-    p.drawString(50, 690, f"CERTIFIED VALUE: {currency_label}{val:,.2f}")
+    p.drawString(60, 660, f"CERTIFIED VALUE: {currency_label}{val:,.2f}")
     
+    # --- 5. AUDIT SUMMARY ---
     p.setFillColorRGB(0, 0, 0)
     p.setFont("Helvetica-Bold", 11)
-    p.drawString(50, 655, "PHYSICAL AUDIT SUMMARY:")
+    p.drawString(60, 620, "PHYSICAL AUDIT SUMMARY:")
     p.setFont("Helvetica", 10)
-    p.drawString(60, 635, f"• Property Dimension: {sqft:,.0f} Sqft | Baseline: {build_type}")
-    p.drawString(60, 620, f"• Internal Inventory: {inventory['beds']} Beds | {inventory['baths']} Baths")
-    p.drawString(60, 605, f"• Tech Infrastructure: {inventory['solar']} KVA Solar | Active Security")
+    p.drawString(70, 600, f"• Property Dimension: {sqft:,.0f} Sqft | Baseline: {build_type}")
+    p.drawString(70, 585, f"• Internal Inventory: {inventory['beds']} Beds | {inventory['baths']} Bathrooms")
+    p.drawString(70, 570, f"• Infrastructure: Solar {inventory['solar']} KVA | High Security")
 
-    # --- 4. VISUAL PROOF (With Border) ---
+    # --- 6. VISUAL PROOF (Centered) ---
     if images.get('img1'):
         try:
-            p.rect(48, 438, 144, 104, fill=0) # Photo Border
-            p.drawImage(ImageReader(images['img1']), 50, 440, width=140, height=100)
+            # Border for the photo
+            p.setStrokeColorRGB(0.9, 0.9, 0.9)
+            p.rect(58, 418, 184, 124, fill=0)
+            p.drawImage(ImageReader(images['img1']), 60, 420, width=180, height=120)
             p.setFont("Helvetica-Oblique", 8)
-            p.drawString(50, 425, "Fig 1: Primary Evidence Scan")
+            p.drawString(60, 405, "Fig 1: Primary Evidence Scan")
         except: pass
 
-    # --- 5. METHODOLOGY DISCLOSURE (Tiny Italics) ---
+    # --- 7. METHODOLOGY DISCLOSURE (Tiny Italics at base) ---
     p.setFont("Helvetica-Oblique", 7)
     p.setFillColorRGB(0.4, 0.4, 0.4)
-    
+    y_pos = 100
     disclosure = [
         "METHODOLOGY DISCLOSURE: This valuation is derived via the PSO-ML20 Industrial Lifecycle (Phases 01-20).",
         "Logic utilizes Phase 12-B Surgical Independence to neutralize institutional bias and Phase 15 Outlier Shielding ",
         "to block market anomalies. Value weighted via Neural Synchronization Index (0.6602) and Anti-Bias Vision scans.",
-        "Security: Authenticated via unique Session ID. Authorized by Lead Architect Patrick Simon Okosodo | AI Architect | MLOps Specialist | B.Eng (Chem)."
+        "Security: Authenticated via unique Session ID. Authorized by Lead Architect Patrick Simon Okosodo | B.Eng (Chem)."
     ]
-    
-    y_pos = 85
     for line in disclosure:
-        p.drawString(50, y_pos, line)
+        p.drawString(60, y_pos, line)
         y_pos -= 9
 
     p.showPage()
     p.save()
     buffer.seek(0)
     return buffer
-
 
 # --- 3. SYSTEM CONFIG & AUTH ---
 st.set_page_config(page_title="PSO-ML20 Executive", page_icon="🛡️", layout="wide")
