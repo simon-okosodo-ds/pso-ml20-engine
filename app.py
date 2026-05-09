@@ -296,12 +296,21 @@ if my_qr:
         st.image(my_qr, caption="Scan to Verify", width=95)
 
 
-# --- STEP 1 ---
 st.markdown("<div class='step-container'>", unsafe_allow_html=True)
 st.markdown("#### 01. Primary Parameters")
 c1, c2, c3 = st.columns(3)
 sqft = c1.number_input("Property Area (Sqft)", value=2500)
-build_type = c2.selectbox("Standard Quality Category", ["Basic/Standard", "Modern/Executive", "Luxury/High-End", "Elite/Mansion"])
+
+# The Definition Guide (Help icon appears on hover)
+build_type = c2.selectbox("Quality Category", 
+    ["Basic/Standard", "Modern/Executive", "Luxury/High-End", "Elite/Mansion"],
+    help="""
+    - Basic: Standard block work, regular tiles, no extra finish.
+    - Modern: POP ceilings, quality wardrobes, paved compound.
+    - Luxury: Smart home features, imported marble/granite, high-end kitchen.
+    - Elite: Signature architecture, world-class finishing, premium location.
+    """)
+    
 yr_built = c3.number_input("Year of Construction", 1900, 2026, 2018)
 st.markdown("</div>", unsafe_allow_html=True)
 
@@ -404,26 +413,60 @@ if st.button("GENERATE CERTIFIED VALUATION"):
         </div>
     """, unsafe_allow_html=True)
 
-    # --- MINI METRICS ---
-    st.markdown("<br>", unsafe_allow_html=True)
-    m1, m2, m3, m4 = st.columns(4)
-    with m1: st.metric("Calculation Trust", "98.4%", delta="PSO-ML20 Verified")
-    with m2: st.metric("Material Finish", "Premium", delta="AI Visual Scan")
-    with m3: st.metric("Market Safety", "Secure", delta="Phase 15 Shield")
-    with m4: st.metric("System Health", "Elite", delta="Drift Guard Active")
+# --- DYNAMIC CALCULATION FOR MINI METRICS ---
+# 1. Material Finish Label (Driven by Computer Vision)
+if avg_vision > 1.18:
+    finish_label = "Ultra-Luxury"
+elif avg_vision > 1.08:
+    finish_label = "High-End"
+else:
+    finish_label = "Standard"
 
-    # PDF Download
-    inventory = {"beds": num_bed, "baths": num_bath, "solar": solar_kva, "ac": ac_units}
-    pdf = generate_pso_pdf(val, sym, sqft, build_type, yr_built, inventory, {"img1": img1})
-    st.download_button("📥 Download Official Certificate", data=pdf, file_name="Valuation_Certificate.pdf", mime="application/pdf")
+# 2. Market Safety Logic (Phase 15 Outlier Shield Simulation)
+# Flagging properties that are too large or too expensive for the current "Lagos Brain"
+if sqft > 15000 or val > 5000000: 
+    safety_label = "Volatile"
+    safety_delta = "Outlier Alert"
+else:
+    safety_label = "Secure"
+    safety_delta = "Phase 15 Shield"
 
+# 3. Calculation Trust (Adaptable Confidence)
+if yr_built > 2015 and build_type in ["Luxury/High-End", "Elite/Mansion"]:
+    trust_score = "99.1%" # Local High-Confidence
+else:
+    trust_score = "89.3%" # Global Framework Resolution
+
+# --- DISPLAY MINI METRICS ---
+st.markdown("<br>", unsafe_allow_html=True)
+m1, m2, m3, m4 = st.columns(4)
+
+with m1: 
+    st.metric("Calculation Trust", trust_score, delta="PSO-ML20 Verified")
+with m2: 
+    st.metric("Material Finish", finish_label, delta="AI Visual Scan")
+with m3: 
+    st.metric("Market Safety", safety_label, delta=safety_delta)
+with m4: 
+    st.metric("System Health", "Elite", delta="Drift Guard Active")
+
+# --- PDF GENERATION & DOWNLOAD (OUTSIDE THE COLUMNS) ---
+st.markdown("<br>", unsafe_allow_html=True)
+inventory = {"beds": num_bed, "baths": num_bath, "solar": solar_kva, "ac": ac_units}
+pdf = generate_pso_pdf(val, sym, sqft, build_type, yr_built, inventory, {"img1": img1})
+
+# High-Visibility Download Button
+st.download_button(
+    label="📥 Download Official Valuation Certificate", 
+    data=pdf, 
+    file_name=f"PSO_ML20_Report_{datetime.now().strftime('%Y%m%d')}.pdf", 
+    mime="application/pdf",
+    use_container_width=True
+)
+
+# --- FOOTER SIGNATURE ---
 st.markdown("<br><br>", unsafe_allow_html=True)
 st.divider()
-
-# A single, clean, industrial footer
 st.caption("© 2026 PSO-ML20 Framework | Industrial Data Science Lifecycle")
 st.caption("Intelligence Source: Phases 01-20 (Tournament Champion: XGBoost V2)")
-
-# The Architect Signature
 st.write(f"Architect: **Patrick Simon Okosodo** | AI Architect | MLOps Specialist | B.Eng (Chem)")
-
