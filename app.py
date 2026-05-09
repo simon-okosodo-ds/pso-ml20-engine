@@ -153,26 +153,19 @@ with st.sidebar:
 # Applying Dynamic Button Color
 st.markdown(f"<style>.stButton>button {{ background: {brand_color}; color: white; }} .metric-card {{ border-top: 5px solid {brand_color}; }}</style>", unsafe_allow_html=True)
 
-# --- 7. HEADER ---
-# This line creates 3 slots: 1 for logo, 4 for title, 1 for QR
-c_logo, c_title, c_qr = st.columns([1, 4, 1])
+# --- 7. HEADER (Direct Force Version) ---
+c_logo, col_mid, c_qr = st.columns()
 
 if client_logo: 
     c_logo.image(client_logo, width=100)
 
-with c_title:
+with col_mid:
     st.title("Executive Valuation Terminal")
     st.write("Professional market analysis powered by Anti-Bias Computer Vision.")
 
 with c_qr:
-    # PASTE YOUR LONG BASE64 STRING BETWEEN THE QUOTES BELOW
-    QR_BASE64 = "PASTE_YOUR_STRING_HERE"
-    
-    if "base64" in QR_BASE64:
-        st.image(QR_BASE64, caption="Scan to Verify", width=95)
-    else:
-        # Fallback if you haven't pasted the string yet
-        st.caption("QR Syncing...")
+    # PASTE YOUR ENTIRE STRING (including data:image/png;base64,...) INSIDE THESE QUOTES
+    st.image("PASTE_YOUR_LONG_BASE64_STRING_HERE", caption="Scan to Verify", width=95)
 
 st.markdown("<br>", unsafe_allow_html=True)
 
