@@ -87,7 +87,7 @@ def generate_pso_pdf(val, sym, sqft, build_type, yr, inventory, images):
         "METHODOLOGY DISCLOSURE: This valuation is derived via the PSO-ML20 Industrial Lifecycle (Phases 01-20).",
         "Logic utilizes Phase 12-B Surgical Independence to neutralize institutional bias and Phase 15 Outlier Shielding ",
         "to block market anomalies. Value weighted via Neural Synchronization Index (0.6602) and Anti-Bias Vision scans.",
-        "Security: Authenticated via unique Session ID. Authorized by Lead Architect Patrick Simon Okosodo | B.Eng (Chem)."
+        "Security: Authenticated via unique Session ID. Authorized by Lead Architect Patrick Simon Okosodo | AI Architect | MLOps Specialist | B.Eng (Chem)."
     ]
     for line in disclosure:
         p.drawString(60, y_pos, line)
