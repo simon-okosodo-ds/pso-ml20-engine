@@ -142,38 +142,54 @@ if not st.session_state['authenticated']:
 # --- 6. SIDEBAR ---
 with st.sidebar:
     st.title("PSO-ML20 Control")
-    client_logo = st.file_uploader("Upload Logo", type=['png', 'jpg'])
+    
+    # IDENTITY UPLOADS
+    client_logo = st.file_uploader("Upload Company Logo", type=['png', 'jpg'])
+    my_qr = st.file_uploader("Upload System QR (Optional)", type=['png', 'jpg'])
+    
+    # CONTROLS
     brand_color = st.color_picker("Accent Color", "#2C3E50")
     currency = st.radio("Currency", ["USD ($)", "NGN (₦)"], horizontal=True)
+    
     st.divider()
+    
+    # ARCHITECT INFO
     st.write("**Architect**")
     st.write("Patrick Simon Okosodo")
     st.caption("Senior AI Lead | B.Eng (Chem)")
 
+# Applying Dynamic Styles
+st.markdown(f"""
+    <style>
+    .stButton>button {{ background: {brand_color}; color: white; border-radius: 8px; }} 
+    .metric-card {{ border-top: 5px solid {brand_color}; }}
+    </style>
+    """, unsafe_allow_html=True)
+
+
 # Applying Dynamic Button Color
 st.markdown(f"<style>.stButton>button {{ background: {brand_color}; color: white; }} .metric-card {{ border-top: 5px solid {brand_color}; }}</style>", unsafe_allow_html=True)
 
-# --- 7. HEADER (Fail-Safe Version) ---
-c_logo, col_mid, c_qr = st.columns([1, 4, 1])
+# --- 7. HEADER ---
+# We use a 2-column or 3-column layout depending on if QR is uploaded
+if my_qr:
+    c_logo, col_mid, c_qr = st.columns([1, 4, 1])
+else:
+    c_logo, col_mid = st.columns([1, 5])
 
-# LOGO SECTION
 if client_logo: 
     with c_logo:
         st.image(client_logo, width=100)
 
-# TITLE SECTION
 with col_mid:
-    st.markdown("<h2 style='margin-bottom:0;'>Executive Valuation Terminal</h2>", unsafe_allow_html=True)
-    st.caption("Professional market analysis powered by Anti-Bias Computer Vision.")
+    st.title("Valuation Terminal")
+    st.write("Professional market analysis powered by Anti-Bias Computer Vision.")
 
-# QR CODE SECTION (Using Stable External Link)
-with c_qr:
-    # This is a direct, public-access link to a standard PSO QR
-    # It will never show as '0' because it's hosted on a global CDN
-    qr_cloud_url = "https://qrserver.com"
-    st.image(qr_cloud_url, caption="Scan to Verify", width=95)
+# The QR only appears if you actually upload it in the sidebar
+if my_qr:
+    with c_qr:
+        st.image(my_qr, caption="Scan to Verify", width=95)
 
-st.markdown("<br>", unsafe_allow_html=True)
 
 # --- STEP 1 ---
 st.markdown("<div class='step-container'>", unsafe_allow_html=True)
