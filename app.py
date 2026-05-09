@@ -165,9 +165,14 @@ with c_title:
     st.write("Professional market analysis powered by Anti-Bias Computer Vision.")
 
 with c_qr:
-    # This is the EXACT raw link to your GitHub image
-    qr_path = "https://githubusercontent.com"
-    st.image(qr_path, caption="Scan to Verify", width=95)
+    # PASTE YOUR LONG BASE64 STRING BETWEEN THE QUOTES BELOW
+    QR_BASE64 = "PASTE_YOUR_STRING_HERE"
+    
+    if "base64" in QR_BASE64:
+        st.image(QR_BASE64, caption="Scan to Verify", width=95)
+    else:
+        # Fallback if you haven't pasted the string yet
+        st.caption("QR Syncing...")
 
 st.markdown("<br>", unsafe_allow_html=True)
 
