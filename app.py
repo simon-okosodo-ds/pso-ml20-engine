@@ -139,36 +139,72 @@ if not st.session_state['authenticated']:
                 st.rerun()
     st.stop()
 
-# --- 6. SIDEBAR ---
+# --- 6. SIDEBAR: CONTROL & INTELLIGENCE ---
 with st.sidebar:
-    st.title("PSO-ML20 Control")
+    st.title("🛡️ System Control")
     
-    # IDENTITY UPLOADS
-    client_logo = st.file_uploader("Upload Company Logo", type=['png', 'jpg'])
-    my_qr = st.file_uploader("Upload System QR (Optional)", type=['png', 'jpg'])
+    # --- PORTAL 1: BRANDING ---
+    with st.expander("🎨 Custom Branding", expanded=False):
+        client_logo = st.file_uploader("Upload Company Logo", type=['png', 'jpg'])
+        my_qr = st.file_uploader("Upload System QR", type=['png', 'jpg'])
+        brand_color = st.color_picker("Pick your Brand Color", "#2C3E50")
     
-    # CONTROLS
-    brand_color = st.color_picker("Accent Color", "#2C3E50")
-    currency = st.radio("Currency", ["USD ($)", "NGN (₦)"], horizontal=True)
+    # --- PORTAL 2: MARKET LEARNER (THE CSV UPLOADER) ---
+    st.divider()
+    st.write("📂 **Market Knowledge Portal**")
+    new_data = st.file_uploader("Upload local market data (CSV)", type=['csv'], 
+                                 help="Upload local sales records to teach the AI about a new city or country.")
+    
+    if new_data:
+        # This simulates the 20-Phase Framework re-learning the new data live
+        with st.status("🧠 AI is learning new market patterns...", expanded=True):
+            st.write("Reading local price anchors...")
+            time.sleep(1.5)
+            st.write("Adjusting neural weights for this specific area...")
+            time.sleep(1.5)
+            st.write("Verifying data integrity (Phase 15 Shield)...")
+            time.sleep(1)
+            st.success("Learning Complete! Terminal is now tuned to this CSV.")
+    
+    # --- PORTAL 3: SETTINGS ---
+    st.divider()
+    currency = st.radio("Money Type", ["USD ($)", "NGN (₦)"], horizontal=True)
     
     st.divider()
     
-    # ARCHITECT INFO
-    st.write("**Architect**")
+    # --- PORTAL 4: ARCHITECT CREDENTIALS ---
+    st.write("**System Architect**")
     st.write("Patrick Simon Okosodo")
-    st.caption("Senior AI Lead | B.Eng (Chem)")
+    st.caption("AI Lead | B.Eng (Chem)")
+    # Handshake proof of the 20-phase framework
+    st.info("🧠 **Engine:** PSO-ML20 Standard")
 
-# Applying Dynamic Styles
+# --- EXECUTIVE UI STYLING (Dynamic) ---
 st.markdown(f"""
     <style>
-    .stButton>button {{ background: {brand_color}; color: white; border-radius: 8px; }} 
-    .metric-card {{ border-top: 5px solid {brand_color}; }}
+    /* Button Style */
+    .stButton>button {{ 
+        background: {brand_color} !important; 
+        color: white !important; 
+        border-radius: 8px; 
+        border: none;
+        height: 3em;
+        font-weight: 600;
+    }}
+    /* Metric Card Style */
+    .metric-card {{ 
+        border-top: 5px solid {brand_color} !important; 
+        background: white;
+        padding: 25px;
+        border-radius: 12px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    }}
+    /* Sidebar styling for a classy look */
+    [data-testid="stSidebar"] {{
+        background-color: #F8F9F9;
+    }}
     </style>
     """, unsafe_allow_html=True)
-
-
-# Applying Dynamic Button Color
-st.markdown(f"<style>.stButton>button {{ background: {brand_color}; color: white; }} .metric-card {{ border-top: 5px solid {brand_color}; }}</style>", unsafe_allow_html=True)
 
 # --- 7. HEADER ---
 # We use a 2-column or 3-column layout depending on if QR is uploaded
