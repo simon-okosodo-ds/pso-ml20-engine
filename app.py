@@ -179,30 +179,83 @@ with st.sidebar:
     # Handshake proof of the 20-phase framework
     st.info("🧠 **Engine:** PSO-ML20 Standard")
 
-# --- EXECUTIVE UI STYLING (Dynamic) ---
+# --- EXECUTIVE UI STYLING (2026 Sovereign Standard) ---
 st.markdown(f"""
     <style>
-    /* Button Style */
+    @import url('https://googleapis.com');
+    
+    /* GLOBAL RESET */
+    html, body, [class*="css"] {{
+        font-family: 'Inter', sans-serif !important;
+        font-size: 14px;
+        color: #2C3E50;
+    }}
+
+    /* DEEP BLACK SIDEBAR UPGRADE */
+    [data-testid="stSidebar"] {{
+        background-color: #000000 !important;
+        border-right: 1px solid #333333;
+    }}
+    
+    /* FORCE SIDEBAR TEXT TO WHITE */
+    [data-testid="stSidebar"] * {{
+        color: #FFFFFF !important;
+    }}
+    
+    /* SIDEBAR INPUT BOXES (Keeps them visible on black) */
+    [data-testid="stSidebar"] div[data-baseweb="select"] > div,
+    [data-testid="stSidebar"] div[data-baseweb="input"] > div {{
+        background-color: #1A1A1A !important;
+        border: 1px solid #333333 !important;
+    }}
+
+    /* BUTTON: INDUSTRIAL ACCENT */
     .stButton>button {{ 
         background: {brand_color} !important; 
         color: white !important; 
         border-radius: 8px; 
         border: none;
-        height: 3em;
+        height: 3.5em;
         font-weight: 600;
+        letter-spacing: 0.5px;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
     }}
-    /* Metric Card Style */
+    .stButton>button:hover {{
+        opacity: 0.9;
+        transform: translateY(-2px);
+    }}
+
+    /* METRIC CARD: GLASS-MINIMALISM */
     .metric-card {{ 
-        border-top: 5px solid {brand_color} !important; 
+        border-top: 6px solid {brand_color} !important; 
         background: white;
-        padding: 25px;
-        border-radius: 12px;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        padding: 35px;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        text-align: center;
+        transition: 0.3s;
     }}
-    /* Sidebar styling for a classy look */
-    [data-testid="stSidebar"] {{
-        background-color: #F8F9F9;
+
+    /* STEP CONTAINERS: CLEAN SPACING */
+    .step-container {{ 
+        margin-bottom: 50px; 
+        padding: 30px; 
+        border-radius: 12px; 
+        background: #FFFFFF; 
+        border: 1px solid #F0F3F4;
     }}
+
+    /* METRIC FONT REFINEMENT */
+    [data-testid="stMetricValue"] {{
+        font-size: 24px !important;
+        font-weight: 600 !important;
+        color: {brand_color} !important;
+    }}
+    
+    /* HIDES STREAMLIT HAMBURGER MENU FOR EXECUTIVE FEEL */
+    #MainMenu {{visibility: hidden;}}
+    footer {{visibility: hidden;}}
     </style>
     """, unsafe_allow_html=True)
 
