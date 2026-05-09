@@ -367,6 +367,7 @@ if eclipse_mode:
 st.markdown("</div>", unsafe_allow_html=True)
 
 # --- CALCULATION ---
+# --- CALCULATION ---
 if st.button("GENERATE CERTIFIED VALUATION"):
     with st.status("Analyzing Visual Signals & Neural Weights...", expanded=False) as status:
         # 1. AI Vision Analysis (Lighting Neutralized)
@@ -376,16 +377,12 @@ if st.button("GENERATE CERTIFIED VALUATION"):
         avg_vision = (score1 + score3 + score4) / 3
 
         # 2. Applying EXACT Ratios from Phase 19 Tournament
-        # Ratio 0.66: Building Grade (The Dominant Force)
-        # Ratio 0.076: Total Living Space
-        # Ratio 0.053: Age/Year Built
         base_calc = (
             (sqft * 272 * 0.0761) + 
             (num_bed * 15000 * 0.0518) + 
             (num_bath * 9000 * 0.0341)
         )
         
-        # Applying the Quality Force (The 0.66 Weighting)
         type_map = {"Basic/Standard": 0.8, "Modern/Executive": 1.2, "Luxury/High-End": 1.8, "Elite/Mansion": 2.5}
         quality_force = type_map[build_type] * 0.6602
         
@@ -399,7 +396,7 @@ if st.button("GENERATE CERTIFIED VALUATION"):
         st.session_state['history'].append({'Time': datetime.now().strftime('%H:%M'), 'price': final_usd})
         status.update(label="Valuation Certified!", state="complete")
 
-    # --- UPDATED OUTPUT DISPLAY ---
+    # --- THE FOLLOWING CODE IS NOW INSIDE THE BUTTON ACTION ---
     rate = 1485
     val = final_usd if "USD" in currency else final_usd * rate
     sym = "USD " if "USD" in currency else "NGN "
@@ -413,58 +410,51 @@ if st.button("GENERATE CERTIFIED VALUATION"):
         </div>
     """, unsafe_allow_html=True)
 
-# --- DYNAMIC CALCULATION FOR MINI METRICS ---
-# 1. Material Finish Label (Driven by Computer Vision)
-if avg_vision > 1.18:
-    finish_label = "Ultra-Luxury"
-elif avg_vision > 1.08:
-    finish_label = "High-End"
-else:
-    finish_label = "Standard"
+    # --- DYNAMIC CALCULATION FOR MINI METRICS ---
+    if avg_vision > 1.18:
+        finish_label = "Ultra-Luxury"
+    elif avg_vision > 1.08:
+        finish_label = "High-End"
+    else:
+        finish_label = "Standard"
 
-# 2. Market Safety Logic (Phase 15 Outlier Shield Simulation)
-# Flagging properties that are too large or too expensive for the current "Lagos Brain"
-if sqft > 15000 or val > 5000000: 
-    safety_label = "Volatile"
-    safety_delta = "Outlier Alert"
-else:
-    safety_label = "Secure"
-    safety_delta = "Phase 15 Shield"
+    if sqft > 15000 or final_usd > 5000000: 
+        safety_label = "Volatile"
+        safety_delta = "Outlier Alert"
+    else:
+        safety_label = "Secure"
+        safety_delta = "Phase 15 Shield"
 
-# 3. Calculation Trust (Adaptable Confidence)
-if yr_built > 2015 and build_type in ["Luxury/High-End", "Elite/Mansion"]:
-    trust_score = "99.1%" # Local High-Confidence
-else:
-    trust_score = "89.3%" # Global Framework Resolution
+    if yr_built > 2015 and build_type in ["Luxury/High-End", "Elite/Mansion"]:
+        trust_score = "99.1%"
+    else:
+        trust_score = "89.3%"
 
-# --- DISPLAY MINI METRICS ---
-st.markdown("<br>", unsafe_allow_html=True)
-m1, m2, m3, m4 = st.columns(4)
+    # --- DISPLAY MINI METRICS ---
+    st.markdown("<br>", unsafe_allow_html=True)
+    m1, m2, m3, m4 = st.columns(4)
+    with m1: st.metric("Calculation Trust", trust_score, delta="PSO-ML20 Verified")
+    with m2: st.metric("Material Finish", finish_label, delta="AI Visual Scan")
+    with m3: st.metric("Market Safety", safety_label, delta=safety_delta)
+    with m4: st.metric("System Health", "Elite", delta="Drift Guard Active")
 
-with m1: 
-    st.metric("Calculation Trust", trust_score, delta="PSO-ML20 Verified")
-with m2: 
-    st.metric("Material Finish", finish_label, delta="AI Visual Scan")
-with m3: 
-    st.metric("Market Safety", safety_label, delta=safety_delta)
-with m4: 
-    st.metric("System Health", "Elite", delta="Drift Guard Active")
+    # --- PDF GENERATION & DOWNLOAD ---
+    st.markdown("<br>", unsafe_allow_html=True)
+    inventory = {"beds": num_bed, "baths": num_bath, "solar": solar_kva, "ac": ac_units}
+    
+    # We pass the cleaned symbol to the PDF generator
+    clean_sym = "₦" if "NGN" in sym else "$"
+    pdf = generate_pso_pdf(val, clean_sym, sqft, build_type, yr_built, inventory, {"img1": img1})
 
-# --- PDF GENERATION & DOWNLOAD (OUTSIDE THE COLUMNS) ---
-st.markdown("<br>", unsafe_allow_html=True)
-inventory = {"beds": num_bed, "baths": num_bath, "solar": solar_kva, "ac": ac_units}
-pdf = generate_pso_pdf(val, sym, sqft, build_type, yr_built, inventory, {"img1": img1})
+    st.download_button(
+        label="📥 Download Official Valuation Certificate", 
+        data=pdf, 
+        file_name=f"PSO_ML20_Report_{datetime.now().strftime('%Y%m%d')}.pdf", 
+        mime="application/pdf",
+        use_container_width=True
+    )
 
-# High-Visibility Download Button
-st.download_button(
-    label="📥 Download Official Valuation Certificate", 
-    data=pdf, 
-    file_name=f"PSO_ML20_Report_{datetime.now().strftime('%Y%m%d')}.pdf", 
-    mime="application/pdf",
-    use_container_width=True
-)
-
-# --- FOOTER SIGNATURE ---
+# --- FOOTER SIGNATURE (THIS STAYS OUTSIDE AT THE VERY BOTTOM) ---
 st.markdown("<br><br>", unsafe_allow_html=True)
 st.divider()
 st.caption("© 2026 PSO-ML20 Framework | Industrial Data Science Lifecycle")
