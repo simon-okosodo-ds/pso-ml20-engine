@@ -153,21 +153,24 @@ with st.sidebar:
 # Applying Dynamic Button Color
 st.markdown(f"<style>.stButton>button {{ background: {brand_color}; color: white; }} .metric-card {{ border-top: 5px solid {brand_color}; }}</style>", unsafe_allow_html=True)
 
-# --- 7. HEADER (Direct Force Version) ---
-c_logo, col_mid, c_qr = st.columns()
+# --- 7. HEADER (Fixed Version) ---
+# We explicitly define the width ratios [Logo, Title, QR]
+c_logo, col_mid, c_qr = st.columns([1, 4, 1])
 
 if client_logo: 
-    c_logo.image(client_logo, width=100)
+    with c_logo:
+        st.image(client_logo, width=100)
 
 with col_mid:
     st.title("Executive Valuation Terminal")
     st.write("Professional market analysis powered by Anti-Bias Computer Vision.")
 
 with c_qr:
-    # PASTE YOUR ENTIRE STRING (including data:image/png;base64,...) INSIDE THESE QUOTES
-    st.image("PASTE_YOUR_LONG_BASE64_STRING_HERE", caption="Scan to Verify", width=95)
+    # Use your Base64 string here (ensure it's inside the quotes)
+    st.image("data:image/png;base64,PASTE_YOUR_FULL_STRING_HERE", caption="Scan to Verify", width=95)
 
 st.markdown("<br>", unsafe_allow_html=True)
+
 
 # --- STEP 1 ---
 st.markdown("<div class='step-container'>", unsafe_allow_html=True)
