@@ -9,6 +9,19 @@ from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 from reportlab.lib.utils import ImageReader
 
+import streamlit as st
+import pandas as pd
+import numpy as np
+import joblib  # Ensure this is here
+import time
+import io
+
+@st.cache_resource
+def load_pso_model():
+    return joblib.load('pso_super_brain.pkl')
+
+model = load_pso_model()
+
 # --- 1. ANTI-BIAS VISION ENGINE (THE MATERIAL SENSOR) ---
 def analyze_visual_quality(uploaded_file):
     if uploaded_file is None:
