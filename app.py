@@ -451,9 +451,22 @@ if st.button("GENERATE CERTIFIED VALUATION"):
         status.update(label="Champion Logic Applied!", state="complete")
 
     # --- RESULTS DISPLAY ---
+        # --- UPDATED OUTPUT DISPLAY (Hardened Handshake) ---
     rate = 1485
-    val = final_usd if "USD" in currency else final_usd * rate
-    sym = "USD " if "USD" in currency else "NGN "
+    
+    # 🟢 SAFETY NET: We verify the currency variable from the sidebar
+    try:
+        user_choice = currency
+    except NameError:
+        user_choice = "USD ($)" # Industrial Fallback
+        
+    # 🟢 LOGIC: Convert based on the verified choice
+    if "USD" in user_choice:
+        val = final_usd
+        sym = "USD "
+    else:
+        val = final_usd * rate
+        sym = "NGN "
     
     st.balloons()
     st.markdown(f"""
@@ -463,6 +476,7 @@ if st.button("GENERATE CERTIFIED VALUATION"):
             <p style='font-size: 13px; margin-top:10px;'><b>Trust Rating: 89.28%</b> | PSO-ML20 Verified</p>
         </div>
     """, unsafe_allow_html=True)
+
 
     # --- DYNAMIC CALCULATION FOR MINI METRICS ---
     if avg_vision > 1.18:
