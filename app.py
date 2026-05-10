@@ -366,37 +366,41 @@ if eclipse_mode:
     st.warning("⚠️ TOTAL ECLIPSE ACTIVE: Institutional Crutches Removed. Reconstructing value via Physical Atoms.")
 st.markdown("</div>", unsafe_allow_html=True)
 
-# --- CALCULATION ---
-# --- CALCULATION ---
+# --- CALCULATION (INTEGRATED PKL BRAIN) ---
 if st.button("GENERATE CERTIFIED VALUATION"):
-    with st.status("Analyzing Visual Signals & Neural Weights...", expanded=False) as status:
+    with st.status("Deploying LightGBM Champion Logic...", expanded=False) as status:
         # 1. AI Vision Analysis (Lighting Neutralized)
-        score1 = analyze_visual_quality(img1) # Front
-        score3 = analyze_visual_quality(img3) # Living Room
-        score4 = analyze_visual_quality(img4) # Kitchen
+        score1 = analyze_visual_quality(img1) 
+        score3 = analyze_visual_quality(img3) 
+        score4 = analyze_visual_quality(img4) 
         avg_vision = (score1 + score3 + score4) / 3
 
-        # 2. Applying EXACT Ratios from Phase 19 Tournament
-        base_calc = (
-            (sqft * 272 * 0.0761) + 
-            (num_bed * 15000 * 0.0518) + 
-            (num_bath * 9000 * 0.0341)
-        )
+        # 2. Prepare Data for the Super-Brain
+        # Order must match your training: Living Sqft, Grade, Year, Bed, Bath, Lot, Noise, New
+        # We use '7' as baseline grade if not using the slider for BldgGrade specifically
+        features = np.array([[sqft, 7, yr_built, num_bed, num_bath, 5000, 0, 0]])
         
-        type_map = {"Basic/Standard": 0.8, "Modern/Executive": 1.2, "Luxury/High-End": 1.8, "Elite/Mansion": 2.5}
-        quality_force = type_map[build_type] * 0.6602
+        # 3. Predict & Reverse Log Transformation
+        # Since your championship used np.log1p, we MUST use np.expm1
+        log_prediction = model.predict(features)
+        base_price = np.expm1(log_prediction)[0] # Extract the single value
+        
+        # 4. Applying Multipliers (Weights from Phase 19)
+        # Quality force uses your type_map but centers it around the AI's prediction
+        type_map = {"Basic/Standard": 0.85, "Modern/Executive": 1.1, "Luxury/High-End": 1.4, "Elite/Mansion": 1.9}
+        quality_force = type_map[build_type]
         
         if eclipse_mode:
             st.write("Neutralizing Proxy Descendants (Total Eclipse Active)...")
-            final_usd = (base_calc * quality_force * avg_vision) * 0.95
+            final_usd = (base_price * quality_force * avg_vision) * 0.92
         else:
             st.write("Synchronizing Full-Spectrum Market Logic...")
-            final_usd = (base_calc * quality_force * avg_vision) * 1.12
+            final_usd = (base_price * quality_force * avg_vision) * 1.08
             
         st.session_state['history'].append({'Time': datetime.now().strftime('%H:%M'), 'price': final_usd})
-        status.update(label="Valuation Certified!", state="complete")
+        status.update(label="Champion Logic Applied!", state="complete")
 
-    # --- THE FOLLOWING CODE IS NOW INSIDE THE BUTTON ACTION ---
+    # >>> STOP PASTING HERE. LEAVE THE DISPLAY CODE BELOW AS IT IS <<<
     rate = 1485
     val = final_usd if "USD" in currency else final_usd * rate
     sym = "USD " if "USD" in currency else "NGN "
