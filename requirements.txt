@@ -1,6 +1,7 @@
 streamlit
 pandas
-streamlit-lottie
-requests
+numpy
+Pillow
 reportlab
+joblib
 lightgbm
