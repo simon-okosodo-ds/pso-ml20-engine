@@ -381,15 +381,23 @@ if eclipse_mode:
 st.markdown("</div>", unsafe_allow_html=True)
 
 # ==========================================
-# 🛡️ NEW: NEURAL CONFIDENCE TRACKER (PASTE HERE)
+# 🛡️ NEW: NEURAL CONFIDENCE TRACKER (FIXED)
 # ==========================================
 st.markdown("<br>", unsafe_allow_html=True)
-# This calculates how much evidence the client has provided
+
+# 🟢 ADD THIS LINE FIRST: It "Bundles" your Step 3 variables so the tracker can see them
+user_inventory = {
+    "Bedrooms": num_bed, "Bathrooms": num_bath, "Living": num_liv, 
+    "Parking": num_park, "Solar": solar_kva, "Gen": gen_kva, 
+    "AC": ac_units, "CCTV": cctv, "Store": stores, "BQ": bq_units
+}
+
+# 🟢 NOW the tracker works:
 filled_inputs = sum(1 for v in user_inventory.values() if v > 0) + (1 if sqft > 0 else 0)
 filled_photos = sum(1 for p in [img1, img3, img4, img5, img8] if p is not None)
 
 # Progress bar logic
-total_progress = min((filled_inputs + filled_photos) / 12, 1.0) 
+total_progress = min((filled_inputs + filled_photos) / 15, 1.0) 
 
 st.write(f"📊 **Neural Confidence:** {int(total_progress * 100)}%")
 st.progress(total_progress)
@@ -400,6 +408,7 @@ else:
     st.info("💡 Provide more visual evidence (photos) or inventory data to reach 'Certified' status.")
 
 st.markdown("<br>", unsafe_allow_html=True)
+
 
 # --- CALCULATION (HARDENED INTEGRATION) ---
 if st.button("GENERATE CERTIFIED VALUATION"):
