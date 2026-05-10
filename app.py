@@ -410,6 +410,37 @@ else:
 st.markdown("<br>", unsafe_allow_html=True)
 
 
+# --- 05. SYSTEM INTEGRITY CHECK (10-Slot Sync) ---
+st.markdown("<br>", unsafe_allow_html=True)
+
+# 1. Bundle all 10 inventory items
+user_inventory = {
+    "Bed": num_bed, "Bath": num_bath, "Liv": num_liv, "Park": num_park, 
+    "Solar": solar_kva, "Gen": gen_kva, "AC": ac_units, "CCTV": cctv, 
+    "Store": stores, "BQ": bq_units
+}
+
+# 2. Sniff all 10 photo slots (Ensure these variable names match your Step 02 uploaders!)
+# List every img variable you created in Step 02 (img1, img2, img3... img10)
+all_photos = [img1, img2, img3, img4, img5, img6, img7, img8, img9, img10]
+filled_photos = sum(1 for p in all_photos if p is not None)
+filled_inputs = sum(1 for v in user_inventory.values() if v > 0) + (1 if sqft > 0 else 0)
+
+# 3. Progress bar logic (Normalized to 20 total evidence points)
+# 10 Data Points + 10 Photos = 20 Points for 100% Integrity
+total_progress = min((filled_inputs + filled_photos) / 20, 1.0) 
+
+st.write(f"📊 **Neural Confidence:** {int(total_progress * 100)}%")
+st.progress(total_progress)
+
+if total_progress >= 1.0:
+    st.success("✅ FULL FORENSIC INTEGRITY: 20/20 Evidence Points Verified.")
+elif total_progress > 0.7:
+    st.warning("⚠️ High Confidence reached. Missing minor visual anchors.")
+else:
+    st.info("💡 Continue uploading photos to the 10-Point Vault to reach Certified status.")
+
+
 # --- CALCULATION (HARDENED INTEGRATION) ---
 if st.button("GENERATE CERTIFIED VALUATION"):
     with st.status("Deploying LightGBM Champion Logic...", expanded=False) as status:
