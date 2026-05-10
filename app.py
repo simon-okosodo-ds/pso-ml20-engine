@@ -8,13 +8,7 @@ from PIL import Image, ImageOps, ImageFilter
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 from reportlab.lib.utils import ImageReader
-
-import streamlit as st
-import pandas as pd
-import numpy as np
-import joblib  # Ensure this is here
-import time
-import io
+import joblib  
 
 @st.cache_resource
 def load_pso_model():
@@ -379,41 +373,47 @@ if eclipse_mode:
     st.warning("⚠️ TOTAL ECLIPSE ACTIVE: Institutional Crutches Removed. Reconstructing value via Physical Atoms.")
 st.markdown("</div>", unsafe_allow_html=True)
 
-# --- CALCULATION (INTEGRATED PKL BRAIN) ---
+# --- CALCULATION (HARDENED INTEGRATION) ---
 if st.button("GENERATE CERTIFIED VALUATION"):
     with st.status("Deploying LightGBM Champion Logic...", expanded=False) as status:
-        # 1. AI Vision Analysis (Lighting Neutralized)
-        score1 = analyze_visual_quality(img1) 
-        score3 = analyze_visual_quality(img3) 
-        score4 = analyze_visual_quality(img4) 
-        avg_vision = (score1 + score3 + score4) / 3
+        # 1. AI Vision Analysis
+        s1 = analyze_visual_quality(img1)
+        s3 = analyze_visual_quality(img3)
+        s4 = analyze_visual_quality(img4)
+        avg_vision = (s1 + s3 + s4) / 3
 
-        # 2. Prepare Data for the Super-Brain
-        # Order must match your training: Living Sqft, Grade, Year, Bed, Bath, Lot, Noise, New
-        # We use '7' as baseline grade if not using the slider for BldgGrade specifically
-        features = np.array([[sqft, 7, yr_built, num_bed, num_bath, 5000, 0, 0]])
+        # 2. DATA FORMATTING (This fixes the TypeError)
+        # We create a proper DataFrame with names so the model doesn't get confused
+        feature_columns = ['SqFtTotLiving', 'BldgGrade', 'YrBuilt', 'Bedrooms', 
+                           'Bathrooms', 'SqFtLot', 'TrafficNoise', 'NewConstruction']
         
-        # 3. Predict & Reverse Log Transformation
-        # Since your championship used np.log1p, we MUST use np.expm1
-        log_prediction = model.predict(features)
-        base_price = np.expm1(log_prediction)[0] # Extract the single value
+        # We map your app inputs to these columns
+        # Note: We use '7' as the standard BldgGrade baseline
+        input_row = [[sqft, 7, yr_built, num_bed, num_bath, 5000, 0, 0]]
+        features_df = pd.DataFrame(input_row, columns=feature_columns)
+
+        # 3. PREDICTION (Log-Space)
+        try:
+            log_prediction = model.predict(features_df)
+            # Reverse the Log (np.log1p -> np.expm1)
+            base_price = np.expm1(log_prediction[0]) 
+        except Exception as e:
+            st.error(f"Brain Sync Error: {e}")
+            base_price = 500000 # Emergency Fallback
         
-        # 4. Applying Multipliers (Weights from Phase 19)
-        # Quality force uses your type_map but centers it around the AI's prediction
+        # 4. MULTIPLIERS
         type_map = {"Basic/Standard": 0.85, "Modern/Executive": 1.1, "Luxury/High-End": 1.4, "Elite/Mansion": 1.9}
         quality_force = type_map[build_type]
         
         if eclipse_mode:
-            st.write("Neutralizing Proxy Descendants (Total Eclipse Active)...")
             final_usd = (base_price * quality_force * avg_vision) * 0.92
         else:
-            st.write("Synchronizing Full-Spectrum Market Logic...")
             final_usd = (base_price * quality_force * avg_vision) * 1.08
             
         st.session_state['history'].append({'Time': datetime.now().strftime('%H:%M'), 'price': final_usd})
         status.update(label="Champion Logic Applied!", state="complete")
 
-    # >>> STOP PASTING HERE. LEAVE THE DISPLAY CODE BELOW AS IT IS <<<
+    # --- RESULTS DISPLAY ---
     rate = 1485
     val = final_usd if "USD" in currency else final_usd * rate
     sym = "USD " if "USD" in currency else "NGN "
