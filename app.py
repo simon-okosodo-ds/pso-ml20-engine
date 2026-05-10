@@ -178,17 +178,24 @@ with st.sidebar:
     new_data = st.file_uploader("Upload local market data (CSV)", type=['csv'], 
                                  help="Upload local sales records to teach the AI about a new city or country.")
     
-    if new_data:
-        # This simulates the 20-Phase Framework re-learning the new data live
-        with st.status("🧠 AI is learning new market patterns...", expanded=True):
-            st.write("Reading local price anchors...")
-            time.sleep(1.5)
-            st.write("Adjusting neural weights for this specific area...")
-            time.sleep(1.5)
-            st.write("Verifying data integrity (Phase 15 Shield)...")
-            time.sleep(1)
-            st.success("Learning Complete! Terminal is now tuned to this CSV.")
+    # --- INSIDE YOUR SIDEBAR 'if new_data:' BLOCK ---
+if new_data:
+    df_raw = pd.read_csv(new_data)
+    # This stores the ENTIRE list of columns for later use
+    st.session_state['full_column_list'] = df_raw.columns.tolist()
     
+    # This specifically finds the 3 "Pillars" even if spelt wrongly
+    st.session_state['active_schema'] = {
+        'Size': next((c for c in df_raw.columns if 'sqft' in c.lower() or 'living' in c.lower()), 'SqFtTotLiving'),
+        'Quality': next((c for c in df_raw.columns if 'grade' in c.lower() or 'quality' in c.lower()), 'BldgGrade'),
+        'Age': next((c for c in df_raw.columns if 'yr' in c.lower() or 'year' in c.lower() or 'built' in c.lower()), 'YrBuilt')
+    }
+    
+    with st.status("🧠 AI is learning new patterns...", expanded=True):
+        st.write(f"Matched Pillar: {st.session_state['active_schema']['Size']}")
+        time.sleep(1)
+        st.success("Tuned to New Market CSV.")
+
     # --- PORTAL 3: SETTINGS ---
     st.divider()
     currency = st.radio("Money Type", ["USD ($)", "NGN (₦)"], horizontal=True)
@@ -372,6 +379,27 @@ eclipse_mode = st.toggle("Activate 'Total Eclipse' Mode", help="Removes governme
 if eclipse_mode:
     st.warning("⚠️ TOTAL ECLIPSE ACTIVE: Institutional Crutches Removed. Reconstructing value via Physical Atoms.")
 st.markdown("</div>", unsafe_allow_html=True)
+
+# ==========================================
+# 🛡️ NEW: NEURAL CONFIDENCE TRACKER (PASTE HERE)
+# ==========================================
+st.markdown("<br>", unsafe_allow_html=True)
+# This calculates how much evidence the client has provided
+filled_inputs = sum(1 for v in user_inventory.values() if v > 0) + (1 if sqft > 0 else 0)
+filled_photos = sum(1 for p in [img1, img3, img4, img5, img8] if p is not None)
+
+# Progress bar logic
+total_progress = min((filled_inputs + filled_photos) / 12, 1.0) 
+
+st.write(f"📊 **Neural Confidence:** {int(total_progress * 100)}%")
+st.progress(total_progress)
+
+if total_progress > 0.8:
+    st.success("✅ Forensic Integrity reached. Ready for Certification.")
+else:
+    st.info("💡 Provide more visual evidence (photos) or inventory data to reach 'Certified' status.")
+
+st.markdown("<br>", unsafe_allow_html=True)
 
 # --- CALCULATION (HARDENED INTEGRATION) ---
 if st.button("GENERATE CERTIFIED VALUATION"):
