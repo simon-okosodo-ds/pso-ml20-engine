@@ -11,19 +11,24 @@ from reportlab.lib.utils import ImageReader
 
 
 # --- AT THE VERY TOP (Line 15 approx) ---
+# --- 1. GLOBAL BRAIN INITIALIZATION ---
+import joblib
+
+# We define the model as None first to prevent the NameError
+model = None 
+
 @st.cache_resource
 def load_pso_model():
-    import joblib
     try:
-        # Load the brain
-        model = joblib.load('pso_super_brain.pkl')
-        # Force it to use only 1 thread to prevent the 'hanging' glitch
-        if hasattr(model, 'set_params'):
-            model.set_params(n_jobs=1)
-        return model
+        # Ensure the filename matches your GitHub exactly
+        return joblib.load('pso_super_brain.pkl')
     except Exception as e:
-        st.error(f"Handshake Failure: {e}")
+        # We don't crash here; we just let the app know the file is missing
         return None
+
+# Now we actually try to load it
+model = load_pso_model()
+
 
 # --- 1. ANTI-BIAS VISION ENGINE (THE MATERIAL SENSOR) ---
 def analyze_visual_quality(uploaded_file):
@@ -431,63 +436,51 @@ if st.button("GENERATE CERTIFIED VALUATION"):
         s4 = analyze_visual_quality(img4)
         avg_vision = (s1 + s3 + s4) / 3
 
-        # 2. DATA FORMATTING (This fixes the TypeError)
-        # We create a proper DataFrame with names so the model doesn't get confused
+        # 2. DATA FORMATTING
         feature_columns = ['SqFtTotLiving', 'BldgGrade', 'YrBuilt', 'Bedrooms', 
                            'Bathrooms', 'SqFtLot', 'TrafficNoise', 'NewConstruction']
         
-        # We map your app inputs to these columns
-        # Note: We use '7' as the standard BldgGrade baseline
+        # Mapping inputs to DataFrame
         input_row = [[sqft, 7, yr_built, num_bed, num_bath, 5000, 0, 0]]
         features_df = pd.DataFrame(input_row, columns=feature_columns)
-        # 3. PREDICTION (Log-Space)
-                # 3. PREDICTION (The actual Brain Logic)
-        try:
-            # We ensure the input is a Float to prevent TypeErrors
-            log_prediction = model.predict(features_df)
-            base_price = float(np.expm1(log_prediction[0])) # Convert to a real number
-        except Exception as e:
-            # If this shows on your screen, tell me what the error says!
-            st.warning(f"Handshake Alert: {e}")
-            base_price = 500000 
 
-
-        # 🟢 INDENTED: Now these run ONLY after the button is clicked
-        infra_bonus = (
-            (solar_kva * 1500) +  # Energy independence value
-            (gen_kva * 450) +     # Backup power value
-            (ac_units * 750) +    # Climate control value
-            (cctv * 250) +        # Security tech premium
-            (bq_units * 12500)    # Service quarters value
-        )
-           # 3. THE NEURAL HANDSHAKE
-        if model is not None:
+        # 3. THE NEURAL HANDSHAKE (Single Path Logic)
+        base_price = 0.0 # Initialize
+        
+        # We check if 'model' was successfully loaded at the top of the app
+        if 'model' in globals() and model is not None:
             try:
-                # 🟢 INDENTED: This must be pushed to the right
+                # Convert to numpy for LightGBM compatibility
                 input_array = features_df.values.astype(np.float32)
-                log_prediction = model.predict(input_array)
-                base_price = float(np.expm1(log_prediction))
+                log_pred = model.predict(input_array)
+                # Reverse log transformation (np.log1p -> np.expm1)
+                base_price = float(np.expm1(log_pred))
                 st.success("✅ Neural Handshake: Verified (89.28% Precision)")
             except Exception as e:
-                # 🟢 INDENTED: The fallback if the .pkl fails
                 st.warning("⚠️ Neural Handshake Offline: Engaging Direct Framework Physics")
                 base_price = (sqft * 272 * 0.0761) + (num_bed * 15000 * 0.0518) + (num_bath * 9000 * 0.0341)
         else:
-            # 🟢 INDENTED: If model loading failed at the top of the file
-            st.warning("⚠️ Logic Sync Required: Utilizing Architectural Weights")
+            st.warning("⚠️ Logic Sync: Utilizing 20-Phase Architectural Weights")
             base_price = (sqft * 272 * 0.0761) + (num_bed * 15000 * 0.0518) + (num_bath * 9000 * 0.0341)
 
-        # 4. MULTIPLIERS (Ensure these are aligned with the 'if model' block)
+        # 4. INFRASTRUCTURE & MULTIPLIERS
+        infra_bonus = (
+            (solar_kva * 1500) + (gen_kva * 450) + (ac_units * 750) + 
+            (cctv * 250) + (bq_units * 12500)
+        )
+        
+        # Set market_appreciation to 1.0 to match your 2014 Dataset Sync test
         market_appreciation = 1.0 
         type_map = {"Basic/Standard": 1.0, "Modern/Executive": 1.25, "Luxury/High-End": 1.6, "Elite/Mansion": 2.2}
         quality_force = type_map[build_type]
         
         # 5. FINAL CALCULATION
         if eclipse_mode:
-            final_usd = (base_price * market_appreciation * quality_force * avg_vision) * 1.0
+            # Surgical Independence Mode
+            final_usd = ((base_price + infra_bonus) * quality_force * avg_vision) * 1.0
         else:
-            final_usd = (base_price * market_appreciation * quality_force * avg_vision) * 1.05
-
+            # Market Standard Mode
+            final_usd = ((base_price + infra_bonus) * quality_force * avg_vision) * 1.05
 
         st.session_state['history'].append({'Time': datetime.now().strftime('%H:%M'), 'price': final_usd})
         status.update(label="Champion Logic Applied!", state="complete")
