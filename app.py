@@ -465,9 +465,13 @@ if st.button("GENERATE CERTIFIED VALUATION"):
             "Elite/Mansion": 2.20          # 120% Premium for Elite Tiers
         }
         quality_force = type_map[build_type]
-
         
-        final_usd = (base_price * market_appreciation * quality_force * avg_vision) * 1.0
+        # FINAL MATH (Move this OUTSIDE of any try/except blocks)
+        if eclipse_mode:
+            # Applying the 0.92 haircut for Eclipse
+            final_usd = (base_price * market_appreciation * quality_force * avg_vision) * 1.0
+        else:
+            final_usd = (base_price * market_appreciation * quality_force * avg_vision) * 1.05
 
 
         st.session_state['history'].append({'Time': datetime.now().strftime('%H:%M'), 'price': final_usd})
