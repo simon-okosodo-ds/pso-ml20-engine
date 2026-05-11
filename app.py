@@ -434,13 +434,16 @@ if st.button("GENERATE CERTIFIED VALUATION"):
         input_row = [[sqft, 7, yr_built, num_bed, num_bath, 5000, 0, 0]]
         features_df = pd.DataFrame(input_row, columns=feature_columns)
         # 3. PREDICTION (Log-Space)
+                # 3. PREDICTION (The actual Brain Logic)
         try:
+            # We ensure the input is a Float to prevent TypeErrors
             log_prediction = model.predict(features_df)
-            # Reverse the Log (np.log1p -> np.expm1)
-            base_price = np.expm1(log_prediction[0]) 
+            base_price = float(np.expm1(log_prediction[0])) # Convert to a real number
         except Exception as e:
-            st.error(f"Brain Sync Error: {e}")
-            base_price = 500000 # Emergency Fallback
+            # If this shows on your screen, tell me what the error says!
+            st.warning(f"Handshake Alert: {e}")
+            base_price = 500000 
+
 
         # 🟢 INDENTED: Now these run ONLY after the button is clicked
         infra_bonus = (
