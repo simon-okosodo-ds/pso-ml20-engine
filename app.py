@@ -460,38 +460,33 @@ if st.button("GENERATE CERTIFIED VALUATION"):
             (cctv * 250) +        # Security tech premium
             (bq_units * 12500)    # Service quarters value
         )
-        
-        # 4. MULTIPLIERS
-        # 3. THE NEURAL HANDSHAKE
+           # 3. THE NEURAL HANDSHAKE
         if model is not None:
             try:
-            # Prepare the array
-            input_array = features_df.values.astype(np.float32)
-            
-            # RUN PREDICTION
-            log_prediction = model.predict(input_array)
-            base_price = float(np.expm1(log_prediction))
-            st.success("✅ Neural Handshake: Verified (89.28% Precision)")
-            
-        except Exception as e:
-            # IF THE BRAIN HANGS OR FAILS, WE USE THE DIRECT PHYSICS (0.076, 0.051, 0.034)
-            st.warning("⚠️ Neural Handshake Offline: Engaging Direct Framework Physics")
+                # 🟢 INDENTED: This must be pushed to the right
+                input_array = features_df.values.astype(np.float32)
+                log_prediction = model.predict(input_array)
+                base_price = float(np.expm1(log_prediction))
+                st.success("✅ Neural Handshake: Verified (89.28% Precision)")
+            except Exception as e:
+                # 🟢 INDENTED: The fallback if the .pkl fails
+                st.warning("⚠️ Neural Handshake Offline: Engaging Direct Framework Physics")
+                base_price = (sqft * 272 * 0.0761) + (num_bed * 15000 * 0.0518) + (num_bath * 9000 * 0.0341)
+        else:
+            # 🟢 INDENTED: If model loading failed at the top of the file
+            st.warning("⚠️ Logic Sync Required: Utilizing Architectural Weights")
             base_price = (sqft * 272 * 0.0761) + (num_bed * 15000 * 0.0518) + (num_bath * 9000 * 0.0341)
 
-
-        # 4. APPLYING THE 2026 CALIBRATION
+        # 4. MULTIPLIERS (Ensure these are aligned with the 'if model' block)
         market_appreciation = 1.0 
         type_map = {"Basic/Standard": 1.0, "Modern/Executive": 1.25, "Luxury/High-End": 1.6, "Elite/Mansion": 2.2}
         quality_force = type_map[build_type]
         
-        # 5. FINAL CERTIFIED VALUE
+        # 5. FINAL CALCULATION
         if eclipse_mode:
-            # Applying the 0.92 haircut for Surgical Independence
             final_usd = (base_price * market_appreciation * quality_force * avg_vision) * 1.0
         else:
-            # Full-Spectrum Market Logic (1.05 Premium)
             final_usd = (base_price * market_appreciation * quality_force * avg_vision) * 1.05
-
 
 
         st.session_state['history'].append({'Time': datetime.now().strftime('%H:%M'), 'price': final_usd})
