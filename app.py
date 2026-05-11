@@ -355,7 +355,7 @@ st.markdown("</div>", unsafe_allow_html=True)
 
 # --- STEP 3 ---
 st.markdown("<div class='step-container'>", unsafe_allow_html=True)
-st.markdown("#### 03. Inventory Inventory")
+st.markdown("#### 03. Inventory")
 i1, i2, i3, i4, i5 = st.columns(5)
 num_bed = i1.number_input("Bedrooms", 1, 20, 4)
 num_bath = i2.number_input("Bathrooms", 1, 20, 4)
