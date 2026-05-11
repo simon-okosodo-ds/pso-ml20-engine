@@ -451,7 +451,7 @@ if st.button("GENERATE CERTIFIED VALUATION"):
         
         # 4. MULTIPLIERS
                 # Line 410: The 2026 Temporal Bridge & Quality Map
-        market_appreciation = 2.15  # 🟢 Facts: 12-Year Market Growth (2014-2026)
+        market_appreciation = 1.0  # 🟢 Facts: 12-Year Market Growth (2014-2026)
         
         type_map = {
             "Basic/Standard": 1.0,         # Raw Scientific Baseline
@@ -462,13 +462,7 @@ if st.button("GENERATE CERTIFIED VALUATION"):
         quality_force = type_map[build_type]
 
         
-              # Line 420: Applying the Unified Logic
-        if eclipse_mode:
-            # 75.91% Resolution (Conservative / Hardened)
-            final_usd = (base_price * market_appreciation * quality_force * avg_vision) * 0.92
-        else:
-            # 89.28% Championship Precision (Full-Spectrum Market Value)
-            final_usd = (base_price * market_appreciation * quality_force * avg_vision) * 1.05
+        final_usd = (base_price * market_appreciation * quality_force * avg_vision) * 1.0
 
 
         st.session_state['history'].append({'Time': datetime.now().strftime('%H:%M'), 'price': final_usd})
