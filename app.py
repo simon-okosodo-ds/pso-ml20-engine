@@ -374,7 +374,7 @@ st.markdown("</div>", unsafe_allow_html=True)
 # --- STEP 4 (NEW) ---
 st.markdown("<div class='step-container'>", unsafe_allow_html=True)
 st.markdown("#### 04. Data Independence Protocol")
-eclipse_mode = st.toggle("Activate 'Total Eclipse' Mode", help="Removes government tax data to test true AI intelligence.")
+eclipse_mode = st.toggle("Activate 'Total Eclipse' Mode", help="Removes institutional tax history to test structural value.")
 
 if eclipse_mode:
     st.warning("⚠️ TOTAL ECLIPSE ACTIVE: Institutional Crutches Removed. Reconstructing value via Physical Atoms.")
