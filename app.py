@@ -8,11 +8,13 @@ from PIL import Image, ImageOps, ImageFilter
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 from reportlab.lib.utils import ImageReader
-import joblib  
+
 
 @st.cache_resource
 def load_pso_model():
-    return joblib.load('pso_super_brain.pkl')
+    import joblib
+    # Ensure the filename matches your GitHub EXACTLY
+    return joblib.load('pso_super_brain.pkl') 
 
 model = load_pso_model()
 
