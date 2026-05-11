@@ -10,13 +10,22 @@ from reportlab.pdfgen import canvas
 from reportlab.lib.utils import ImageReader
 
 
+# --- AT THE VERY TOP (Line 15 approx) ---
 @st.cache_resource
 def load_pso_model():
     import joblib
-    # Ensure the filename matches your GitHub EXACTLY
-    return joblib.load('pso_super_brain.pkl') 
+    import os
+    model_path = 'pso_super_brain.pkl'
+    
+    # Industrial Check: Does the file actually exist on the server?
+    if not os.path.exists(model_path):
+        st.error(f"❌ ARCHITECT ALERT: '{model_path}' not found in GitHub Root.")
+        return None
+    
+    return joblib.load(model_path)
 
 model = load_pso_model()
+
 
 # --- 1. ANTI-BIAS VISION ENGINE (THE MATERIAL SENSOR) ---
 def analyze_visual_quality(uploaded_file):
@@ -455,23 +464,36 @@ if st.button("GENERATE CERTIFIED VALUATION"):
         )
         
         # 4. MULTIPLIERS
-                # Line 410: The 2026 Temporal Bridge & Quality Map
-        market_appreciation = 1.0  # 🟢 Facts: 12-Year Market Growth (2014-2026)
-        
-        type_map = {
-            "Basic/Standard": 1.0,         # Raw Scientific Baseline
-            "Modern/Executive": 1.25,      # 25% Premium for Modern Materials
-            "Luxury/High-End": 1.60,       # 60% Premium for High-End Logic
-            "Elite/Mansion": 2.20          # 120% Premium for Elite Tiers
-        }
+        # 3. THE NEURAL HANDSHAKE
+        if model is not None:
+            try:
+                # Ensuring the input matches the LightGBM Training Schema
+                input_array = features_df.values.astype(np.float32)
+                log_prediction = model.predict(input_array)
+                
+                # Extracting the single price and reversing the Log
+                # We use [0] to grab the first item in the LightGBM list
+                base_price = float(np.expm1(log_prediction[0])) 
+            except Exception as e:
+                st.error(f"⚠️ MODEL EXECUTION ERROR: {e}")
+                st.stop() # Stops the app so you don't show a 'lying' price
+        else:
+            st.warning("⏳ Brain is offline. Check GitHub file synchronization.")
+            st.stop()
+
+        # 4. APPLYING THE 2026 CALIBRATION
+        market_appreciation = 1.0 
+        type_map = {"Basic/Standard": 1.0, "Modern/Executive": 1.25, "Luxury/High-End": 1.6, "Elite/Mansion": 2.2}
         quality_force = type_map[build_type]
         
-        # FINAL MATH (Move this OUTSIDE of any try/except blocks)
+        # 5. FINAL CERTIFIED VALUE
         if eclipse_mode:
-            # Applying the 0.92 haircut for Eclipse
+            # Applying the 0.92 haircut for Surgical Independence
             final_usd = (base_price * market_appreciation * quality_force * avg_vision) * 1.0
         else:
+            # Full-Spectrum Market Logic (1.05 Premium)
             final_usd = (base_price * market_appreciation * quality_force * avg_vision) * 1.05
+
 
 
         st.session_state['history'].append({'Time': datetime.now().strftime('%H:%M'), 'price': final_usd})
