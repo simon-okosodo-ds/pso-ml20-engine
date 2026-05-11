@@ -448,20 +448,30 @@ if st.button("GENERATE CERTIFIED VALUATION"):
         base_price = 0.0 # Initialize
         
         # We check if 'model' was successfully loaded at the top of the app
+                # --- PSO-ML20 SYNCED WEIGHTS (Adjusted for $300k Baseline) ---
+        # We increase the base units so the 7.6% weight hits the 2014 Market Floor
         if 'model' in globals() and model is not None:
             try:
-                # Convert to numpy for LightGBM compatibility
                 input_array = features_df.values.astype(np.float32)
                 log_pred = model.predict(input_array)
-                # Reverse log transformation (np.log1p -> np.expm1)
                 base_price = float(np.expm1(log_pred))
                 st.success("✅ Neural Handshake: Verified (89.28% Precision)")
             except Exception as e:
-                st.warning("⚠️ Neural Handshake Offline: Engaging Direct Framework Physics")
-                base_price = (sqft * 272 * 0.0761) + (num_bed * 15000 * 0.0518) + (num_bath * 9000 * 0.0341)
+                st.warning("⚠️ Neural Handshake Offline: Using Framework Direct Weights")
+                # THE SYNC FORMULA:
+                base_price = (
+                    (sqft * 1500 * 0.0761) +   # Total Sqft Value
+                    (num_bed * 80000 * 0.0518) + # Bedroom Utility Value
+                    (num_bath * 50000 * 0.0341)  # Bathroom Utility Value
+                )
         else:
             st.warning("⚠️ Logic Sync: Utilizing 20-Phase Architectural Weights")
-            base_price = (sqft * 272 * 0.0761) + (num_bed * 15000 * 0.0518) + (num_bath * 9000 * 0.0341)
+            # THE SYNC FORMULA:
+            base_price = (
+                (sqft * 1500 * 0.0761) + 
+                (num_bed * 80000 * 0.0518) + 
+                (num_bath * 50000 * 0.0341)
+            )
 
         # 4. INFRASTRUCTURE & MULTIPLIERS
         infra_bonus = (
