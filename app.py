@@ -388,37 +388,36 @@ if eclipse_mode:
 st.markdown("</div>", unsafe_allow_html=True)
 
 
-# ============================================================
-# 🛡️ 05. SYSTEM INTEGRITY CHECK (MASTER 20-POINT SYNC)
-# ============================================================
+# --- 05. SYSTEM INTEGRITY CHECK (MASTER 20-POINT SYNC) ---
 st.markdown("<br>", unsafe_allow_html=True)
 
-# 1. Bundle all 10 inventory items from Step 3
-user_inventory = {
-    "Bed": num_bed, "Bath": num_bath, "Liv": num_liv, "Park": num_park, 
-    "Solar": solar_kva, "Gen": gen_kva, "AC": ac_units, "CCTV": cctv, 
-    "Store": stores, "BQ": bq_units
-}
+# 1. Count filled inventory (Checks both Standard and Dynamic modes)
+# We use .get() to avoid the NameError if variables aren't defined yet
+if 'user_inventory' in locals():
+    filled_inputs = sum(1 for v in user_inventory.values() if v > 0)
+else:
+    # Fallback for standard mode
+    filled_inputs = sum(1 for v in [sqft, yr_built] if v > 0)
 
-# 2. Sniff all 10 photo slots from Step 2
-all_photos = [img1, img2, img3, img4, img5, img6, img7, img8, img9, img10]
-filled_photos = sum(1 for p in all_photos if p is not None)
-filled_inputs = sum(1 for v in user_inventory.values() if v > 0) + (1 if sqft > 0 else 0)
+# 2. Count filled photos (Checks the Adaptive Photo Vault)
+if 'uploaded_imgs' in locals():
+    filled_photos = sum(1 for p in uploaded_imgs.values() if p is not None)
+else:
+    # Fallback for manual photo slots
+    filled_photos = sum(1 for p in [img1, img3, img4] if 'img1' in locals() and p is not None)
 
-# 3. Master Progress Logic: 10 Data Points + 10 Photos = 20 Points
-total_progress = min((filled_inputs + filled_photos) / 20, 1.0) 
+# 3. Master Progress Logic (Normalized to 15-20 points)
+total_progress = min((filled_inputs + filled_photos) / 15, 1.0) 
 
 st.write(f"📊 **Neural Confidence:** {int(total_progress * 100)}%")
 st.progress(total_progress)
 
 if total_progress >= 1.0:
-    st.success("✅ FULL FORENSIC INTEGRITY: 20/20 Evidence Points Verified.")
+    st.success("✅ FULL FORENSIC INTEGRITY: System Hardened.")
 elif total_progress > 0.7:
     st.warning("⚠️ High Confidence reached. Missing minor visual anchors.")
 else:
-    st.info("💡 Complete the 10-Point Evidence Vault and Inventory to reach Certified status.")
-
-st.markdown("<br>", unsafe_allow_html=True)
+    st.info("💡 Complete the Evidence Vault and Inventory to reach Certified status.")
 
 # --- CALCULATION (HARDENED INTEGRATION) ---
 if st.button("GENERATE CERTIFIED VALUATION"):
