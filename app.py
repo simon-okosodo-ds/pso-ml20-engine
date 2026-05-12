@@ -373,10 +373,17 @@ for feat in extras:
 i_cols = st.columns(4)
 user_inventory = {}
 
+# Line 385 approx: Update the 'feat' loop to handle large land values
 for idx, feat in enumerate(clean_extras[:7]):
     with i_cols[idx % 4]:
-        user_inventory[feat] = st.number_input(f"{feat}", 0, 500, 0, key=f"inv_{idx}")
-st.markdown("</div>", unsafe_allow_html=True)
+        if "SqFtLot" in feat or "Land" in feat:
+            # We set max_value to 1,000,000 for Land Size
+            user_inventory[feat] = st.number_input(f"{feat}", 0, 1000000, 5000, key=f"inv_{idx}")
+        elif "Yr" in feat or "Year" in feat:
+            user_inventory[feat] = st.number_input(f"{feat}", 1900, 2026, 0, key=f"inv_{idx}")
+        else:
+            # Keep standard features at a 500 max limit
+            user_inventory[feat] = st.number_input(f"{feat}", 0, 500, 0, key=f"inv_{idx}")
 
 
 # --- STEP 4 (NEW) ---
