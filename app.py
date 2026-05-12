@@ -8,26 +8,27 @@ from PIL import Image, ImageOps, ImageFilter
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 from reportlab.lib.utils import ImageReader
-
-
-# --- AT THE VERY TOP (Line 15 approx) ---
-# --- 1. GLOBAL BRAIN INITIALIZATION ---
 import joblib
+import os
 
 # We define the model as None first to prevent the NameError
 model = None 
 
+# 1. LOAD THE CHAMPION BRAIN
 @st.cache_resource
-def load_pso_model():
-    try:
-        # Ensure the filename matches your GitHub exactly
-        return joblib.load('pso_super_brain.pkl')
-    except Exception as e:
-        # We don't crash here; we just let the app know the file is missing
-        return None
+def load_champion_brain():
+    model = joblib.load('pso_super_brain.pkl')
+    # Extract feature names directly from the trained pipeline
+    # This ensures the App always knows what the Notebook did
+    if hasattr(model, 'feature_names_in_'):
+        features = model.feature_names_in_.tolist()
+    else:
+        # Fallback if names aren't embedded
+        features = ['SqFtTotLiving', 'BldgGrade', 'YrBuilt', 'Bedrooms', 'Bathrooms', 'SqFtLot', 'Floors', 'ZipCode']
+    return model, features
 
-# Now we actually try to load it
-model = load_pso_model()
+model, brain_features = load_champion_brain()
+
 
 
 # --- 1. ANTI-BIAS VISION ENGINE (THE MATERIAL SENSOR) ---
@@ -337,53 +338,52 @@ else:
 
 st.markdown("</div>", unsafe_allow_html=True)
 
-# --- STEP 02: 10-POINT MASTER VAULT (Onsite Evidence) ---
-st.markdown("<div class='step-container'>", unsafe_allow_html=True)
+# --- 02. FORENSIC EVIDENCE VAULT (ADAPTIVE) ---
 st.markdown("#### 02. Forensic Evidence Vault")
 
+# Create labels based on Dataset atoms + General features
+photo_labels = [clean_label(f) + " Evidence" for f in top_10_features[:5]]
+general_labels = ["Exterior Elevation", "Kitchen Architecture", "Master Suite", "Energy Unit", "Security Perimeter"]
+all_photo_slots = (photo_labels + general_labels)[:10]
+
 with st.expander("Expand 10-Point Evidence Portals", expanded=True):
-    v1, v2 = st.columns(2)
-    img1 = v1.file_uploader("1. Exterior Elevation", type=['jpg', 'png'])
-    img2 = v2.file_uploader("2. Compound Paving", type=['jpg', 'png'])
-    img3 = v1.file_uploader("3. Living Room View", type=['jpg', 'png'])
-    img4 = v2.file_uploader("4. Kitchen Architecture", type=['jpg', 'png'])
-    img5 = v1.file_uploader("5. Master Bedroom", type=['jpg', 'png'])
-    img6 = v2.file_uploader("6. Master Bathroom", type=['jpg', 'png'])
-    img7 = v1.file_uploader("7. Corridors & Staircase", type=['jpg', 'png'])
-    img8 = v2.file_uploader("8. Energy/Power Unit", type=['jpg', 'png'])
-    img9 = v1.file_uploader("9. Boys Quarters (BQ)", type=['jpg', 'png'])
-    img10 = v2.file_uploader("10. Security & Gatehouse", type=['jpg', 'png'])
-st.markdown("</div>", unsafe_allow_html=True)
+    p_cols = st.columns(2)
+    for i, p_label in enumerate(all_photo_slots):
+        with p_cols[i % 2]:
+            st.file_uploader(f"{i+1}. {p_label}", type=['jpg', 'png'], key=f"img_{i}")
 
-# --- STEP 03: FORENSIC INVENTORY ---
+
+# --- 03. FORENSIC INVENTORY (DYNAMIC MIRROR) ---
 st.markdown("<div class='step-container'>", unsafe_allow_html=True)
-st.markdown("#### 03. Forensic Inventory")
+st.markdown("#### 03. Forensic Dataset Inventory")
 
-# We define the labels professionally
-default_inventory = ['Bedrooms', 'Bathrooms', 'Storeys', 'SqFtLot', 'Unit Density', 'Solar KVA', 'AC Units']
-extras = st.session_state.get('inventory_schema', default_inventory)
+# Correcting Names for the Executive Interface
+def clean_label(name):
+    mapping = {
+        'SqFtTotLiving': 'Total Living Area (Sqft)',
+        'BldgGrade': 'Construction Grade (1-12)',
+        'YrBuilt': 'Year of Construction',
+        'NbrLivingUnits': 'Unit Density',
+        'SqFtLot': 'Land Area (Sqft)',
+        'YrRenovated': 'Year of Last Renovation'
+    }
+    return mapping.get(name, name.replace('_', ' ').title())
 
-# Ensuring the names are Executive-Grade
-clean_extras = []
-for feat in extras:
-    if "NbrLivingUnits" in feat: clean_extras.append("Unit Density")
-    elif "Floors" in feat or "Stories" in feat: clean_extras.append("Storeys")
-    else: clean_extras.append(feat)
+# Take top 10 features from your .pkl brain
+top_10_features = brain_features[:10]
+user_inputs = {}
 
-i_cols = st.columns(4)
-user_inventory = {}
-
-# Line 385 approx: Update the 'feat' loop to handle large land values
-for idx, feat in enumerate(clean_extras[:7]):
-    with i_cols[idx % 4]:
-        if "SqFtLot" in feat or "Land" in feat:
-            # We set max_value to 1,000,000 for Land Size
-            user_inventory[feat] = st.number_input(f"{feat}", 0, 1000000, 5000, key=f"inv_{idx}")
-        elif "Yr" in feat or "Year" in feat:
-            user_inventory[feat] = st.number_input(f"{feat}", 1900, 2026, 0, key=f"inv_{idx}")
+cols = st.columns(5)
+for i, feat in enumerate(top_10_features):
+    with cols[i % 5]:
+        label = clean_label(feat)
+        if "Yr" in feat or "Year" in feat:
+            user_inputs[feat] = st.number_input(label, 1900, 2026, 2015, key=f"in_{feat}")
+        elif "Grade" in feat:
+            user_inputs[feat] = st.slider(label, 1, 13, 7, key=f"in_{feat}")
         else:
-            # Keep standard features at a 500 max limit
-            user_inventory[feat] = st.number_input(f"{feat}", 0, 500, 0, key=f"inv_{idx}")
+            user_inputs[feat] = st.number_input(label, 0, 1000000, 0, key=f"in_{feat}")
+st.markdown("</div>", unsafe_allow_html=True)
 
 
 # --- STEP 4 (NEW) ---
@@ -427,89 +427,62 @@ elif total_progress > 0.7:
 else:
     st.info("💡 Complete the Evidence Vault and Inventory to reach Certified status.")
 
-# --- CALCULATION (HARDENED INTEGRATION) ---
+# --- CALCULATION (DIRECT 20-PHASE INFERENCE) ---
 if st.button("GENERATE CERTIFIED VALUATION"):
     with st.status("Deploying LightGBM Champion Logic...", expanded=False) as status:
-        # 1. AI Vision Analysis
+        # 1. AI Vision Analysis (Forensic Photo Audit)
         s1 = analyze_visual_quality(img1)
         s3 = analyze_visual_quality(img3)
         s4 = analyze_visual_quality(img4)
         avg_vision = (s1 + s3 + s4) / 3
 
-                # --- 2. DATA FORMATTING (Line 440 approx) ---
-        feature_columns = ['SqFtTotLiving', 'BldgGrade', 'YrBuilt', 'Bedrooms', 
-                           'Bathrooms', 'SqFtLot', 'TrafficNoise', 'NewConstruction']
+        # 2. NEURAL SCHEMA HANDSHAKE
+        # We build the exact DataFrame the .pkl brain expects
+        # 'user_inputs' is the dictionary created in Step 03
+        input_df = pd.DataFrame([user_inputs])
         
-                # 🟢 THE MASTER SYNC: Pulling EVERY value from the Dynamic Inventory
-        final_bed = user_inventory.get("Bedrooms", 4)
-        final_bath = user_inventory.get("Bathrooms", 2)
-        final_lot = user_inventory.get("SqFtLot", 5000)
-        
-        # Pulling Infrastructure values safely
-        f_solar = user_inventory.get("Solar KVA", 0)
-        f_gen = user_inventory.get("Gen (KVA)", 0)
-        f_ac = user_inventory.get("AC Units", 0)
-        f_cctv = user_inventory.get("CCTV Cameras", 0)
-        f_bq = user_inventory.get("BQ Units", 0)
+        # Add core UI parameters into the dataframe
+        input_df['SqFtTotLiving'] = sqft
+        input_df['YrBuilt'] = yr_built
+        # Map quality category to BldgGrade (7=Standard, 9=Executive, 11=Luxury, 12=Elite)
+        grade_map = {"Basic/Standard": 7, "Modern/Executive": 9, "Luxury/High-End": 11, "Elite/Mansion": 12}
+        input_df['BldgGrade'] = grade_map.get(build_type, 7)
 
-        # Map to Brain DataFrame
-        input_row = [[sqft, 7, yr_built, final_bed, final_bath, final_lot, 0, 0]]
-        features_df = pd.DataFrame(input_row, columns=feature_columns)
+        # 🚀 DATASET SNIFFER: Fill missing features with 0 (ensures handshake doesn't break)
+        for col in brain_features:
+            if col not in input_df.columns:
+                input_df[col] = 0
+            
+        # Ensure column order is IDENTICAL to the notebook training
+        final_features_df = input_df[brain_features]
 
-                       # 3. THE NEURAL HANDSHAKE
-        base_price = 0.0 
-        if 'model' in globals() and model is not None:
-            try:
-                # 🟢 THE PIPELINE FIX: Pass the DataFrame directly, not the array
-                # This allows the brain to 'read' the column names like 'SqFtTotLiving'
-                log_pred = model.predict(features_df)
-                
-                # Extract the result and reverse the Log (np.log1p -> np.expm1)
-                base_price = float(np.expm1(log_pred[0])) 
-                st.success("✅ Neural Handshake: Verified (89.28% Precision)")
-                
-            except Exception as e:
-                # This triggers if the .pkl fails or the columns don't match exactly
-                st.warning(f"⚠️ Neural Handshake Offline: {e}")
-                # 🟢 FALLBACK FORMULA
-                base_price = (
-                    (sqft * 3250 * 0.0761) +     
-                    (final_bed * 160000 * 0.0518) + 
-                    (final_bath * 95000 * 0.0341)   
-                )
+        # 3. DIRECT .PKL PREDICTION (No Multipliers)
+        try:
+            # Predict in Log-Space and reverse via np.expm1
+            raw_log_val = model.predict(final_features_df)
+            base_price = float(np.expm1(raw_log_val[0]))
+            
+            # Apply Visual Forensic Multiplier ONLY (To reward material finish)
+            final_usd = base_price * avg_vision
+            
+            st.success(f"✅ Neural Handshake Verified: Direct 20-Phase Inference.")
+        except Exception as e:
+            st.error(f"❌ Handshake Failed: {e}")
+            final_usd = 300000 # Emergency Fallback
 
-        # 4. INFRASTRUCTURE & MULTIPLIERS (Now using f_solar, f_gen, etc.)
-        infra_bonus = (
-            (f_solar * 1500) + (f_gen * 450) + (f_ac * 750) + 
-            (f_cctv * 250) + (f_bq * 12500)
-        )
-        
-        # Set market_appreciation to 1.0 to match your 2014 Dataset Sync test
-        market_appreciation = 1.0 
-        type_map = {"Basic/Standard": 1.0, "Modern/Executive": 1.25, "Luxury/High-End": 1.6, "Elite/Mansion": 2.2}
-        quality_force = type_map[build_type]
-        
-        # 5. FINAL CALCULATION
-        if eclipse_mode:
-            # Surgical Independence Mode
-            final_usd = ((base_price + infra_bonus) * quality_force * avg_vision) * 1.0
-        else:
-            # Market Standard Mode
-            final_usd = ((base_price + infra_bonus) * quality_force * avg_vision) * 1.05
-
+        # Record History
         st.session_state['history'].append({'Time': datetime.now().strftime('%H:%M'), 'price': final_usd})
         status.update(label="Champion Logic Applied!", state="complete")
 
     # --- RESULTS DISPLAY ---
     rate = 1485
     
-    # 🟢 SAFETY NET: We verify the currency variable from the sidebar
+    # Verify currency choice
     try:
         user_choice = currency
     except NameError:
-        user_choice = "USD ($)" # Industrial Fallback
+        user_choice = "USD ($)"
         
-    # 🟢 LOGIC: Convert based on the verified choice
     if "USD" in user_choice:
         val = final_usd
         sym = "USD "
@@ -526,34 +499,17 @@ if st.button("GENERATE CERTIFIED VALUATION"):
         </div>
     """, unsafe_allow_html=True)
 
-
-    # --- DYNAMIC CALCULATION FOR MINI METRICS ---
-    if avg_vision > 1.18:
-        finish_label = "Ultra-Luxury"
-    elif avg_vision > 1.08:
-        finish_label = "High-End"
-    else:
-        finish_label = "Standard"
-
-    if sqft > 15000 or final_usd > 5000000: 
-        safety_label = "Volatile"
-        safety_delta = "Outlier Alert"
-    else:
-        safety_label = "Secure"
-        safety_delta = "Phase 15 Shield"
-
-    if yr_built > 2015 and build_type in ["Luxury/High-End", "Elite/Mansion"]:
-        trust_score = "99.1%"
-    else:
-        trust_score = "89.3%"
-
-    # --- DISPLAY MINI METRICS ---
+    # --- MINI METRICS ---
+    finish_label = "Ultra-Luxury" if avg_vision > 1.18 else "High-End" if avg_vision > 1.08 else "Standard"
+    safety_label = "Secure" if final_usd < 5000000 else "Volatile"
+    
     st.markdown("<br>", unsafe_allow_html=True)
     m1, m2, m3, m4 = st.columns(4)
-    with m1: st.metric("Calculation Trust", trust_score, delta="PSO-ML20 Verified")
+    with m1: st.metric("Calculation Trust", "89.3%", delta="Tournament Champion")
     with m2: st.metric("Material Finish", finish_label, delta="AI Visual Scan")
-    with m3: st.metric("Market Safety", safety_label, delta=safety_delta)
-    with m4: st.metric("System Health", "Elite", delta="Drift Guard Active")
+    with m3: st.metric("Market Safety", safety_label, delta="Phase 15 Shield")
+    with m4: st.metric("System Health", "Elite", delta="Direct .PKL Link")
+
 
      # --- PDF GENERATION & DOWNLOAD (Line 450 approx) ---
     st.markdown("<br>", unsafe_allow_html=True)
