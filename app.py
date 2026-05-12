@@ -456,8 +456,7 @@ if st.button("GENERATE CERTIFIED VALUATION"):
         input_row = [[sqft, 7, yr_built, final_bed, final_bath, final_lot, 0, 0]]
         features_df = pd.DataFrame(input_row, columns=feature_columns)
 
-               # 3. THE NEURAL HANDSHAKE
-                # 3. THE NEURAL HANDSHAKE
+                       # 3. THE NEURAL HANDSHAKE
         base_price = 0.0 
         if 'model' in globals() and model is not None:
             try:
