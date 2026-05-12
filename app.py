@@ -436,13 +436,20 @@ if st.button("GENERATE CERTIFIED VALUATION"):
         s4 = analyze_visual_quality(img4)
         avg_vision = (s1 + s3 + s4) / 3
 
-        # 2. DATA FORMATTING
+                # --- 2. DATA FORMATTING (Line 440 approx) ---
         feature_columns = ['SqFtTotLiving', 'BldgGrade', 'YrBuilt', 'Bedrooms', 
                            'Bathrooms', 'SqFtLot', 'TrafficNoise', 'NewConstruction']
         
-        # Mapping inputs to DataFrame
-        input_row = [[sqft, 7, yr_built, num_bed, num_bath, 5000, 0, 0]]
+        # 🟢 THE FIX: We pull Bed, Bath, and Lot from the dynamic inventory
+        # We use .get() to find the value, defaulting to a standard number if not found
+        final_bed = user_inventory.get("Bedrooms", 4)
+        final_bath = user_inventory.get("Bathrooms", 2)
+        final_lot = user_inventory.get("SqFtLot", 5000)
+
+        # Map the inputs to the industrial row
+        input_row = [[sqft, 7, yr_built, final_bed, final_bath, final_lot, 0, 0]]
         features_df = pd.DataFrame(input_row, columns=feature_columns)
+
 
         # 3. THE NEURAL HANDSHAKE (Single Path Logic)
         base_price = 0.0 # Initialize
