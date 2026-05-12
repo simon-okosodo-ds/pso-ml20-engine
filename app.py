@@ -47,21 +47,20 @@ def analyze_visual_quality(uploaded_file):
         return 1.0
 
 # --- 2. PROFESSIONAL PDF GENERATOR ---
-def generate_pso_pdf(val, sym, sqft, build_type, yr, inventory, images):
+def generate_pso_pdf(val, sym, sqft, build_type, yr, inventory, images, is_dynamic=False):
     buffer = io.BytesIO()
     p = canvas.Canvas(buffer, pagesize=letter)
-    currency_label = "NGN " if sym == "₦" else "USD "
+    currency_label = sym.strip()
     
-    # --- 1. THE INDUSTRIAL FRAME (Large Faint Box) ---
-    p.setStrokeColorRGB(0.8, 0.8, 0.8) # Faint grey
+    # --- 1. THE INDUSTRIAL FRAME ---
+    p.setStrokeColorRGB(0.8, 0.8, 0.8)
     p.setLineWidth(1)
-    # This draws a large box around the entire content (margin of 30 units)
     p.rect(30, 30, 552, 732, fill=0)
 
     # --- 2. BACKGROUND WATERMARK ---
     p.saveState()
     p.setFont("Helvetica-Bold", 50)
-    p.setFillColorRGB(0.97, 0.97, 0.97) # Ultra faint
+    p.setFillColorRGB(0.97, 0.97, 0.97)
     p.translate(300, 400)
     p.rotate(45)
     p.drawCentredString(0, 0, "PSO-ML20 CERTIFIED")
@@ -73,42 +72,49 @@ def generate_pso_pdf(val, sym, sqft, build_type, yr, inventory, images):
     p.drawString(60, 720, "OFFICIAL VALUATION CERTIFICATE")
     p.setFont("Helvetica", 9)
     p.drawString(60, 705, f"Date: {datetime.now().strftime('%Y-%m-%d')} | System: PSO-ML20-GLOBAL")
-    p.line(60, 700, 540, 700) # Header underline
+    p.line(60, 700, 540, 700) 
     
-    # --- 4. THE VALUATION (BIG & BOLD) ---
+    # --- 4. THE VALUATION ---
     p.setFont("Helvetica-Bold", 24)
-    p.setFillColorRGB(0.11, 0.51, 0.28) # Success Green
-    p.drawString(60, 660, f"CERTIFIED VALUE: {currency_label}{val:,.2f}")
+    p.setFillColorRGB(0.11, 0.51, 0.28)
+    p.drawString(60, 660, f"CERTIFIED VALUE: {currency_label} {val:,.2f}")
     
-    # --- 5. AUDIT SUMMARY ---
+    # --- 5. ADAPTIVE AUDIT SUMMARY ---
     p.setFillColorRGB(0, 0, 0)
     p.setFont("Helvetica-Bold", 11)
     p.drawString(60, 620, "PHYSICAL AUDIT SUMMARY:")
     p.setFont("Helvetica", 10)
-    p.drawString(70, 600, f"• Property Dimension: {sqft:,.0f} Sqft | Baseline: {build_type}")
-    p.drawString(70, 585, f"• Internal Inventory: {inventory['beds']} Beds | {inventory['baths']} Bathrooms")
-    p.drawString(70, 570, f"• Infrastructure: Solar {inventory['solar']} KVA | High Security")
+    
+    # List actual features from the inventory (Dynamic)
+    y_text = 600
+    p.drawString(70, y_text, f"• Primary Area: {sqft:,.0f} Sqft")
+    y_text -= 15
+    for key, value in inventory.items():
+        if y_text > 500: # Safety margin
+            p.drawString(70, y_text, f"• {key}: {value}")
+            y_text -= 15
 
-    # --- 6. VISUAL PROOF (Centered) ---
-    if images.get('img1'):
+    # --- 6. VISUAL PROOF (Dynamic Logic) ---
+    # We grab the first uploaded image available
+    first_img = next((img for img in images.values() if img is not None), None)
+    if first_img:
         try:
-            # Border for the photo
             p.setStrokeColorRGB(0.9, 0.9, 0.9)
-            p.rect(58, 418, 184, 124, fill=0)
-            p.drawImage(ImageReader(images['img1']), 60, 420, width=180, height=120)
+            p.rect(58, 358, 184, 124, fill=0)
+            p.drawImage(ImageReader(first_img), 60, 360, width=180, height=120)
             p.setFont("Helvetica-Oblique", 8)
-            p.drawString(60, 405, "Fig 1: Primary Evidence Scan")
+            p.drawString(60, 345, "Fig 1: Primary Evidence Scan")
         except: pass
 
-    # --- 7. METHODOLOGY DISCLOSURE (Tiny Italics at base) ---
+    # --- 7. METHODOLOGY DISCLOSURE (Tiny Italics) ---
     p.setFont("Helvetica-Oblique", 7)
     p.setFillColorRGB(0.4, 0.4, 0.4)
     y_pos = 100
     disclosure = [
         "METHODOLOGY DISCLOSURE: This valuation is derived via the PSO-ML20 Industrial Lifecycle (Phases 01-20).",
-        "Logic utilizes Phase 12-B Surgical Independence to neutralize institutional bias and Phase 15 Outlier Shielding ",
-        "to block market anomalies. Value weighted via Neural Synchronization Index (0.6602) and Anti-Bias Vision scans.",
-        "Security: Authenticated via unique Session ID. Authorized by Lead Architect Patrick Simon Okosodo | AI Architect | MLOps Specialist | B.Eng (Chem)."
+        "Logic utilizes Phase 12-B Surgical Independence to neutralize institutional bias and Phase 15 Outlier Shielding.",
+        f"Temporal Mode: {'Dataset-Driven Neural Sync' if is_dynamic else '2.15x Temporal Bridge'}.",
+        "Authorized by Lead Architect Patrick Simon Okosodo | B.Eng (Chem)."
     ]
     for line in disclosure:
         p.drawString(60, y_pos, line)
@@ -192,35 +198,33 @@ with st.sidebar:
     new_data = st.file_uploader("Upload local market data (CSV)", type=['csv'], 
                                  help="Upload local sales records to teach the AI about a new city or country.")
     
-    # --- INSIDE YOUR SIDEBAR 'if new_data:' BLOCK ---
-if new_data:
-    df_raw = pd.read_csv(new_data)
-    # This stores the ENTIRE list of columns for later use
-    st.session_state['full_column_list'] = df_raw.columns.tolist()
-    
-    # This specifically finds the 3 "Pillars" even if spelt wrongly
-    st.session_state['active_schema'] = {
-        'Size': next((c for c in df_raw.columns if 'sqft' in c.lower() or 'living' in c.lower()), 'SqFtTotLiving'),
-        'Quality': next((c for c in df_raw.columns if 'grade' in c.lower() or 'quality' in c.lower()), 'BldgGrade'),
-        'Age': next((c for c in df_raw.columns if 'yr' in c.lower() or 'year' in c.lower() or 'built' in c.lower()), 'YrBuilt')
-    }
-    
-    with st.status("🧠 AI is learning new patterns...", expanded=True):
-        st.write(f"Matched Pillar: {st.session_state['active_schema']['Size']}")
-        time.sleep(1)
-        st.success("Tuned to New Market CSV.")
+    # THE DYNAMIC SNIFFER LOGIC
+    if new_data:
+        df_raw = pd.read_csv(new_data)
+        st.session_state['full_columns'] = df_raw.columns.tolist()
+        
+        # Priority Keywords for the 2026 Sovereign Audit
+        keywords = ['pool', 'waterfront', 'renovated', 'parking', 'view', 'basement', 'condition', 'noise']
+        matched_extras = []
+        
+        for word in keywords:
+            for col in df_raw.columns:
+                if word in col.lower() and col not in matched_extras:
+                    matched_extras.append(col)
+        
+        # Update Session State for Step 03
+        st.session_state['inventory_schema'] = matched_extras[:7]
+        st.success(f"Framework Synced. Identified: {len(matched_extras)} Pillars.")
 
     # --- PORTAL 3: SETTINGS ---
     st.divider()
     currency = st.radio("Money Type", ["USD ($)", "NGN (₦)"], horizontal=True)
     
-    st.divider()
-    
     # --- PORTAL 4: ARCHITECT CREDENTIALS ---
+    st.divider()
     st.write("**System Architect**")
     st.write("Patrick Simon Okosodo")
-    st.caption("AI Lead | B.Eng (Chem)")
-    # Handshake proof of the 20-phase framework
+    st.caption("AI Lead | MLOps Specialist | B.Eng (Chem)")
     st.info("🧠 **Engine:** PSO-ML20 Standard")
 
 # --- EXECUTIVE UI STYLING (2026 Sovereign Standard) ---
@@ -242,18 +246,20 @@ st.markdown(f"""
     }}
     
     /* FORCE SIDEBAR TEXT TO WHITE */
-    [data-testid="stSidebar"] * {{
+    [data-testid="stSidebar"] *, [data-testid="stSidebar"] p, [data-testid="stSidebar"] label {{
         color: #FFFFFF !important;
     }}
     
-    /* SIDEBAR INPUT BOXES (Keeps them visible on black) */
+    /* SIDEBAR INPUT BOXES */
     [data-testid="stSidebar"] div[data-baseweb="select"] > div,
-    [data-testid="stSidebar"] div[data-baseweb="input"] > div {{
+    [data-testid="stSidebar"] div[data-baseweb="input"] > div,
+    [data-testid="stSidebar"] div[data-baseweb="radio"] label {{
         background-color: #1A1A1A !important;
         border: 1px solid #333333 !important;
+        color: white !important;
     }}
 
-    /* BUTTON: INDUSTRIAL ACCENT */
+    /* Button Style */
     .stButton>button {{ 
         background: {brand_color} !important; 
         color: white !important; 
@@ -261,129 +267,116 @@ st.markdown(f"""
         border: none;
         height: 3.5em;
         font-weight: 600;
-        letter-spacing: 0.5px;
-        transition: all 0.3s ease;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    }}
-    .stButton>button:hover {{
-        opacity: 0.9;
-        transform: translateY(-2px);
-    }}
-
-    /* METRIC CARD: GLASS-MINIMALISM */
-    .metric-card {{ 
-        border-top: 6px solid {brand_color} !important; 
-        background: white;
-        padding: 35px;
-        border-radius: 15px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-        text-align: center;
+        width: 100%;
         transition: 0.3s;
     }}
-
-    /* STEP CONTAINERS: CLEAN SPACING */
-    .step-container {{ 
-        margin-bottom: 50px; 
-        padding: 30px; 
-        border-radius: 12px; 
-        background: #FFFFFF; 
-        border: 1px solid #F0F3F4;
+    .stButton>button:hover {{
+        opacity: 0.8;
+        transform: scale(0.98);
     }}
-
-    /* METRIC FONT REFINEMENT */
-    [data-testid="stMetricValue"] {{
-        font-size: 24px !important;
-        font-weight: 600 !important;
-        color: {brand_color} !important;
-    }}
-    
-    /* HIDES STREAMLIT HAMBURGER MENU FOR EXECUTIVE FEEL */
-    #MainMenu {{visibility: hidden;}}
-    footer {{visibility: hidden;}}
     </style>
     """, unsafe_allow_html=True)
 
-# --- 7. HEADER ---
-# We use a 2-column or 3-column layout depending on if QR is uploaded
+# --- 7. HEADER & LOGO INJECTION ---
+st.markdown("<br>", unsafe_allow_html=True)
 if my_qr:
     c_logo, col_mid, c_qr = st.columns([1, 4, 1])
+    with c_logo:
+        if client_logo: st.image(client_logo, width=80)
+    with col_mid:
+        st.title("Executive Valuation Terminal")
+        st.caption("PSO-ML20 Standard | Industrial Forensic Audit Engine")
+    with c_qr:
+        st.image(my_qr, width=80)
 else:
     c_logo, col_mid = st.columns([1, 5])
-
-if client_logo: 
     with c_logo:
-        st.image(client_logo, width=100)
-
-with col_mid:
-    st.title("Valuation Terminal")
-    st.write("Professional market analysis powered by Anti-Bias Computer Vision.")
-
-# The QR only appears if you actually upload it in the sidebar
-if my_qr:
-    with c_qr:
-        st.image(my_qr, caption="Scan to Verify", width=95)
+        if client_logo: st.image(client_logo, width=80)
+    with col_mid:
+        st.title("Executive Valuation Terminal")
+        st.caption("PSO-ML20 Standard | Industrial Forensic Audit Engine")
 
 
+# ==========================================
+# 🛡️ 01. PRIMARY PARAMETERS (ADAPTIVE)
+# ==========================================
 st.markdown("<div class='step-container'>", unsafe_allow_html=True)
-st.markdown("#### 01. Primary Parameters")
-c1, c2, c3 = st.columns(3)
-sqft = c1.number_input("Property Area (Sqft)", value=2500)
+st.markdown("#### 01. Primary Asset Parameters")
 
-# The Definition Guide (Help icon appears on hover)
-build_type = c2.selectbox("Quality Category", 
-    ["Basic/Standard", "Modern/Executive", "Luxury/High-End", "Elite/Mansion"],
-    help="""
-    - Basic: Standard block work, regular tiles, no extra finish.
-    - Modern: POP ceilings, quality wardrobes, paved compound.
-    - Luxury: Smart home features, imported marble/granite, high-end kitchen.
-    - Elite: Signature architecture, world-class finishing, premium location.
-    """)
+# We check if a CSV was uploaded to decide which UI to show
+is_dynamic = 'inventory_schema' in st.session_state
+
+if not is_dynamic:
+    # --- STANDARD EXECUTIVE UI (Lagos/USA Default) ---
+    c1, c2, c3 = st.columns(3)
+    with c1:
+        sqft = st.number_input("Property Area (Sqft)", value=2500, step=50)
+    with c2:
+        build_type = st.selectbox("Quality Category", 
+            ["Basic/Standard", "Modern/Executive", "Luxury/High-End", "Elite/Mansion"],
+            help="Basic: Regular finish | Modern: POP/Wardrobes | Luxury: Marble/Smart | Elite: Masterpiece.")
+    with c3:
+        yr_built = st.number_input("Year of Construction", 1900, 2026, 2018)
+else:
+    # --- DYNAMIC DATASET UI (Self-Assembles from CSV) ---
+    st.info(f"📊 PSO-ML20 is currently mapped to: {len(st.session_state['full_columns'])} Dataset Features")
+    c1, c2, c3 = st.columns(3)
+    # Mapping the pillars discovered by the Sniffer
+    mapping = st.session_state.get('active_schema', {'Size': 'SqFtTotLiving', 'Quality': 'BldgGrade', 'Age': 'YrBuilt'})
     
-yr_built = c3.number_input("Year of Construction", 1900, 2026, 2018)
+    sqft = c1.number_input(f"Area ({mapping['Size']})", value=2000)
+    build_type = c2.selectbox(f"Baseline ({mapping['Quality']})", ["Standard", "Premium", "Elite"])
+    yr_built = c3.number_input(f"History ({mapping['Age']})", 1900, 2026, 2015)
+
 st.markdown("</div>", unsafe_allow_html=True)
 
-# --- STEP 2 ---
+# ==========================================
+# 🛡️ 02. FORENSIC EVIDENCE VAULT (ADAPTIVE)
+# ==========================================
 st.markdown("<div class='step-container'>", unsafe_allow_html=True)
 st.markdown("#### 02. Forensic Evidence Vault")
 st.warning("**PROTOCOL:** Capture full-view photos from floor-to-ceiling for accurate material analysis.")
 
-with st.expander("Expand 10-Point Upload Portals", expanded=True):
-    v1, v2 = st.columns(2)
-    # ROW 1
-    img1 = v1.file_uploader("1. Exterior Elevation", type=['jpg', 'png'])
-    img2 = v2.file_uploader("2. Compound Paving", type=['jpg', 'png'])
-    # ROW 2
-    img3 = v1.file_uploader("3. Living Room View", type=['jpg', 'png'])
-    img4 = v2.file_uploader("4. Kitchen Architecture", type=['jpg', 'png'])
-    # ROW 3
-    img5 = v1.file_uploader("5. Master Bedroom", type=['jpg', 'png'])
-    img6 = v2.file_uploader("6. Master Bathroom", type=['jpg', 'png'])
-    # ROW 4
-    img7 = v1.file_uploader("7. Corridors & Staircase", type=['jpg', 'png'])
-    img8 = v2.file_uploader("8. Energy/Power Unit", type=['jpg', 'png'])
-    # ROW 5
-    img9 = v1.file_uploader("9. Boys Quarters (BQ)", type=['jpg', 'png'])
-    img10 = v2.file_uploader("10. Security & Gatehouse", type=['jpg', 'png'])
+# Adaptive Photo Requests
+if not is_dynamic:
+    photo_labels = ["1. Exterior Elevation", "2. Kitchen Architecture", "3. Living Area Texture"]
+else:
+    # Dynamic photos: If 'waterfront' is in the CSV, ask for a 'Waterfront View'
+    photo_labels = ["1. Primary Structural Scan"]
+    if any('water' in c.lower() for c in st.session_state['full_columns']):
+        photo_labels.append("2. Waterfront Verification")
+    if any('renovated' in c.lower() for c in st.session_state['full_columns']):
+        photo_labels.append("3. Renovation Audit")
+
+with st.expander("Expand Multi-Point Upload Portals", expanded=True):
+    v_cols = st.columns(2)
+    uploaded_imgs = {}
+    for i, label in enumerate(photo_labels):
+        with v_cols[i % 2]:
+            uploaded_imgs[f"img{i}"] = st.file_uploader(label, type=['jpg', 'png'])
+
 st.markdown("</div>", unsafe_allow_html=True)
 
-
-# --- STEP 3 ---
+# --- STEP 03: DYNAMIC INVENTORY ---
 st.markdown("<div class='step-container'>", unsafe_allow_html=True)
-st.markdown("#### 03. Inventory")
-i1, i2, i3, i4, i5 = st.columns(5)
-num_bed = i1.number_input("Bedrooms", 1, 20, 4)
-num_bath = i2.number_input("Bathrooms", 1, 20, 4)
-num_liv = i3.number_input("Living Areas", 1, 5, 1)
-num_park = i4.number_input("Parking", 0, 15, 2)
-solar_kva = i5.number_input("Solar (KVA)", 0, 100, 5)
+st.markdown("#### 03. Forensic Inventory")
 
-i6, i7, i8, i9, i10 = st.columns(5)
-gen_kva = i6.number_input("Gen (KVA)", 0, 500, 20)
-ac_units = i7.number_input("AC Units", 0, 30, 6)
-cctv = i8.number_input("CCTV Cameras", 0, 50, 8)
-stores = i9.number_input("Store Rooms", 0, 5, 1)
-bq_units = i10.number_input("BQ Units", 0, 5, 1)
+# We pull the 7 winners from the Sniffer
+extras = st.session_state.get('inventory_schema', ['Bedrooms', 'Bathrooms', 'Floors'])
+
+i_cols = st.columns(4)
+user_inventory = {}
+
+for idx, feat in enumerate(extras):
+    with i_cols[idx % 4]:
+        # If it's a 'Year' feature, we use a different range
+        if "Yr" in feat or "Year" in feat:
+            user_inventory[feat] = st.number_input(f"{feat}", 1900, 2026, 0)
+        else:
+            user_inventory[feat] = st.number_input(f"{feat}", 0, 100, 0)
+
 st.markdown("</div>", unsafe_allow_html=True)
+
 
 # --- STEP 4 (NEW) ---
 st.markdown("<div class='step-container'>", unsafe_allow_html=True)
@@ -496,7 +489,6 @@ if st.button("GENERATE CERTIFIED VALUATION"):
         status.update(label="Champion Logic Applied!", state="complete")
 
     # --- RESULTS DISPLAY ---
-        # --- UPDATED OUTPUT DISPLAY (Hardened Handshake) ---
     rate = 1485
     
     # 🟢 SAFETY NET: We verify the currency variable from the sidebar
@@ -551,14 +543,30 @@ if st.button("GENERATE CERTIFIED VALUATION"):
     with m3: st.metric("Market Safety", safety_label, delta=safety_delta)
     with m4: st.metric("System Health", "Elite", delta="Drift Guard Active")
 
-    # --- PDF GENERATION & DOWNLOAD ---
+     # --- PDF GENERATION & DOWNLOAD (Line 450 approx) ---
     st.markdown("<br>", unsafe_allow_html=True)
-    inventory = {"beds": num_bed, "baths": num_bath, "solar": solar_kva, "ac": ac_units}
     
-    # We pass the cleaned symbol to the PDF generator
+    # 1. Clean the Currency Symbol
     clean_sym = "₦" if "NGN" in sym else "$"
-    pdf = generate_pso_pdf(val, clean_sym, sqft, build_type, yr_built, inventory, {"img1": img1})
+    
+    # 2. Synchronize Inventory for PDF
+    # If using the Dynamic Sniffer, we use 'user_inventory'. Otherwise, use 'inventory'
+    final_pdf_inventory = user_inventory if 'user_inventory' in locals() else inventory
+    
+    # 3. Generate the Adaptive PDF
+    # 'uploaded_imgs' comes from our Adaptive Photo Vault in Step 02
+    pdf = generate_pso_pdf(
+        val, 
+        clean_sym, 
+        sqft, 
+        build_type, 
+        yr_built, 
+        final_pdf_inventory, 
+        uploaded_imgs if 'uploaded_imgs' in locals() else {"img1": img1}, 
+        is_dynamic=is_dynamic if 'is_dynamic' in locals() else False
+    )
 
+    # 4. The Action Button (Indented inside the valuation button)
     st.download_button(
         label="📥 Download Official Valuation Certificate", 
         data=pdf, 
@@ -567,9 +575,11 @@ if st.button("GENERATE CERTIFIED VALUATION"):
         use_container_width=True
     )
 
-# --- FOOTER SIGNATURE (THIS STAYS OUTSIDE AT THE VERY BOTTOM) ---
+# ==========================================
+# --- FOOTER (OUTSIDE THE BUTTON) ---
+# ==========================================
 st.markdown("<br><br>", unsafe_allow_html=True)
 st.divider()
 st.caption("© 2026 PSO-ML20 Framework | Industrial Data Science Lifecycle")
-st.caption("Intelligence Source: Phases 01-20 (Tournament Champion: XGBoost V2)")
+st.caption("Intelligence Source: Phases 01-20 (Tournament Champion: LightGBM V2)")
 st.write(f"Architect: **Patrick Simon Okosodo** | AI Architect | MLOps Specialist | B.Eng (Chem)")
