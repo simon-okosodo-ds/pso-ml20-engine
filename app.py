@@ -440,23 +440,24 @@ if st.button("GENERATE CERTIFIED VALUATION"):
         feature_columns = ['SqFtTotLiving', 'BldgGrade', 'YrBuilt', 'Bedrooms', 
                            'Bathrooms', 'SqFtLot', 'TrafficNoise', 'NewConstruction']
         
-        # 🟢 THE FIX: We pull Bed, Bath, and Lot from the dynamic inventory
-        # We use .get() to find the value, defaulting to a standard number if not found
+                # 🟢 THE MASTER SYNC: Pulling EVERY value from the Dynamic Inventory
         final_bed = user_inventory.get("Bedrooms", 4)
         final_bath = user_inventory.get("Bathrooms", 2)
         final_lot = user_inventory.get("SqFtLot", 5000)
+        
+        # Pulling Infrastructure values safely
+        f_solar = user_inventory.get("Solar KVA", 0)
+        f_gen = user_inventory.get("Gen (KVA)", 0)
+        f_ac = user_inventory.get("AC Units", 0)
+        f_cctv = user_inventory.get("CCTV Cameras", 0)
+        f_bq = user_inventory.get("BQ Units", 0)
 
-        # Map the inputs to the industrial row
+        # Map to Brain DataFrame
         input_row = [[sqft, 7, yr_built, final_bed, final_bath, final_lot, 0, 0]]
         features_df = pd.DataFrame(input_row, columns=feature_columns)
 
-
-        # 3. THE NEURAL HANDSHAKE (Single Path Logic)
-        base_price = 0.0 # Initialize
-        
-        # We check if 'model' was successfully loaded at the top of the app
-                # --- PSO-ML20 SYNCED WEIGHTS (Adjusted for $300k Baseline) ---
-        # We increase the base units so the 7.6% weight hits the 2014 Market Floor
+        # 3. THE NEURAL HANDSHAKE
+        base_price = 0.0 
         if 'model' in globals() and model is not None:
             try:
                 input_array = features_df.values.astype(np.float32)
@@ -465,26 +466,16 @@ if st.button("GENERATE CERTIFIED VALUATION"):
                 st.success("✅ Neural Handshake: Verified (89.28% Precision)")
             except Exception as e:
                 st.warning("⚠️ Neural Handshake Offline: Using Framework Direct Weights")
-                # THE SYNC FORMULA:
-                base_price = (
-                    (sqft * 1500 * 0.0761) +   # Total Sqft Value
-                    (num_bed * 80000 * 0.0518) + # Bedroom Utility Value
-                    (num_bath * 50000 * 0.0341)  # Bathroom Utility Value
-                )
+                base_price = ((sqft * 1500 * 0.0761) + (final_bed * 80000 * 0.0518) + (final_bath * 50000 * 0.0341))
         else:
-            st.warning("⚠️ Logic Sync: Utilizing 20-Phase Architectural Weights")
-            # THE SYNC FORMULA:
-            base_price = (
-                (sqft * 1500 * 0.0761) + 
-                (num_bed * 80000 * 0.0518) + 
-                (num_bath * 50000 * 0.0341)
-            )
+            base_price = ((sqft * 1500 * 0.0761) + (final_bed * 80000 * 0.0518) + (final_bath * 50000 * 0.0341))
 
-        # 4. INFRASTRUCTURE & MULTIPLIERS
+        # 4. INFRASTRUCTURE & MULTIPLIERS (Now using f_solar, f_gen, etc.)
         infra_bonus = (
-            (solar_kva * 1500) + (gen_kva * 450) + (ac_units * 750) + 
-            (cctv * 250) + (bq_units * 12500)
+            (f_solar * 1500) + (f_gen * 450) + (f_ac * 750) + 
+            (f_cctv * 250) + (f_bq * 12500)
         )
+
         
         # Set market_appreciation to 1.0 to match your 2014 Dataset Sync test
         market_appreciation = 1.0 
