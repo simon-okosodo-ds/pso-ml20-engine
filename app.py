@@ -337,52 +337,44 @@ else:
 
 st.markdown("</div>", unsafe_allow_html=True)
 
-# ==========================================
-# 🛡️ 02. FORENSIC EVIDENCE VAULT (ADAPTIVE)
-# ==========================================
+# --- STEP 02: 10-POINT MASTER VAULT (Onsite Evidence) ---
 st.markdown("<div class='step-container'>", unsafe_allow_html=True)
 st.markdown("#### 02. Forensic Evidence Vault")
-st.warning("**PROTOCOL:** Capture full-view photos from floor-to-ceiling for accurate material analysis.")
 
-# Adaptive Photo Requests
-if not is_dynamic:
-    photo_labels = ["1. Exterior Elevation", "2. Kitchen Architecture", "3. Living Area Texture"]
-else:
-    # Dynamic photos: If 'waterfront' is in the CSV, ask for a 'Waterfront View'
-    photo_labels = ["1. Primary Structural Scan"]
-    if any('water' in c.lower() for c in st.session_state['full_columns']):
-        photo_labels.append("2. Waterfront Verification")
-    if any('renovated' in c.lower() for c in st.session_state['full_columns']):
-        photo_labels.append("3. Renovation Audit")
-
-with st.expander("Expand Multi-Point Upload Portals", expanded=True):
-    v_cols = st.columns(2)
-    uploaded_imgs = {}
-    for i, label in enumerate(photo_labels):
-        with v_cols[i % 2]:
-            uploaded_imgs[f"img{i}"] = st.file_uploader(label, type=['jpg', 'png'])
-
+with st.expander("Expand 10-Point Evidence Portals", expanded=True):
+    v1, v2 = st.columns(2)
+    img1 = v1.file_uploader("1. Exterior Elevation", type=['jpg', 'png'])
+    img2 = v2.file_uploader("2. Compound Paving", type=['jpg', 'png'])
+    img3 = v1.file_uploader("3. Living Room View", type=['jpg', 'png'])
+    img4 = v2.file_uploader("4. Kitchen Architecture", type=['jpg', 'png'])
+    img5 = v1.file_uploader("5. Master Bedroom", type=['jpg', 'png'])
+    img6 = v2.file_uploader("6. Master Bathroom", type=['jpg', 'png'])
+    img7 = v1.file_uploader("7. Corridors & Staircase", type=['jpg', 'png'])
+    img8 = v2.file_uploader("8. Energy/Power Unit", type=['jpg', 'png'])
+    img9 = v1.file_uploader("9. Boys Quarters (BQ)", type=['jpg', 'png'])
+    img10 = v2.file_uploader("10. Security & Gatehouse", type=['jpg', 'png'])
 st.markdown("</div>", unsafe_allow_html=True)
 
-# --- STEP 03: DYNAMIC INVENTORY ---
+# --- STEP 03: DYNAMIC INVENTORY (Dataset Features) ---
 st.markdown("<div class='step-container'>", unsafe_allow_html=True)
 st.markdown("#### 03. Forensic Inventory")
 
-# We pull the 7 winners from the Sniffer
-extras = st.session_state.get('inventory_schema', ['Bedrooms', 'Bathrooms', 'Floors'])
+# 🟢 SINCERE LOGIC: We prioritize Dataset features, then fill with Onsite extras
+default_inventory = ['Bedrooms', 'Bathrooms', 'Floors', 'SqFtLot', 'NbrLivingUnits', 'Solar KVA', 'AC Units']
+extras = st.session_state.get('inventory_schema', default_inventory)
+
+# Force it to show exactly 7 items in the grid (plus the 3 at the top = 10 Total)
+while len(extras) < 7:
+    extras.append(f"Extra Marker {len(extras)+1}")
 
 i_cols = st.columns(4)
 user_inventory = {}
 
-for idx, feat in enumerate(extras):
+for idx, feat in enumerate(extras[:7]):
     with i_cols[idx % 4]:
-        # If it's a 'Year' feature, we use a different range
-        if "Yr" in feat or "Year" in feat:
-            user_inventory[feat] = st.number_input(f"{feat}", 1900, 2026, 0)
-        else:
-            user_inventory[feat] = st.number_input(f"{feat}", 0, 100, 0)
-
+        user_inventory[feat] = st.number_input(f"{feat}", 0, 500, 0, key=f"inv_{idx}")
 st.markdown("</div>", unsafe_allow_html=True)
+
 
 
 # --- STEP 4 (NEW) ---
