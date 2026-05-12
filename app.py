@@ -199,22 +199,27 @@ with st.sidebar:
                                  help="Upload local sales records to teach the AI about a new city or country.")
     
     # THE DYNAMIC SNIFFER LOGIC
+        # THE DYNAMIC SNIFFER (Hardened to always show 10)
     if new_data:
         df_raw = pd.read_csv(new_data)
         st.session_state['full_columns'] = df_raw.columns.tolist()
         
-        # Priority Keywords for the 2026 Sovereign Audit
-        keywords = ['pool', 'waterfront', 'renovated', 'parking', 'view', 'basement', 'condition', 'noise']
-        matched_extras = []
+        # 1. Primary Pillars (Always First)
+        keywords = ['pool', 'waterfront', 'renovated', 'parking', 'view', 'basement', 'condition', 'noise', 'grade', 'sqft']
         
-        for word in keywords:
-            for col in df_raw.columns:
-                if word in col.lower() and col not in matched_extras:
-                    matched_extras.append(col)
+        # 2. Find all matches
+        found = [col for col in df_raw.columns if any(k in col.lower() for k in keywords)]
         
-        # Update Session State for Step 03
-        st.session_state['inventory_schema'] = matched_extras[:7]
-        st.success(f"Framework Synced. Identified: {len(matched_extras)} Pillars.")
+        # 3. If we found too few, fill the rest with standard features to hit 7 extras
+        standard_fallbacks = ['Bedrooms', 'Bathrooms', 'Floors', 'SqFtLot', 'NbrLivingUnits', 'YrBuilt', 'ZipCode']
+        for fallback in standard_fallbacks:
+            if len(found) < 7 and fallback in df_raw.columns and fallback not in found:
+                found.append(fallback)
+        
+        # 4. Lock exactly 7 for the Inventory section
+        st.session_state['inventory_schema'] = found[:7]
+        st.success(f"✅ Schema Synced: 10-Point Forensic Audit Ready.")
+
 
     # --- PORTAL 3: SETTINGS ---
     st.divider()
