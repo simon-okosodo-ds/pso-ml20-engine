@@ -355,26 +355,28 @@ with st.expander("Expand 10-Point Evidence Portals", expanded=True):
     img10 = v2.file_uploader("10. Security & Gatehouse", type=['jpg', 'png'])
 st.markdown("</div>", unsafe_allow_html=True)
 
-# --- STEP 03: DYNAMIC INVENTORY (Dataset Features) ---
+# --- STEP 03: FORENSIC INVENTORY ---
 st.markdown("<div class='step-container'>", unsafe_allow_html=True)
 st.markdown("#### 03. Forensic Inventory")
 
-# 🟢 SINCERE LOGIC: We prioritize Dataset features, then fill with Onsite extras
-default_inventory = ['Bedrooms', 'Bathrooms', 'Floors', 'SqFtLot', 'NbrLivingUnits', 'Solar KVA', 'AC Units']
+# We define the labels professionally
+default_inventory = ['Bedrooms', 'Bathrooms', 'Storeys', 'SqFtLot', 'Unit Density', 'Solar KVA', 'AC Units']
 extras = st.session_state.get('inventory_schema', default_inventory)
 
-# Force it to show exactly 7 items in the grid (plus the 3 at the top = 10 Total)
-while len(extras) < 7:
-    extras.append(f"Extra Marker {len(extras)+1}")
+# Ensuring the names are Executive-Grade
+clean_extras = []
+for feat in extras:
+    if "NbrLivingUnits" in feat: clean_extras.append("Unit Density")
+    elif "Floors" in feat or "Stories" in feat: clean_extras.append("Storeys")
+    else: clean_extras.append(feat)
 
 i_cols = st.columns(4)
 user_inventory = {}
 
-for idx, feat in enumerate(extras[:7]):
+for idx, feat in enumerate(clean_extras[:7]):
     with i_cols[idx % 4]:
         user_inventory[feat] = st.number_input(f"{feat}", 0, 500, 0, key=f"inv_{idx}")
 st.markdown("</div>", unsafe_allow_html=True)
-
 
 
 # --- STEP 4 (NEW) ---
