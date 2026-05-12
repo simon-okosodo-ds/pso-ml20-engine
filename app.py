@@ -457,29 +457,27 @@ if st.button("GENERATE CERTIFIED VALUATION"):
         features_df = pd.DataFrame(input_row, columns=feature_columns)
 
                # 3. THE NEURAL HANDSHAKE
+                # 3. THE NEURAL HANDSHAKE
         base_price = 0.0 
         if 'model' in globals() and model is not None:
             try:
-                input_array = features_df.values.astype(np.float32)
-                log_pred = model.predict(input_array)
-                base_price = float(np.expm1(log_pred))
+                # 🟢 THE PIPELINE FIX: Pass the DataFrame directly, not the array
+                # This allows the brain to 'read' the column names like 'SqFtTotLiving'
+                log_pred = model.predict(features_df)
+                
+                # Extract the result and reverse the Log (np.log1p -> np.expm1)
+                base_price = float(np.expm1(log_pred[0])) 
                 st.success("✅ Neural Handshake: Verified (89.28% Precision)")
+                
             except Exception as e:
-                st.warning("⚠️ Neural Handshake Offline: Using Framework Direct Weights")
-                # 🟢 CALIBRATED FOR THE $349K BASELINE
+                # This triggers if the .pkl fails or the columns don't match exactly
+                st.warning(f"⚠️ Neural Handshake Offline: {e}")
+                # 🟢 FALLBACK FORMULA
                 base_price = (
-                    (sqft * 3250 * 0.0761) +     # Size Value (Increased base to 3250)
-                    (final_bed * 160000 * 0.0518) + # Bedroom Utility
-                    (final_bath * 95000 * 0.0341)   # Bathroom Utility
+                    (sqft * 3250 * 0.0761) +     
+                    (final_bed * 160000 * 0.0518) + 
+                    (final_bath * 95000 * 0.0341)   
                 )
-        else:
-            st.warning("⚠️ Logic Sync: Utilizing 20-Phase Architectural Weights")
-            # 🟢 CALIBRATED FOR THE $349K BASELINE
-            base_price = (
-                (sqft * 3250 * 0.0761) + 
-                (final_bed * 160000 * 0.0518) + 
-                (final_bath * 95000 * 0.0341)
-            )
 
         # 4. INFRASTRUCTURE & MULTIPLIERS (Now using f_solar, f_gen, etc.)
         infra_bonus = (
