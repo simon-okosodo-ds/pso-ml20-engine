@@ -221,6 +221,8 @@ with st.sidebar:
         st.success(f"✅ Schema Synced: 10-Point Forensic Audit Ready.")
 
 
+
+
     # --- PORTAL 3: SETTINGS ---
     st.divider()
     currency = st.radio("Money Type", ["USD ($)", "NGN (₦)"], horizontal=True)
