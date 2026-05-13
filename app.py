@@ -210,93 +210,88 @@ with st.sidebar:
     st.caption("AI Lead | MLOps Specialist | B.Eng (Chem)")
     st.info("🧠 **Engine:** PSO-ML20 Standard")
 
-# --- PREMIUM EXECUTIVE UI STYLING (Glassmorphic Cyber Standard) ---
+# --- EXECUTIVE UI PREMIUM STYLING (Obsidian & Neon Glow Standard) ---
 st.markdown(f"""
     <style>
     @import url('googleapis.com');
     
-    /* GLOBAL LUXURY CANVAS */
+    /* PREMIUM OBSIDIAN CANVAS BACKGROUND */
     html, body, [class*="css"] {{
         font-family: 'Plus Jakarta Sans', sans-serif !important;
-        background-color: #0A0F1D !important;
+        background-color: #0A0F1D !important; 
         color: #E2E8F0 !important;
     }}
     
-    /* OBSIDIAN GLOWING SIDEBAR */
+    /* GLASSMORPHIC STEP CONTAINERS */
+    .step-container {{ 
+        margin-bottom: 35px !important; 
+        padding: 25px !important; 
+        border-radius: 16px !important; 
+        background: rgba(13, 20, 38, 0.6) !important; 
+        border: 1px solid rgba(0, 242, 254, 0.1) !important; 
+        backdrop-filter: blur(12px) !important;
+        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3) !important;
+    }}
+    
+    .step-container h4 {{
+        color: #00F2FE !important; 
+        font-weight: 700 !important;
+        letter-spacing: 0.5px !important;
+        margin-bottom: 15px !important;
+    }}
+    
+    /* DEEP GLOW SIDEBAR UNIFICATION */
     [data-testid="stSidebar"] {{
         background: linear-gradient(180deg, #060B26 0%, #0A0F1D 100%) !important;
         border-right: 1px solid rgba(0, 242, 254, 0.15) !important;
-        box-shadow: 5px 0 30px rgba(0, 0, 0, 0.5);
     }}
     
     [data-testid="stSidebar"] *, [data-testid="stSidebar"] p, [data-testid="stSidebar"] label {{
         color: #94A3B8 !important;
     }}
     
-    /* GLASSMORPHIC STEP CONTAINERS */
-    .step-container {{
-        background: rgba(13, 20, 38, 0.6) !important;
-        border: 1px solid rgba(255, 255, 255, 0.05) !important;
-        border-radius: 16px !important;
-        padding: 24px !important;
-        margin-bottom: 25px !important;
-        backdrop-filter: blur(12px) !important;
-        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3) !important;
-    }}
-    
-    .step-container h4 {{
-        color: #00F2FE !important;
-        letter-spacing: 1px;
-        font-weight: 700;
-        margin-bottom: 15px;
-    }}
-
-    /* PREMIUM METRIC CARDS */
-    .metric-card {{
-        background: linear-gradient(135deg, rgba(6, 182, 212, 0.1) 0%, rgba(59, 130, 246, 0.05) 100%) !important;
-        border: 1px solid rgba(6, 182, 212, 0.2) !important;
-        border-radius: 20px !important;
-        padding: 30px !important;
-        text-align: center !important;
-        box-shadow: 0 0 40px rgba(6, 182, 212, 0.1) !important;
-        transition: transform 0.3s ease;
-    }}
-    .metric-card:hover {{
-        transform: translateY(-5px);
-    }}
-
-    /* CYBER INPUT SLIDERS & BOXES */
-    [data-testid="stSidebar"] div[data-baseweb="select"] > div,
-    [data-testid="stSidebar"] div[data-baseweb="input"] > div,
+    /* INPUT PORTAL GLOW BOXES */
     div[data-baseweb="input"] > div,
-    .stNumberInput div {{
+    .stNumberInput div,
+    .stSelectbox div {{
         background-color: #0D1426 !important;
         border: 1px solid rgba(255, 255, 255, 0.1) !important;
         border-radius: 8px !important;
         color: #FFFFFF !important;
     }}
-    
-    /* GAUGE BUTTON HIGHLIGHT */
+
+    /* HIGH-ATTRACTION CYBER BUTTON */
     .stButton>button {{ 
-        background: linear-gradient(90deg, #00F2FE 0%, #4FACFE 100%) !important;
+        background: linear-gradient(90deg, #00F2FE 0%, #4FACFE 100%) !important; 
         color: #060B26 !important; 
-        border-radius: 12px; 
-        border: none;
-        height: 3.8em;
-        font-weight: 700;
-        letter-spacing: 1px;
-        text-transform: uppercase;
+        border-radius: 12px !important; 
+        border: none !important;
+        height: 3.8em !important;
+        font-weight: 700 !important;
+        letter-spacing: 1px !important;
+        text-transform: uppercase !important;
         box-shadow: 0 4px 20px rgba(0, 242, 254, 0.3) !important;
-        transition: 0.3s all ease;
-        width: 100%;
+        transition: 0.3s all ease !important;
+        width: 100% !important;
     }}
     .stButton>button:hover {{
         box-shadow: 0 6px 30px rgba(0, 242, 254, 0.6) !important;
-        transform: scale(1.01);
-        opacity: 0.9;
+        transform: scale(1.01) !important;
+        opacity: 0.95 !important;
     }}
     
-    [data-testid="stMetricValue"] {{ font-size: 24px !important; font-weight: 700; color: #FFFFFF; }}
+    /* PREMIUM GLOW METRIC CERTIFICATE CARD */
+    .metric-card {{
+        background: linear-gradient(135deg, rgba(6, 182, 212, 0.12) 0%, rgba(59, 130, 246, 0.06) 100%) !important;
+        border: 1px solid rgba(6, 182, 212, 0.25) !important;
+        border-radius: 20px !important;
+        padding: 40px !important;
+        text-align: center !important;
+        box-shadow: 0 0 40px rgba(6, 182, 212, 0.15) !important; 
+        transition: transform 0.3s ease !important;
+    }}
+    
+    [data-testid="stMetricValue"] {{ font-size: 24px !important; font-weight: 700 !important; color: #FFFFFF !important; }}
     [data-testid="stMetricDelta"] {{ font-size: 13px !important; }}
     </style>
     """, unsafe_allow_html=True)
@@ -320,19 +315,15 @@ else:
         st.title("Executive Valuation Terminal")
         st.caption("PSO-ML20 Standard | Industrial Forensic Audit Engine")
 
-
-
 # ==========================================
 # 🛡️ 01. PRIMARY PARAMETERS (ADAPTIVE)
 # ==========================================
 st.markdown("<div class='step-container'>", unsafe_allow_html=True)
 st.markdown("#### 01. Primary Asset Parameters")
 
-# We check if a CSV was uploaded to decide which UI to show
 is_dynamic = 'inventory_schema' in st.session_state
 
 if not is_dynamic:
-    # --- STANDARD EXECUTIVE UI (Lagos/USA Default) ---
     c1, c2, c3 = st.columns(3)
     with c1:
         sqft = st.number_input("Property Area (Sqft)", value=2500, step=50)
@@ -343,10 +334,8 @@ if not is_dynamic:
     with c3:
         yr_built = st.number_input("Year of Construction", 1900, 2026, 2018)
 else:
-    # --- DYNAMIC DATASET UI (Self-Assembles from CSV) ---
     st.info(f"📊 PSO-ML20 is currently mapped to: {len(st.session_state['full_columns'])} Dataset Features")
     c1, c2, c3 = st.columns(3)
-    # Mapping the pillars discovered by the Sniffer
     mapping = st.session_state.get('active_schema', {'Size': 'SqFtTotLiving', 'Quality': 'BldgGrade', 'Age': 'YrBuilt'})
     
     sqft = c1.number_input(f"Area ({mapping['Size']})", value=2000)
@@ -358,15 +347,12 @@ st.markdown("</div>", unsafe_allow_html=True)
 # --- 02. FORENSIC EVIDENCE VAULT (ADAPTIVE) ---
 st.markdown("<div class='step-container'>", unsafe_allow_html=True)
 st.markdown("#### 02. Forensic Evidence Vault")
-st.warning("**PROTOCOL:** Capture full-view photos from floor-to-ceiling for accurate material analysis.")
 
-# 🟢 THE FIX: Safely inherit from brain_features or establish the fallback array immediately
 if 'brain_features' in locals() or 'brain_features' in globals():
     top_10_features = brain_features[:10]
 else:
     top_10_features = ['SqFtTotLiving', 'BldgGrade', 'YrBuilt', 'Bedrooms', 'Bathrooms', 'SqFtLot']
 
-# Create labels based on Dataset atoms + General features
 photo_labels = [clean_label(f) + " Evidence" for f in top_10_features[:5]]
 general_labels = ["Exterior Elevation", "Kitchen Architecture", "Master Suite", "Energy Unit", "Security Perimeter"]
 all_photo_slots = (photo_labels + general_labels)[:10]
@@ -379,27 +365,11 @@ with st.expander("Expand 10-Point Evidence Portals", expanded=True):
             uploaded_imgs[f"img{i+1}"] = st.file_uploader(f"{i+1}. {p_label}", type=['jpg', 'png'], key=f"img_{i}")
 st.markdown("</div>", unsafe_allow_html=True)
 
-
 # --- 03. FORENSIC INVENTORY (DYNAMIC MIRROR) ---
 st.markdown("<div class='step-container'>", unsafe_allow_html=True)
 st.markdown("#### 03. Forensic Dataset Inventory")
 
-# Correcting Names for the Executive Interface
-def clean_label(name):
-    mapping = {
-        'SqFtTotLiving': 'Total Living Area (Sqft)',
-        'BldgGrade': 'Construction Grade (1-12)',
-        'YrBuilt': 'Year of Construction',
-        'NbrLivingUnits': 'Unit Density',
-        'SqFtLot': 'Land Area (Sqft)',
-        'YrRenovated': 'Year of Last Renovation'
-    }
-    return mapping.get(name, name.replace('_', ' ').title())
-
-# Take top 10 features from your .pkl brain
-top_10_features = brain_features[:10]
 user_inputs = {}
-
 cols = st.columns(5)
 for i, feat in enumerate(top_10_features):
     with cols[i % 5]:
@@ -412,7 +382,6 @@ for i, feat in enumerate(top_10_features):
             user_inputs[feat] = st.number_input(label, 0, 1000000, 0, key=f"in_{feat}")
 st.markdown("</div>", unsafe_allow_html=True)
 
-
 # --- STEP 4 (NEW) ---
 st.markdown("<div class='step-container'>", unsafe_allow_html=True)
 st.markdown("#### 04. Data Independence Protocol")
@@ -422,26 +391,19 @@ if eclipse_mode:
     st.warning("⚠️ TOTAL ECLIPSE ACTIVE: Institutional Crutches Removed. Reconstructing value via Physical Atoms.")
 st.markdown("</div>", unsafe_allow_html=True)
 
-
 # --- 05. SYSTEM INTEGRITY CHECK (MASTER 20-POINT SYNC) ---
 st.markdown("<br>", unsafe_allow_html=True)
 
-# 1. Count filled inventory (Checks both Standard and Dynamic modes)
-# We use .get() to avoid the NameError if variables aren't defined yet
-if 'user_inventory' in locals():
-    filled_inputs = sum(1 for v in user_inventory.values() if v > 0)
+if 'user_inputs' in locals():
+    filled_inputs = sum(1 for v in user_inputs.values() if v > 0)
 else:
-    # Fallback for standard mode
     filled_inputs = sum(1 for v in [sqft, yr_built] if v > 0)
 
-# 2. Count filled photos (Checks the Adaptive Photo Vault)
 if 'uploaded_imgs' in locals():
     filled_photos = sum(1 for p in uploaded_imgs.values() if p is not None)
 else:
-    # Fallback for manual photo slots
-    filled_photos = sum(1 for p in [img1, img3, img4] if 'img1' in locals() and p is not None)
+    filled_photos = 0
 
-# 3. Master Progress Logic (Normalized to 15-20 points)
 total_progress = min((filled_inputs + filled_photos) / 15, 1.0) 
 
 st.write(f"📊 **Neural Confidence:** {int(total_progress * 100)}%")
@@ -453,6 +415,7 @@ elif total_progress > 0.7:
     st.warning("⚠️ High Confidence reached. Missing minor visual anchors.")
 else:
     st.info("💡 Complete the Evidence Vault and Inventory to reach Certified status.")
+
 
 # --- CALCULATION (DIRECT 20-PHASE INFERENCE) ---
 # --- CALCULATION (DYNAMIC INFERENCE ENGINE) ---
