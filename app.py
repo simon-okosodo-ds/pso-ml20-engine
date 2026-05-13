@@ -279,23 +279,43 @@ st.markdown(f"""
     </style>
     """, unsafe_allow_html=True)
 
-# --- 03. FORENSIC INVENTORY (DYNAMIC MIRROR) ---
+# ============================================================
+# 🛡️ STEP 03: FORENSIC DATASET INVENTORY (PRODUCTION HARDENED)
+# ============================================================
 st.markdown("<div class='step-container'>", unsafe_allow_html=True)
 st.markdown("#### 03. Forensic Dataset Inventory")
 
-user_inputs = {}
-cols = st.columns(5)
-for i, feat in enumerate(top_10_features):
-    with cols[i % 5]:
-        label = clean_label(feat)
-        if "Yr" in feat or "Year" in feat:
-            user_inputs[feat] = st.number_input(label, 1900, 2026, 2015, key=f"in_{feat}")
-        elif "Grade" in feat:
-            # 🟢 FIXED: Forcing numeric +/- input box to prevent layout slider bugs
-            user_inputs[feat] = st.number_input(label, 1, 13, 7, key=f"in_{feat}")
-        else:
-            user_inputs[feat] = st.number_input(label, 0, 1000000, 0, key=f"in_{feat}")
+# 1. Safely pull your top 10 attributes from the active .pkl brain features list
+if 'brain_features' in locals() or 'brain_features' in globals():
+    active_features = brain_features[:10]
+else:
+    active_features = ['SqFtTotLiving', 'BldgGrade', 'YrBuilt', 'Bedrooms', 'Bathrooms', 'SqFtLot']
+
+# 2. Build the exact fixed 10-point data layout you prefer
+i_cols = st.columns(4)
+with i_cols[0]: num_bed = st.number_input("Bedrooms", 0, 20, 4, key="inv_bed")
+with i_cols[1]: num_bath = st.number_input("Bathrooms", 0, 20, 2, key="inv_bath")
+with i_cols[2]: storeys = st.number_input("Storeys", 0, 10, 1, key="inv_storeys")
+with i_cols[3]: sqft_lot = st.number_input("SqFtLot", 0, 1000000, 5000, key="inv_lot")
+
+i_cols_row2 = st.columns(4)
+with i_cols_row2[0]: unit_density = st.number_input("Unit Density", 0, 10, 1, key="inv_density")
+with i_cols_row2[1]: solar_kva = st.number_input("Solar KVA", 0, 100, 0, key="inv_solar")
+with i_cols_row2[2]: ac_units = st.number_input("AC Units", 0, 50, 0, key="inv_ac")
+with i_cols_row2[3]: gen_kva = st.number_input("Gen (KVA)", 0, 500, 0, key="inv_gen")
+
+i_cols_row3 = st.columns(2)
+with i_cols_row3[0]: cctv = st.number_input("CCTV Cameras", 0, 100, 0, key="inv_cctv")
+with i_cols_row3[1]: bq_units = st.number_input("BQ Units", 0, 10, 0, key="inv_bq")
+
+# 3. Synchronize storage explicitly into user_inputs for the progress bars & math
+user_inputs = {
+    "Bedrooms": num_bed, "Bathrooms": num_bath, "Storeys": storeys, "SqFtLot": sqft_lot,
+    "Unit Density": unit_density, "Solar KVA": solar_kva, "AC Units": ac_units,
+    "Gen (KVA)": gen_kva, "CCTV Cameras": cctv, "BQ Units": bq_units
+}
 st.markdown("</div>", unsafe_allow_html=True)
+
 
 # --- STEP 4 (NEW) ---
 st.markdown("<div class='step-container'>", unsafe_allow_html=True)
