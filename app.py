@@ -381,7 +381,7 @@ def clean_label(name):
         'Bedrooms': 'Bedrooms', # Changed from Bedrooms Count
         'Bathrooms': 'Bathrooms',
         'TrafficNoise': 'Traffic Noise Index',
-        'NewConstruction': 'New Construction Flag'
+        'NewConstruction': 'New Construction'
     }
     return mapping.get(name, str(name).replace('_', ' ').title())
 
