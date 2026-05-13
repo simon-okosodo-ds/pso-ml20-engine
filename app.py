@@ -227,27 +227,27 @@ st.markdown(f"""
         margin-top: 0px !important;
     }}
     
-        /* SIDEBAR CONTROL CONFIG */
-    [data-testid="stSidebar"] {
+    /* SIDEBAR CONTROL CONFIG */
+    [data-testid="stSidebar"] {{
         background-color: #000000 !important;
         border-right: 1px solid #333333;
-    }
+    }}
     
-    [data-testid="stSidebar"] *, [data-testid="stSidebar"] p, [data-testid="stSidebar"] label {
+    [data-testid="stSidebar"] *, [data-testid="stSidebar"] p, [data-testid="stSidebar"] label {{
         color: #FFFFFF !important;
-    }
+    }}
     
     [data-testid="stSidebar"] div[data-baseweb="select"] > div,
     [data-testid="stSidebar"] div[data-baseweb="input"] > div,
     [data-testid="stSidebar"] div[data-baseweb="radio"] label,
-    [data-testid="stSidebar"] div[data-baseweb="radio"] div {
+    [data-testid="stSidebar"] div[data-baseweb="radio"] div {{
         background-color: #1A1A1A !important;
         border: 1px solid #333333 !important;
         color: white !important;
-    }
+    }}
 
     /* REGULAR EXECUTIVE GAUGE BUTTON */
-    .stButton>button { 
+    .stButton>button {{ 
         background: {brand_color} !important; 
         color: white !important; 
         border-radius: 8px !important; 
@@ -258,94 +258,26 @@ st.markdown(f"""
         letter-spacing: 0.5px !important;
         width: 100% !important;
         transition: 0.3s all ease;
-    }
-    .stButton>button:hover {
+    }}
+    .stButton>button:hover {{
         opacity: 0.85;
         transform: scale(0.99);
-    }
+    }}
     
     /* STATIONARY METRIC HOUSING CERTIFICATE CARD */
-    .metric-card {
+    .metric-card {{
         background: #FFFFFF !important;
         padding: 40px !important;
         border-radius: 12px !important;
         box-shadow: 0 4px 15px rgba(0,0,0,0.05) !important;
         text-align: center !important;
         border: 1px solid #EAECEE !important;
-    }
+    }}
     
-    [data-testid="stMetricValue"] { font-size: 22px !important; font-weight: 600 !important; color: #2C3E50 !important; }
-    [data-testid="stMetricDelta"] { font-size: 13px !important; }
+    [data-testid="stMetricValue"] {{ font-size: 22px !important; font-weight: 600 !important; color: #2C3E50 !important; }}
+    [data-testid="stMetricDelta"] {{ font-size: 13px !important; }}
     </style>
     """, unsafe_allow_html=True)
-
-# --- 7. HEADER & LOGO INJECTION ---
-st.markdown("<br>", unsafe_allow_html=True)
-if my_qr:
-    c_logo, col_mid, c_qr = st.columns([1, 4, 1])
-    with c_logo:
-        if client_logo: st.image(client_logo, width=80)
-    with col_mid:
-        st.title("Executive Valuation Terminal")
-        st.caption("PSO-ML20 Standard | Industrial Forensic Audit Engine")
-    with c_qr:
-        st.image(my_qr, width=80)
-else:
-    c_logo, col_mid = st.columns([1, 5])
-    with c_logo:
-        if client_logo: st.image(client_logo, width=80)
-    with col_mid:
-        st.title("Executive Valuation Terminal")
-        st.caption("PSO-ML20 Standard | Industrial Forensic Audit Engine")
-
-# ==========================================
-# 🛡️ 01. PRIMARY PARAMETERS (ADAPTIVE)
-# ==========================================
-st.markdown("<div class='step-container'>", unsafe_allow_html=True)
-st.markdown("#### 01. Primary Asset Parameters")
-
-is_dynamic = 'inventory_schema' in st.session_state
-
-if not is_dynamic:
-    c1, c2, c3 = st.columns(3)
-    with c1:
-        sqft = st.number_input("Property Area (Sqft)", value=2500, step=50)
-    with c2:
-        build_type = st.selectbox("Quality Category", 
-            ["Basic/Standard", "Modern/Executive", "Luxury/High-End", "Elite/Mansion"],
-            help="Basic: Regular finish | Modern: POP/Wardrobes | Luxury: Marble/Smart | Elite: Masterpiece.")
-    with c3:
-        yr_built = st.number_input("Year of Construction", 1900, 2026, 2018)
-else:
-    st.info(f"📊 PSO-ML20 is currently mapped to: {len(st.session_state['full_columns'])} Dataset Features")
-    c1, c2, c3 = st.columns(3)
-    mapping = st.session_state.get('active_schema', {'Size': 'SqFtTotLiving', 'Quality': 'BldgGrade', 'Age': 'YrBuilt'})
-    
-    sqft = c1.number_input(f"Area ({mapping['Size']})", value=2000)
-    build_type = c2.selectbox(f"Baseline ({mapping['Quality']})", ["Standard", "Premium", "Elite"])
-    yr_built = c3.number_input(f"History ({mapping['Age']})", 1900, 2026, 2015)
-st.markdown("</div>", unsafe_allow_html=True)
-
-# --- 02. FORENSIC EVIDENCE VAULT (ADAPTIVE) ---
-st.markdown("<div class='step-container'>", unsafe_allow_html=True)
-st.markdown("#### 02. Forensic Evidence Vault")
-
-if 'brain_features' in locals() or 'brain_features' in globals():
-    top_10_features = brain_features[:10]
-else:
-    top_10_features = ['SqFtTotLiving', 'BldgGrade', 'YrBuilt', 'Bedrooms', 'Bathrooms', 'SqFtLot']
-
-photo_labels = [clean_label(f) + " Evidence" for f in top_10_features[:5]]
-general_labels = ["Exterior Elevation", "Kitchen Architecture", "Master Suite", "Energy Unit", "Security Perimeter"]
-all_photo_slots = (photo_labels + general_labels)[:10]
-
-with st.expander("Expand 10-Point Evidence Portals", expanded=True):
-    p_cols = st.columns(2)
-    uploaded_imgs = {}
-    for i, p_label in enumerate(all_photo_slots):
-        with p_cols[i % 2]:
-            uploaded_imgs[f"img{i+1}"] = st.file_uploader(f"{i+1}. {p_label}", type=['jpg', 'png'], key=f"img_{i}")
-st.markdown("</div>", unsafe_allow_html=True)
 
 # --- 03. FORENSIC INVENTORY (DYNAMIC MIRROR) ---
 st.markdown("<div class='step-container'>", unsafe_allow_html=True)
