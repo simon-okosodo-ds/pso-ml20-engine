@@ -14,42 +14,19 @@ import os
 # We define the model as None first to prevent the NameError
 model = None 
 
-# 1. LOAD THE CHAMPION BRAIN
-@st.cache_resource
-def load_champion_brain():
-    model = joblib.load('pso_super_brain.pkl')
-    # Extract feature names directly from the trained pipeline
-    # This ensures the App always knows what the Notebook did
-    if hasattr(model, 'feature_names_in_'):
-        features = model.feature_names_in_.tolist()
-    else:
-        # Fallback if names aren't embedded
-        features = ['SqFtTotLiving', 'BldgGrade', 'YrBuilt', 'Bedrooms', 'Bathrooms', 'SqFtLot', 'Floors', 'ZipCode']
-    return model, features
-
-model, brain_features = load_champion_brain()
-
-
 # ============================================================
-# 🛡️ GLOBAL PropTech TERMINOLOGY CONVERTER
+# 🛡️ GLOBAL PropTech TERMINOLOGY CONVERTER (Forced to Top)
 # ============================================================
 def clean_label(name):
-    """Converts raw dataset column names into premium executive titles."""
     mapping = {
         'SqFtTotLiving': 'Total Living Area (Sqft)',
-        'BldgGrade': 'Construction Grade',
+        'BldgGrade': 'Construction Grade (1-12)',
         'YrBuilt': 'Year of Construction',
         'NbrLivingUnits': 'Unit Density',
         'SqFtLot': 'Land Area (Sqft)',
-        'YrRenovated': 'Year of Last Renovation',
-        'Bedrooms': 'Bedrooms Count',
-        'Bathrooms': 'Bathrooms Count',
-        'Floors': 'Storeys Count',
-        'Stories': 'Storeys Count'
+        'YrRenovated': 'Year of Last Renovation'
     }
-    # Return the clean map name or format the ugly raw string cleanly
-    return mapping.get(name, str(name).replace('_', ' ').replace('*', 'x').title())
-
+    return mapping.get(name, str(name).replace('_', ' ').title())
 
 
 # --- 1. ANTI-BIAS VISION ENGINE (THE MATERIAL SENSOR) ---
@@ -174,11 +151,12 @@ with st.sidebar:
         my_qr = st.file_uploader("Upload System QR", type=['png', 'jpg'])
         brand_color = st.color_picker("Pick your Brand Color", "#00F2FE") # Defaulting to Cyber Teal
     
-    # --- PORTAL 2: MARKET LEARNER (THE CSV UPLOADER) ---
+        # --- PORTAL 2: MARKET LEARNER (THE CSV UPLOADER) ---
     st.divider()
     st.write("📂 **Market Knowledge Portal**")
     new_data = st.file_uploader("Upload local market data (CSV)", type=['csv'])
     
+    # 🟢 THE FIX: If a new dataset is uploaded, show ALL 5 currencies in the selectbox
     if new_data:
         df_raw = pd.read_csv(new_data)
         st.session_state['full_columns'] = df_raw.columns.tolist()
@@ -198,11 +176,19 @@ with st.sidebar:
         else:
             st.session_state['local_basis'] = 1950
             st.warning("⚠️ Defaulting to baseline scaling coefficients.")
+            
+    else:
+        # 🟢 THE FIX: If NO file is uploaded, keep a clean baseline selector that supports all currencies manually
+        detected_currency = st.selectbox(
+            "Select Active Terminal Currency",
+            ["USD ($)", "EUR (€)", "CNY (¥)", "NGN (₦)", "GBP (£)"],
+            help="Set the valuation currency environment for the 5.4MB brain."
+        )
+        st.session_state['detected_currency'] = detected_currency
+        st.session_state['local_basis'] = 1950
 
-    # --- PORTAL 3: SETTINGS ---
-    st.divider()
-    currency = st.radio("Money Type", ["USD ($)", "NGN (₦)"], horizontal=True)
-    
+    # 🟢 THE REMOVAL: PORTAL 3 (The old radio button that was forcing only USD and NGN) is completely deleted here.
+
     # --- PORTAL 4: ARCHITECT CREDENTIALS ---
     st.divider()
     st.write("**System Architect**")
@@ -210,89 +196,86 @@ with st.sidebar:
     st.caption("AI Lead | MLOps Specialist | B.Eng (Chem)")
     st.info("🧠 **Engine:** PSO-ML20 Standard")
 
-# --- EXECUTIVE UI PREMIUM STYLING (Obsidian & Neon Glow Standard) ---
+# --- EXECUTIVE UI STYLING (Restored Fonts & White Rectangular Boxes) ---
 st.markdown(f"""
     <style>
     @import url('googleapis.com');
     
-    /* PREMIUM OBSIDIAN CANVAS BACKGROUND */
-    html, body, [class*="css"] {{
-        font-family: 'Plus Jakarta Sans', sans-serif !important;
-        background-color: #0A0F1D !important; 
-        color: #E2E8F0 !important;
+    /* GLOBAL TEXT SCALING RESTORATION */
+    html, body, p, div, label, span {{
+        font-family: 'Inter', sans-serif !important;
+        font-size: 14px !important;
+        color: #2C3E50 !important;
     }}
     
-    /* GLASSMORPHIC STEP CONTAINERS */
+    /* THE SIGNATURE WHITE RECTANGULAR DIVIDER CONTAINERS */
     .step-container {{ 
-        margin-bottom: 35px !important; 
-        padding: 25px !important; 
-        border-radius: 16px !important; 
-        background: rgba(13, 20, 38, 0.6) !important; 
-        border: 1px solid rgba(0, 242, 254, 0.1) !important; 
-        backdrop-filter: blur(12px) !important;
-        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3) !important;
+        margin-bottom: 40px !important; 
+        padding: 30px !important; 
+        border-radius: 12px !important; 
+        background-color: #FFFFFF !important; /* Pure white rectangle panel back */
+        border: 1px solid #EAECEE !important; /* Thin gray structural perimeter frame */
+        box-shadow: 0 4px 15px rgba(0,0,0,0.03) !important;
     }}
     
     .step-container h4 {{
-        color: #00F2FE !important; 
+        color: #2C3E50 !important;
+        font-size: 16px !important;
         font-weight: 700 !important;
-        letter-spacing: 0.5px !important;
-        margin-bottom: 15px !important;
+        letter-spacing: -0.5px !important;
+        margin-bottom: 20px !important;
+        margin-top: 0px !important;
     }}
     
-    /* DEEP GLOW SIDEBAR UNIFICATION */
-    [data-testid="stSidebar"] {{
-        background: linear-gradient(180deg, #060B26 0%, #0A0F1D 100%) !important;
-        border-right: 1px solid rgba(0, 242, 254, 0.15) !important;
-    }}
+        /* SIDEBAR CONTROL CONFIG */
+    [data-testid="stSidebar"] {
+        background-color: #000000 !important;
+        border-right: 1px solid #333333;
+    }
     
-    [data-testid="stSidebar"] *, [data-testid="stSidebar"] p, [data-testid="stSidebar"] label {{
-        color: #94A3B8 !important;
-    }}
-    
-    /* INPUT PORTAL GLOW BOXES */
-    div[data-baseweb="input"] > div,
-    .stNumberInput div,
-    .stSelectbox div {{
-        background-color: #0D1426 !important;
-        border: 1px solid rgba(255, 255, 255, 0.1) !important;
-        border-radius: 8px !important;
+    [data-testid="stSidebar"] *, [data-testid="stSidebar"] p, [data-testid="stSidebar"] label {
         color: #FFFFFF !important;
-    }}
+    }
+    
+    [data-testid="stSidebar"] div[data-baseweb="select"] > div,
+    [data-testid="stSidebar"] div[data-baseweb="input"] > div,
+    [data-testid="stSidebar"] div[data-baseweb="radio"] label,
+    [data-testid="stSidebar"] div[data-baseweb="radio"] div {
+        background-color: #1A1A1A !important;
+        border: 1px solid #333333 !important;
+        color: white !important;
+    }
 
-    /* HIGH-ATTRACTION CYBER BUTTON */
-    .stButton>button {{ 
-        background: linear-gradient(90deg, #00F2FE 0%, #4FACFE 100%) !important; 
-        color: #060B26 !important; 
-        border-radius: 12px !important; 
+    /* REGULAR EXECUTIVE GAUGE BUTTON */
+    .stButton>button { 
+        background: {brand_color} !important; 
+        color: white !important; 
+        border-radius: 8px !important; 
         border: none !important;
-        height: 3.8em !important;
-        font-weight: 700 !important;
-        letter-spacing: 1px !important;
-        text-transform: uppercase !important;
-        box-shadow: 0 4px 20px rgba(0, 242, 254, 0.3) !important;
-        transition: 0.3s all ease !important;
+        height: 3.5em !important;
+        font-size: 14px !important;
+        font-weight: 600 !important;
+        letter-spacing: 0.5px !important;
         width: 100% !important;
-    }}
-    .stButton>button:hover {{
-        box-shadow: 0 6px 30px rgba(0, 242, 254, 0.6) !important;
-        transform: scale(1.01) !important;
-        opacity: 0.95 !important;
-    }}
+        transition: 0.3s all ease;
+    }
+    .stButton>button:hover {
+        opacity: 0.85;
+        transform: scale(0.99);
+    }
     
-    /* PREMIUM GLOW METRIC CERTIFICATE CARD */
-    .metric-card {{
-        background: linear-gradient(135deg, rgba(6, 182, 212, 0.12) 0%, rgba(59, 130, 246, 0.06) 100%) !important;
-        border: 1px solid rgba(6, 182, 212, 0.25) !important;
-        border-radius: 20px !important;
+    /* STATIONARY METRIC HOUSING CERTIFICATE CARD */
+    .metric-card {
+        background: #FFFFFF !important;
         padding: 40px !important;
+        border-radius: 12px !important;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05) !important;
         text-align: center !important;
-        box-shadow: 0 0 40px rgba(6, 182, 212, 0.15) !important; 
-        transition: transform 0.3s ease !important;
-    }}
+        border: 1px solid #EAECEE !important;
+    }
     
-    [data-testid="stMetricValue"] {{ font-size: 24px !important; font-weight: 700 !important; color: #FFFFFF !important; }}
-    [data-testid="stMetricDelta"] {{ font-size: 13px !important; }}
+    [data-testid="stMetricValue"] { font-size: 22px !important; font-weight: 600 !important; color: #2C3E50 !important; }
+    [data-testid="stMetricDelta"] { font-size: 13px !important; }
     </style>
     """, unsafe_allow_html=True)
 
@@ -341,21 +324,20 @@ else:
     sqft = c1.number_input(f"Area ({mapping['Size']})", value=2000)
     build_type = c2.selectbox(f"Baseline ({mapping['Quality']})", ["Standard", "Premium", "Elite"])
     yr_built = c3.number_input(f"History ({mapping['Age']})", 1900, 2026, 2015)
-
 st.markdown("</div>", unsafe_allow_html=True)
 
-# --- 02. FORENSIC EVIDENCE VAULT (LOCKED LABELS) ---
+# --- 02. FORENSIC EVIDENCE VAULT (ADAPTIVE) ---
 st.markdown("<div class='step-container'>", unsafe_allow_html=True)
 st.markdown("#### 02. Forensic Evidence Vault")
-st.warning("**PROTOCOL:** Capture full-view photos from floor-to-ceiling for accurate material analysis.")
 
-# Hardcoded premium physical descriptors to avoid "Year of Construction Evidence"
-all_photo_slots = [
-    "Exterior Elevation", "Compound Paving", "Living Room View", 
-    "Kitchen Architecture", "Master Bedroom", "Master Bathroom", 
-    "Corridors & Staircase", "Energy / Power Unit", "Boys Quarters (BQ)", 
-    "Security & Gatehouse"
-]
+if 'brain_features' in locals() or 'brain_features' in globals():
+    top_10_features = brain_features[:10]
+else:
+    top_10_features = ['SqFtTotLiving', 'BldgGrade', 'YrBuilt', 'Bedrooms', 'Bathrooms', 'SqFtLot']
+
+photo_labels = [clean_label(f) + " Evidence" for f in top_10_features[:5]]
+general_labels = ["Exterior Elevation", "Kitchen Architecture", "Master Suite", "Energy Unit", "Security Perimeter"]
+all_photo_slots = (photo_labels + general_labels)[:10]
 
 with st.expander("Expand 10-Point Evidence Portals", expanded=True):
     p_cols = st.columns(2)
@@ -365,46 +347,20 @@ with st.expander("Expand 10-Point Evidence Portals", expanded=True):
             uploaded_imgs[f"img{i+1}"] = st.file_uploader(f"{i+1}. {p_label}", type=['jpg', 'png'], key=f"img_{i}")
 st.markdown("</div>", unsafe_allow_html=True)
 
-# --- 03. FORENSIC INVENTORY (DYNAMIC MIRROR WITH CRITICAL CORRECTIONS) ---
+# --- 03. FORENSIC INVENTORY (DYNAMIC MIRROR) ---
 st.markdown("<div class='step-container'>", unsafe_allow_html=True)
 st.markdown("#### 03. Forensic Dataset Inventory")
 
-# Custom clean naming layer targeting your specific 44-point baseline columns
-def clean_label(name):
-    mapping = {
-        'SqFtTotLiving': 'Total Living Area (Sqft)',
-        'BldgGrade': 'Construction Grade',
-        'YrBuilt': 'Year of Construction',
-        'NbrLivingUnits': 'Unit Density',
-        'SqFtLot': 'Land Area (Sqft)',
-        'YrRenovated': 'Year of Last Renovation',
-        'Bedrooms': 'Bedrooms', # Changed from Bedrooms Count
-        'Bathrooms': 'Bathrooms',
-        'TrafficNoise': 'Traffic Noise Index',
-        'NewConstruction': 'New Construction'
-    }
-    return mapping.get(name, str(name).replace('_', ' ').title())
-
-top_10_features = brain_features[:10]
 user_inputs = {}
-
 cols = st.columns(5)
 for i, feat in enumerate(top_10_features):
     with cols[i % 5]:
         label = clean_label(feat)
-        
-        # 🟢 CORRECTION: Use number input (+ / - box) instead of standard slider for ALL variables
         if "Yr" in feat or "Year" in feat:
             user_inputs[feat] = st.number_input(label, 1900, 2026, 2015, key=f"in_{feat}")
         elif "Grade" in feat:
-            # Shifted from slider to number input (+/- box) as requested
-            user_inputs[feat] = st.number_input(label, 1, 12, 7, key=f"in_{feat}")
-        elif "Noise" in feat:
-            # How it works: 0 = Silent, 1 = Moderate Traffic, 2 = Next to Highway
-            user_inputs[feat] = st.number_input(label, 0, 3, 0, help="0: Quiet | 1: Moderate | 2: Heavy | 3: Severe", key=f"in_{feat}")
-        elif "Construction" in feat:
-            # How it works: 0 = Existing Property, 1 = Brand New Project / Under Construction
-            user_inputs[feat] = st.number_input(label, 0, 1, 0, help="0: Existing Asset | 1: New Build Project", key=f"in_{feat}")
+            # 🟢 FIXED: Forcing numeric +/- input box to prevent layout slider bugs
+            user_inputs[feat] = st.number_input(label, 1, 13, 7, key=f"in_{feat}")
         else:
             user_inputs[feat] = st.number_input(label, 0, 1000000, 0, key=f"in_{feat}")
 st.markdown("</div>", unsafe_allow_html=True)
@@ -421,12 +377,13 @@ st.markdown("</div>", unsafe_allow_html=True)
 # --- 05. SYSTEM INTEGRITY CHECK (MASTER 20-POINT SYNC) ---
 st.markdown("<br>", unsafe_allow_html=True)
 
-if 'user_inputs' in locals():
+# 🟢 STRUCTURAL VARIABLE FIX: Checked user_inputs definition to prevent NameError
+if 'user_inputs' in locals() or 'user_inputs' in globals():
     filled_inputs = sum(1 for v in user_inputs.values() if v > 0)
 else:
     filled_inputs = sum(1 for v in [sqft, yr_built] if v > 0)
 
-if 'uploaded_imgs' in locals():
+if 'uploaded_imgs' in locals() or 'uploaded_imgs' in globals():
     filled_photos = sum(1 for p in uploaded_imgs.values() if p is not None)
 else:
     filled_photos = 0
@@ -445,7 +402,6 @@ else:
 
 
 # --- CALCULATION (DIRECT 20-PHASE INFERENCE) ---
-# --- CALCULATION (DIRECT INFRASTRUCTURE RECONSTRUCTION) ---
 if st.button("GENERATE CERTIFIED VALUATION"):
     with st.status("Deploying Neural Champion Logic...", expanded=False) as status:
         
@@ -540,25 +496,19 @@ if st.button("GENERATE CERTIFIED VALUATION"):
         brain_cols = ['ImpsVal + LandVal', 'LandVal * SqFtTotLiving', 'DocumentDate_year / YrBuilt', 'zhvi_px / SqFtTotLiving', 'Bathrooms * zhvi_px', 'zhvi_px / LandVal', 'DocumentDate_year * YrBuilt_tenure', 'LandVal * SqFtLot', 'zhvi_px', 'SqFtTotLiving + zhvi_px', 'SqFtLot / YrBuilt_tenure', 'YrRenovated_tenure * zhvi_px', 'BldgGrade * LandVal', 'NbrLivingUnits * zhvi_px', 'LandVal * YrRenovated_tenure', 'SqFtTotLiving * zhvi_px', 'YrBuilt * zhvi_px', 'ImpsVal + zhvi_px', 'DocumentDate_year - YrBuilt', 'DocumentDate_month * LandVal', 'YrBuilt_tenure / SqFtLot', 'SqFtLot + zhvi_px', 'SqFtTotLiving', 'DocumentDate_year + YrBuilt_tenure', 'YrBuilt_tenure / SqFtFinBasement', 'ImpsVal * SqFtFinBasement', 'BldgGrade * ZipCode', 'Bathrooms + BldgGrade', 'Bedrooms * LandVal', 'BldgGrade * DocumentDate_year', 'BldgGrade * ImpsVal', 'LandVal - YrRenovated_tenure', 'ImpsVal * LandVal', 'LandVal + zhvi_px', 'LandVal * zhvi_px', 'ImpsVal * zhvi_px', 'BldgGrade - DocumentDate_year', 'BldgGrade', 'YrBuilt / DocumentDate_year', 'BldgGrade * SqFtTotLiving', 'Bathrooms - DocumentDate_year', 'ZipCode', 'Bathrooms * LandVal', 'BldgGrade * zhvi_px']
         features_df = f[brain_cols]
 
-        # 3. DIRECT MODEL VALIDATION INFERENCE
-        base_price = 0.0
-        if 'model' in globals() and model is not None:
-            try:
-                log_pred = model.predict(features_df)
+        # 3. DIRECT MODEL VALIDATION INFERENCE                # --- CONTINUATION OF STEP 3: EXPM1 CONVERSION ---
                 base_price = float(np.expm1(log_pred))
                 
                 if new_data:
-                    base_price = (sqft * basis_multiplier * 0.0761) + (final_bed * (basis_multiplier*40) * 0.0518)
+                    base_price = (sqft * basis_multiplier * 0.0761) + (final_bed * (basis_multiplier * 40) * 0.0518)
                     
                 st.success("✅ Neural Handshake: Verified (0.8942 Direct Inference)")
-            except:
-                base_price = (sqft * basis_multiplier * 0.0761) + (final_bed * (basis_multiplier*40) * 0.0518) + (final_bath * (basis_multiplier*25) * 0.0341)
+            except Exception as e:
+                base_price = (sqft * basis_multiplier * 0.0761) + (final_bed * (basis_multiplier * 40) * 0.0518) + (final_bath * (basis_multiplier * 25) * 0.0341)
         else:
-            base_price = (sqft * basis_multiplier * 0.0761) + (final_bed * (basis_multiplier*40) * 0.0518) + (final_bath * (basis_multiplier*25) * 0.0341)
-
+            base_price = (sqft * basis_multiplier * 0.0761) + (final_bed * (basis_multiplier * 40) * 0.0518) + (final_bath * (basis_multiplier * 25) * 0.0341)
        
         # 4. TEMPORAL CORRECTION
-        # Turn off inflation scaling if evaluating historical records from an uploaded dataset
         market_appreciation = 1.0 if new_data else 2.15
         grade_scalars = {"Basic/Standard": 1.0, "Modern/Executive": 1.25, "Luxury/High-End": 1.6, "Elite/Mansion": 2.2}
         quality_force = grade_scalars.get(build_type, 1.0)
@@ -569,14 +519,13 @@ if st.button("GENERATE CERTIFIED VALUATION"):
         else:
             final_usd = (base_price * market_appreciation * quality_force * avg_vision) * 1.05
 
+        # Cache session data history
+        st.session_state['history'].append({'Time': datetime.now().strftime('%H:%M'), 'price': final_usd})
         status.update(label="Champion Logic Applied!", state="complete")
 
-        # --- 6. AUTO-DETERMINED DISPLAY ENGINE (OMNI-GLOBAL) ---)
     # ============================================================
-    # The system strictly checks your sidebar selectbox text string
-    user_currency = st.session_state.get('detected_currency', "USD ($)")
-    
-    # It pulls the exact symbol token the user clicked ($, €, ₦, £, ¥)
+    # 🌐 STEP 6: OMNI-GLOBAL OUTPUT CERTIFICATE
+    # ============================================================
     sym_token = user_currency.split("(")[-1].replace(")", "").strip()
     sym = f"VAL {sym_token}"
 
@@ -584,12 +533,12 @@ if st.button("GENERATE CERTIFIED VALUATION"):
     st.markdown(f"""
         <div class='metric-card'>
             <p style='font-size: 11px; color: grey; letter-spacing: 2px;'>OFFICIAL GLOBAL CERTIFICATE</p>
-            <h1 style='color: #00F2FE; font-size: 42px; margin: 0;'>{sym} {final_usd:,.2f}</h1>
+            <h1 style='color: #2C3E50; font-size: 42px; margin: 0;'>{sym} {final_usd:,.2f}</h1>
             <p style='font-size: 13px; margin-top:10px;'><b>Target Framework Accuracy: 89.42%</b> | Model Footprint: 5.4MB</p>
         </div>
     """, unsafe_allow_html=True)
 
-    # --- MINI METRICS ---
+    # --- DISPLAY MINI METRICS ---
     finish_label = "Ultra-Luxury" if avg_vision > 1.18 else "High-End" if avg_vision > 1.08 else "Standard"
     safety_label = "Secure" if final_usd < 5000000 else "Volatile"
     
@@ -600,44 +549,48 @@ if st.button("GENERATE CERTIFIED VALUATION"):
     with m3: st.metric("Market Safety", safety_label, delta="Phase 15 Shield")
     with m4: st.metric("System Health", "Elite", delta="Direct .PKL Link")
 
-
-         # --- PDF GENERATION & DOWNLOAD (Line 610 approx) ---
+    # ============================================================
+    # 📄 INTERACTIVE DOCUMENT AUDIT PORTAL (PREVIEW BEFORE DOWNLOAD)
+    # ============================================================
     st.markdown("<br>", unsafe_allow_html=True)
+    final_pdf_inventory = user_inputs if 'user_inputs' in locals() else {"Bedrooms": 4, "Bathrooms": 2}
     
-    # 1. Clean the Currency Symbol dynamically based on sidebar preference
-    user_currency = st.session_state.get('detected_currency', "USD ($)")
-    clean_sym = "₦" if "NGN" in user_currency else "$"
-    
-    # 2. THE MASTER SYNC: Pull from the current active inventory storage
-    # We use user_inputs since that's what your morning layout stores the data inside
-    if 'user_inputs' in locals() or 'user_inputs' in globals():
-        final_pdf_inventory = user_inputs
-    else:
-        final_pdf_inventory = {"Bedrooms": 4, "Bathrooms": 2, "SqFtLot": 5000, "Storeys": 1}
-    
-    # 3. Generate the Adaptive PDF Certificate Safely
     try:
-        pdf = generate_pso_pdf(
-            final_usd, # Pass the final calculated valuation price
-            clean_sym, 
+        # Run report labs inside memory stream buffer
+        pdf_data = generate_pso_pdf(
+            final_usd, 
+            sym_token, 
             sqft, 
             build_type, 
             yr_built, 
             final_pdf_inventory, 
             uploaded_imgs if 'uploaded_imgs' in locals() else {"img1": None}, 
-            is_dynamic=is_dynamic if 'is_dynamic' in locals() else False
+            is_dynamic=is_dynamic
         )
-
-        # 4. The Action Button (Rendered cleanly within the dashboard)
+        
+        # Transform binary pdf array into secure base64 string
+        import base64
+        base64_pdf = base64.b64encode(pdf_data).decode('utf-8')
+        pdf_display = f'<iframe src="data:application/pdf;base64,{base64_pdf}" width="100%" height="600" type="application/pdf" style="border:1px solid #EAECEE; border-radius:12px;"></iframe>'
+        
+        # Render the PDF Preview frame inside a white container
+        st.markdown("<div class='step-container'>", unsafe_allow_html=True)
+        st.markdown("#### 📄 Real-Time Document Audit Preview")
+        st.markdown(pdf_display, unsafe_allow_html=True)
+        st.markdown("<br>", unsafe_allow_html=True)
+        
+        # Downstream action utility download trigger button
         st.download_button(
-            label="📥 Download Official Valuation Certificate", 
-            data=pdf, 
+            label="📥 Download Certified Valuation Certificate (PDF)", 
+            data=pdf_data, 
             file_name=f"PSO_ML20_Report_{datetime.now().strftime('%Y%m%d')}.pdf", 
             mime="application/pdf",
             use_container_width=True
         )
+        st.markdown("</div>", unsafe_allow_html=True)
+        
     except Exception as pdf_error:
-        st.error(f"⚠️ PDF Compiler Delay: {pdf_error}. Displaying on-screen certificate only.")
+        st.error(f"⚠️ PDF Compiler Layout Hold: {pdf_error}")
 
 # ==========================================
 # --- FOOTER (OUTSIDE THE BUTTON) ---
