@@ -465,13 +465,29 @@ if st.button("GENERATE CERTIFIED VALUATION"):
         avg_vision = (s1 + s3 + s4) / 3
 
         # 2. 44-POINT RECONSTRUCTION WITH INBUILT OR NEW DATASET SYNC
-        # Detect current runtime currency from autopilot session state
         currency_setting = st.session_state.get('detected_currency', "USD ($)")
         basis_multiplier = st.session_state.get('local_basis', 1950)
 
-        final_bed = user_inventory.get("Bedrooms", 4)
-        final_bath = user_inventory.get("Bathrooms", 2)
-        final_lot = user_inventory.get("SqFtLot", 5000)
+        # 🛡️ THE NAME RESOLVER ENGINE: Sniffs columns for spelling mismatches
+        def resolve_feature(target_keywords, default_val):
+            if new_data and 'full_columns' in st.session_state:
+                for col in st.session_state['full_columns']:
+                    if any(key in col.lower() for key in target_keywords):
+                        return float(df_raw[col].mean()) if col in df_raw.columns else default_val
+            return default_val
+
+        # Automatically maps messy uploaded strings to your clean system physics
+        final_bed = resolve_feature(['bed', 'rms', 'room'], user_inventory.get("Bedrooms", 4))
+        final_bath = resolve_feature(['bath', 'bth', 'toilet'], user_inventory.get("Bathrooms", 2))
+        final_lot = resolve_feature(['lot', 'land', 'plot'], user_inventory.get("SqFtLot", 5000))
+        final_storeys = resolve_feature(['story', 'storey', 'floor', 'level'], user_inventory.get("Storeys", 1))
+        
+        f_solar = user_inventory.get("Solar KVA", 0)
+        f_gen = user_inventory.get("Gen (KVA)", 0)
+        f_ac = user_inventory.get("AC Units", 0)
+        f_cctv = user_inventory.get("CCTV Cameras", 0)
+        f_bq = user_inventory.get("BQ Units", 0)
+
 
         # Base Data Structure matching your exact 44-Point Notebook Output
         base_data = {
@@ -534,14 +550,13 @@ if st.button("GENERATE CERTIFIED VALUATION"):
         brain_cols = ['ImpsVal + LandVal', 'LandVal * SqFtTotLiving', 'DocumentDate_year / YrBuilt', 'zhvi_px / SqFtTotLiving', 'Bathrooms * zhvi_px', 'zhvi_px / LandVal', 'DocumentDate_year * YrBuilt_tenure', 'LandVal * SqFtLot', 'zhvi_px', 'SqFtTotLiving + zhvi_px', 'SqFtLot / YrBuilt_tenure', 'YrRenovated_tenure * zhvi_px', 'BldgGrade * LandVal', 'NbrLivingUnits * zhvi_px', 'LandVal * YrRenovated_tenure', 'SqFtTotLiving * zhvi_px', 'YrBuilt * zhvi_px', 'ImpsVal + zhvi_px', 'DocumentDate_year - YrBuilt', 'DocumentDate_month * LandVal', 'YrBuilt_tenure / SqFtLot', 'SqFtLot + zhvi_px', 'SqFtTotLiving', 'DocumentDate_year + YrBuilt_tenure', 'YrBuilt_tenure / SqFtFinBasement', 'ImpsVal * SqFtFinBasement', 'BldgGrade * ZipCode', 'Bathrooms + BldgGrade', 'Bedrooms * LandVal', 'BldgGrade * DocumentDate_year', 'BldgGrade * ImpsVal', 'LandVal - YrRenovated_tenure', 'ImpsVal * LandVal', 'LandVal + zhvi_px', 'LandVal * zhvi_px', 'ImpsVal * zhvi_px', 'BldgGrade - DocumentDate_year', 'BldgGrade', 'YrBuilt / DocumentDate_year', 'BldgGrade * SqFtTotLiving', 'Bathrooms - DocumentDate_year', 'ZipCode', 'Bathrooms * LandVal', 'BldgGrade * zhvi_px']
         features_df = f[brain_cols]
 
-        # Step 3: Neural Handshake)
+        # ============================================================
+        # 🏆 STEP 3: OMNI-MARKET NEURAL HANDSHAKE
         # ============================================================
         base_price = 0.0
         if 'model' in globals() and model is not None:
             try:
                 log_pred = model.predict(features_df)
-                # ⚠️ SINCERE ADJUSTMENT: Change log_pred[0] to just log_pred
-                # Because modern scikit-learn pipelines handle the indexing internally
                 base_price = float(np.expm1(log_pred))
                 
                 if new_data:
