@@ -344,18 +344,18 @@ else:
 
 st.markdown("</div>", unsafe_allow_html=True)
 
-# --- 02. FORENSIC EVIDENCE VAULT (ADAPTIVE) ---
+# --- 02. FORENSIC EVIDENCE VAULT (LOCKED LABELS) ---
 st.markdown("<div class='step-container'>", unsafe_allow_html=True)
 st.markdown("#### 02. Forensic Evidence Vault")
+st.warning("**PROTOCOL:** Capture full-view photos from floor-to-ceiling for accurate material analysis.")
 
-if 'brain_features' in locals() or 'brain_features' in globals():
-    top_10_features = brain_features[:10]
-else:
-    top_10_features = ['SqFtTotLiving', 'BldgGrade', 'YrBuilt', 'Bedrooms', 'Bathrooms', 'SqFtLot']
-
-photo_labels = [clean_label(f) + " Evidence" for f in top_10_features[:5]]
-general_labels = ["Exterior Elevation", "Kitchen Architecture", "Master Suite", "Energy Unit", "Security Perimeter"]
-all_photo_slots = (photo_labels + general_labels)[:10]
+# Hardcoded premium physical descriptors to avoid "Year of Construction Evidence"
+all_photo_slots = [
+    "Exterior Elevation", "Compound Paving", "Living Room View", 
+    "Kitchen Architecture", "Master Bedroom", "Master Bathroom", 
+    "Corridors & Staircase", "Energy / Power Unit", "Boys Quarters (BQ)", 
+    "Security & Gatehouse"
+]
 
 with st.expander("Expand 10-Point Evidence Portals", expanded=True):
     p_cols = st.columns(2)
@@ -365,19 +365,46 @@ with st.expander("Expand 10-Point Evidence Portals", expanded=True):
             uploaded_imgs[f"img{i+1}"] = st.file_uploader(f"{i+1}. {p_label}", type=['jpg', 'png'], key=f"img_{i}")
 st.markdown("</div>", unsafe_allow_html=True)
 
-# --- 03. FORENSIC INVENTORY (DYNAMIC MIRROR) ---
+# --- 03. FORENSIC INVENTORY (DYNAMIC MIRROR WITH CRITICAL CORRECTIONS) ---
 st.markdown("<div class='step-container'>", unsafe_allow_html=True)
 st.markdown("#### 03. Forensic Dataset Inventory")
 
+# Custom clean naming layer targeting your specific 44-point baseline columns
+def clean_label(name):
+    mapping = {
+        'SqFtTotLiving': 'Total Living Area (Sqft)',
+        'BldgGrade': 'Construction Grade (1-12)',
+        'YrBuilt': 'Year of Construction',
+        'NbrLivingUnits': 'Unit Density',
+        'SqFtLot': 'Land Area (Sqft)',
+        'YrRenovated': 'Year of Last Renovation',
+        'Bedrooms': 'Bedrooms', # Changed from Bedrooms Count
+        'Bathrooms': 'Bathrooms',
+        'TrafficNoise': 'Traffic Noise Index',
+        'NewConstruction': 'New Construction Flag'
+    }
+    return mapping.get(name, str(name).replace('_', ' ').title())
+
+top_10_features = brain_features[:10]
 user_inputs = {}
+
 cols = st.columns(5)
 for i, feat in enumerate(top_10_features):
     with cols[i % 5]:
         label = clean_label(feat)
+        
+        # 🟢 CORRECTION: Use number input (+ / - box) instead of standard slider for ALL variables
         if "Yr" in feat or "Year" in feat:
             user_inputs[feat] = st.number_input(label, 1900, 2026, 2015, key=f"in_{feat}")
         elif "Grade" in feat:
-            user_inputs[feat] = st.slider(label, 1, 13, 7, key=f"in_{feat}")
+            # Shifted from slider to number input (+/- box) as requested
+            user_inputs[feat] = st.number_input(label, 1, 12, 7, key=f"in_{feat}")
+        elif "Noise" in feat:
+            # How it works: 0 = Silent, 1 = Moderate Traffic, 2 = Next to Highway
+            user_inputs[feat] = st.number_input(label, 0, 3, 0, help="0: Quiet | 1: Moderate | 2: Heavy | 3: Severe", key=f"in_{feat}")
+        elif "Construction" in feat:
+            # How it works: 0 = Existing Property, 1 = Brand New Project / Under Construction
+            user_inputs[feat] = st.number_input(label, 0, 1, 0, help="0: Existing Asset | 1: New Build Project", key=f"in_{feat}")
         else:
             user_inputs[feat] = st.number_input(label, 0, 1000000, 0, key=f"in_{feat}")
 st.markdown("</div>", unsafe_allow_html=True)
@@ -545,19 +572,20 @@ if st.button("GENERATE CERTIFIED VALUATION"):
 
         status.update(label="Champion Logic Applied!", state="complete")
 
-        # --- 6. AUTO-DETERMINED DISPLAY ENGINE (OMNI-GLOBAL) ---
-    # Safely pull the user-defined currency symbol from session state
+        # --- 6. AUTO-DETERMINED DISPLAY ENGINE (OMNI-GLOBAL) ---)
+    # ============================================================
+    # The system strictly checks your sidebar selectbox text string
     user_currency = st.session_state.get('detected_currency', "USD ($)")
     
-    # Extract only the symbol token ($, €, ₦, etc.) from the text string
+    # It pulls the exact symbol token the user clicked ($, €, ₦, £, ¥)
     sym_token = user_currency.split("(")[-1].replace(")", "").strip()
     sym = f"VAL {sym_token}"
 
     st.balloons()
     st.markdown(f"""
         <div class='metric-card'>
-            <p style='font-size: 11px; color: grey; letter-spacing: 2px;'>OFFICIAL SOVEREIGN CERTIFICATE</p>
-            <h1 style='color: {brand_color}; font-size: 42px; margin: 0;'>{sym} {final_usd:,.2f}</h1>
+            <p style='font-size: 11px; color: grey; letter-spacing: 2px;'>OFFICIAL GLOBAL CERTIFICATE</p>
+            <h1 style='color: #00F2FE; font-size: 42px; margin: 0;'>{sym} {final_usd:,.2f}</h1>
             <p style='font-size: 13px; margin-top:10px;'><b>Target Framework Accuracy: 89.42%</b> | Model Footprint: 5.4MB</p>
         </div>
     """, unsafe_allow_html=True)
