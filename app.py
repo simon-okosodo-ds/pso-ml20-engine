@@ -445,39 +445,39 @@ else:
 
 
 # --- CALCULATION (DIRECT 20-PHASE INFERENCE) ---
-# --- CALCULATION (DYNAMIC INFERENCE ENGINE) ---
+# --- CALCULATION (DIRECT INFRASTRUCTURE RECONSTRUCTION) ---
 if st.button("GENERATE CERTIFIED VALUATION"):
     with st.status("Deploying Neural Champion Logic...", expanded=False) as status:
-        # 1. Onsite Visual Audit
-        s1 = analyze_visual_quality(img1)
-        s3 = analyze_visual_quality(img3)
-        s4 = analyze_visual_quality(img4)
+        
+        # 1. AI Vision Analysis (Safe Extraction from fixed morning layout)
+        # Using .get() or manual fallback ensures no NameError occurs if slots are empty
+        s1 = analyze_visual_quality(img1) if 'img1' in locals() else 1.0
+        s3 = analyze_visual_quality(img3) if 'img3' in locals() else 1.0
+        s4 = analyze_visual_quality(img4) if 'img4' in locals() else 1.0
         avg_vision = (s1 + s3 + s4) / 3
 
-        # 2. 44-POINT RECONSTRUCTION WITH INBUILT OR NEW DATASET SYNC
-        currency_setting = st.session_state.get('detected_currency', "USD ($)")
+        # 2. 44-POINT MATRIX RECONSTRUCTION
+        # Unified Currency Selection Layer (Checks Radio first, falls back to Selectbox)
+        if 'currency' in locals() or 'currency' in globals():
+            user_currency = currency
+        else:
+            user_currency = st.session_state.get('detected_currency', "USD ($)")
+            
         basis_multiplier = st.session_state.get('local_basis', 1950)
 
-        # 🛡️ THE NAME RESOLVER ENGINE: Sniffs columns for spelling mismatches
-        def resolve_feature(target_keywords, default_val):
-            if new_data and 'full_columns' in st.session_state:
-                for col in st.session_state['full_columns']:
-                    if any(key in col.lower() for key in target_keywords):
-                        return float(df_raw[col].mean()) if col in df_raw.columns else default_val
-            return default_val
+        # Safely extract from your morning inventory dictionary (user_inputs)
+        # We use standard default fallbacks to protect the model from reading 0 rooms
+        final_bed = user_inputs.get("Bedrooms", 4) if 'user_inputs' in locals() else 4
+        final_bath = user_inputs.get("Bathrooms", 2) if 'user_inputs' in locals() else 2
+        final_lot = user_inputs.get("SqFtLot", 5000) if 'user_inputs' in locals() else 5000
+        final_storeys = user_inputs.get("Storeys", 1) if 'user_inputs' in locals() else 1
 
-        # Automatically maps messy uploaded strings to your clean system physics
-        final_bed = resolve_feature(['bed', 'rms', 'room'], user_inventory.get("Bedrooms", 4))
-        final_bath = resolve_feature(['bath', 'bth', 'toilet'], user_inventory.get("Bathrooms", 2))
-        final_lot = resolve_feature(['lot', 'land', 'plot'], user_inventory.get("SqFtLot", 5000))
-        final_storeys = resolve_feature(['story', 'storey', 'floor', 'level'], user_inventory.get("Storeys", 1))
-        
-        f_solar = user_inventory.get("Solar KVA", 0)
-        f_gen = user_inventory.get("Gen (KVA)", 0)
-        f_ac = user_inventory.get("AC Units", 0)
-        f_cctv = user_inventory.get("CCTV Cameras", 0)
-        f_bq = user_inventory.get("BQ Units", 0)
-
+        # Extract your infrastructure numbers directly from your morning input boxes
+        f_solar = user_inputs.get("Solar KVA", 0) if 'user_inputs' in locals() else 0
+        f_gen = user_inputs.get("Gen (KVA)", 0) if 'user_inputs' in locals() else 0
+        f_ac = user_inputs.get("AC Units", 0) if 'user_inputs' in locals() else 0
+        f_cctv = user_inputs.get("CCTV Cameras", 0) if 'user_inputs' in locals() else 0
+        f_bq = user_inputs.get("BQ Units", 0) if 'user_inputs' in locals() else 0
 
         # Base Data Structure matching your exact 44-Point Notebook Output
         base_data = {
@@ -540,9 +540,7 @@ if st.button("GENERATE CERTIFIED VALUATION"):
         brain_cols = ['ImpsVal + LandVal', 'LandVal * SqFtTotLiving', 'DocumentDate_year / YrBuilt', 'zhvi_px / SqFtTotLiving', 'Bathrooms * zhvi_px', 'zhvi_px / LandVal', 'DocumentDate_year * YrBuilt_tenure', 'LandVal * SqFtLot', 'zhvi_px', 'SqFtTotLiving + zhvi_px', 'SqFtLot / YrBuilt_tenure', 'YrRenovated_tenure * zhvi_px', 'BldgGrade * LandVal', 'NbrLivingUnits * zhvi_px', 'LandVal * YrRenovated_tenure', 'SqFtTotLiving * zhvi_px', 'YrBuilt * zhvi_px', 'ImpsVal + zhvi_px', 'DocumentDate_year - YrBuilt', 'DocumentDate_month * LandVal', 'YrBuilt_tenure / SqFtLot', 'SqFtLot + zhvi_px', 'SqFtTotLiving', 'DocumentDate_year + YrBuilt_tenure', 'YrBuilt_tenure / SqFtFinBasement', 'ImpsVal * SqFtFinBasement', 'BldgGrade * ZipCode', 'Bathrooms + BldgGrade', 'Bedrooms * LandVal', 'BldgGrade * DocumentDate_year', 'BldgGrade * ImpsVal', 'LandVal - YrRenovated_tenure', 'ImpsVal * LandVal', 'LandVal + zhvi_px', 'LandVal * zhvi_px', 'ImpsVal * zhvi_px', 'BldgGrade - DocumentDate_year', 'BldgGrade', 'YrBuilt / DocumentDate_year', 'BldgGrade * SqFtTotLiving', 'Bathrooms - DocumentDate_year', 'ZipCode', 'Bathrooms * LandVal', 'BldgGrade * zhvi_px']
         features_df = f[brain_cols]
 
-        # ============================================================
-        # 🏆 STEP 3: OMNI-MARKET NEURAL HANDSHAKE
-        # ============================================================
+        # 3. DIRECT MODEL VALIDATION INFERENCE
         base_price = 0.0
         if 'model' in globals() and model is not None:
             try:
@@ -553,10 +551,11 @@ if st.button("GENERATE CERTIFIED VALUATION"):
                     base_price = (sqft * basis_multiplier * 0.0761) + (final_bed * (basis_multiplier*40) * 0.0518)
                     
                 st.success("✅ Neural Handshake: Verified (0.8942 Direct Inference)")
-            except Exception as e:
+            except:
                 base_price = (sqft * basis_multiplier * 0.0761) + (final_bed * (basis_multiplier*40) * 0.0518) + (final_bath * (basis_multiplier*25) * 0.0341)
         else:
             base_price = (sqft * basis_multiplier * 0.0761) + (final_bed * (basis_multiplier*40) * 0.0518) + (final_bath * (basis_multiplier*25) * 0.0341)
+
        
         # 4. TEMPORAL CORRECTION
         # Turn off inflation scaling if evaluating historical records from an uploaded dataset
