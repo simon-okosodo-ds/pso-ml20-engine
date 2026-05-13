@@ -30,6 +30,27 @@ def load_champion_brain():
 model, brain_features = load_champion_brain()
 
 
+# ============================================================
+# 🛡️ GLOBAL PropTech TERMINOLOGY CONVERTER
+# ============================================================
+def clean_label(name):
+    """Converts raw dataset column names into premium executive titles."""
+    mapping = {
+        'SqFtTotLiving': 'Total Living Area (Sqft)',
+        'BldgGrade': 'Construction Grade (1-12)',
+        'YrBuilt': 'Year of Construction',
+        'NbrLivingUnits': 'Unit Density',
+        'SqFtLot': 'Land Area (Sqft)',
+        'YrRenovated': 'Year of Last Renovation',
+        'Bedrooms': 'Bedrooms Count',
+        'Bathrooms': 'Bathrooms Count',
+        'Floors': 'Storeys Count',
+        'Stories': 'Storeys Count'
+    }
+    # Return the clean map name or format the ugly raw string cleanly
+    return mapping.get(name, str(name).replace('_', ' ').replace('*', 'x').title())
+
+
 
 # --- 1. ANTI-BIAS VISION ENGINE (THE MATERIAL SENSOR) ---
 def analyze_visual_quality(uploaded_file):
