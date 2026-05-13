@@ -37,7 +37,7 @@ def clean_label(name):
     """Converts raw dataset column names into premium executive titles."""
     mapping = {
         'SqFtTotLiving': 'Total Living Area (Sqft)',
-        'BldgGrade': 'Construction Grade (1-12)',
+        'BldgGrade': 'Construction Grade',
         'YrBuilt': 'Year of Construction',
         'NbrLivingUnits': 'Unit Density',
         'SqFtLot': 'Land Area (Sqft)',
@@ -373,7 +373,7 @@ st.markdown("#### 03. Forensic Dataset Inventory")
 def clean_label(name):
     mapping = {
         'SqFtTotLiving': 'Total Living Area (Sqft)',
-        'BldgGrade': 'Construction Grade (1-12)',
+        'BldgGrade': 'Construction Grade',
         'YrBuilt': 'Year of Construction',
         'NbrLivingUnits': 'Unit Density',
         'SqFtLot': 'Land Area (Sqft)',
