@@ -335,7 +335,15 @@ else:
 st.markdown("</div>", unsafe_allow_html=True)
 
 # --- 02. FORENSIC EVIDENCE VAULT (ADAPTIVE) ---
+st.markdown("<div class='step-container'>", unsafe_allow_html=True)
 st.markdown("#### 02. Forensic Evidence Vault")
+st.warning("**PROTOCOL:** Capture full-view photos from floor-to-ceiling for accurate material analysis.")
+
+# 🟢 THE FIX: Safely inherit from brain_features or establish the fallback array immediately
+if 'brain_features' in locals() or 'brain_features' in globals():
+    top_10_features = brain_features[:10]
+else:
+    top_10_features = ['SqFtTotLiving', 'BldgGrade', 'YrBuilt', 'Bedrooms', 'Bathrooms', 'SqFtLot']
 
 # Create labels based on Dataset atoms + General features
 photo_labels = [clean_label(f) + " Evidence" for f in top_10_features[:5]]
@@ -344,9 +352,11 @@ all_photo_slots = (photo_labels + general_labels)[:10]
 
 with st.expander("Expand 10-Point Evidence Portals", expanded=True):
     p_cols = st.columns(2)
+    uploaded_imgs = {}
     for i, p_label in enumerate(all_photo_slots):
         with p_cols[i % 2]:
-            st.file_uploader(f"{i+1}. {p_label}", type=['jpg', 'png'], key=f"img_{i}")
+            uploaded_imgs[f"img{i+1}"] = st.file_uploader(f"{i+1}. {p_label}", type=['jpg', 'png'], key=f"img_{i}")
+st.markdown("</div>", unsafe_allow_html=True)
 
 
 # --- 03. FORENSIC INVENTORY (DYNAMIC MIRROR) ---
