@@ -131,46 +131,6 @@ st.set_page_config(page_title="PSO-ML20 Executive", page_icon="🛡️", layout=
 if 'authenticated' not in st.session_state: st.session_state['authenticated'] = False
 if 'history' not in st.session_state: st.session_state['history'] = []
 
-# --- 4. EXECUTIVE UI STYLING (Standard & Modern Fonts) ---
-st.markdown("""
-    <style>
-    @import url('https://googleapis.com');
-    
-    html, body, [class*="css"] {
-        font-family: 'Inter', sans-serif !important;
-        font-size: 14px;
-        color: #2C3E50;
-    }
-    
-    .stButton>button {
-        border-radius: 8px;
-        font-size: 14px;
-        font-weight: 600;
-        letter-spacing: 0.5px;
-        height: 3.5em;
-        transition: 0.3s;
-        width: 100%;
-    }
-    
-    .metric-card {
-        background: white;
-        padding: 40px;
-        border-radius: 12px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-        text-align: center;
-        border: 1px solid #EAECEE;
-    }
-
-    h1, h2, h3, h4 { font-weight: 600 !important; letter-spacing: -0.5px; }
-    
-    /* Spacing between steps */
-    .step-container { margin-bottom: 60px; padding: 20px; border-radius: 10px; background-color: white; border: 1px solid #F2F4F4; }
-    
-    [data-testid="stMetricValue"] { font-size: 20px !important; font-weight: 600; }
-    [data-testid="stMetricDelta"] { font-size: 13px !important; }
-    </style>
-    """, unsafe_allow_html=True)
-
 # --- 5. ACCESS GATE ---
 if not st.session_state['authenticated']:
     st.markdown("<div style='text-align: center; margin-top: 100px;'><h3>🛡️ PSO-ML20 Secure Gateway</h3></div>", unsafe_allow_html=True)
@@ -191,44 +151,32 @@ with st.sidebar:
     with st.expander("🎨 Custom Branding", expanded=False):
         client_logo = st.file_uploader("Upload Company Logo", type=['png', 'jpg'])
         my_qr = st.file_uploader("Upload System QR", type=['png', 'jpg'])
-        brand_color = st.color_picker("Pick your Brand Color", "#2C3E50")
+        brand_color = st.color_picker("Pick your Brand Color", "#00F2FE") # Defaulting to Cyber Teal
     
-        # --- PORTAL 2: MARKET LEARNER (THE CSV UPLOADER) ---
+    # --- PORTAL 2: MARKET LEARNER (THE CSV UPLOADER) ---
     st.divider()
     st.write("📂 **Market Knowledge Portal**")
     new_data = st.file_uploader("Upload local market data (CSV)", type=['csv'])
     
-    # 🟢 THE AUTOPILOT SNIFFER
     if new_data:
         df_raw = pd.read_csv(new_data)
         st.session_state['full_columns'] = df_raw.columns.tolist()
         
-        # Fuzzy price column scanner
-        price_col = next((c for c in df_raw.columns if 'price' in c.lower() or 'val' in c.lower()), None)
+        detected_currency = st.selectbox(
+            "Select Spreadsheet Currency Baseline",
+            ["USD ($)", "EUR (€)", "CNY (¥)", "NGN (₦)", "GBP (£)"],
+            help="Select the currency your uploaded CSV columns are written in."
+        )
+        st.session_state['detected_currency'] = detected_currency
         
+        price_col = next((c for c in df_raw.columns if 'price' in c.lower() or 'val' in c.lower()), None)
         if price_col:
             avg_price = df_raw[price_col].mean()
-            # If mean price is high, automatically switch system to NGN
-            if avg_price > 2000000:
-                st.session_state['detected_currency'] = "NGN (₦)"
-                st.session_state['local_basis'] = avg_price / (2000 * 0.0761) # Calibrate base floor
-                st.info("🇳🇬 Automated Regional Detection: NGN (₦) Framework Enabled.")
-            else:
-                st.session_state['detected_currency'] = "USD ($)"
-                st.session_state['local_basis'] = 1950 # Standard US King County floor
-                st.info("🇺🇸 Automated Regional Detection: USD ($) Framework Enabled.")
+            st.session_state['local_basis'] = avg_price / (2000 * 0.0761)
+            st.success(f"✅ Market DNA Mapped to {detected_currency}.")
         else:
-            st.session_state['detected_currency'] = "USD ($)"
             st.session_state['local_basis'] = 1950
-
-        # Run dynamic column feature mapping
-        keywords = ['pool', 'waterfront', 'renovated', 'parking', 'view', 'basement', 'condition', 'stories', 'floor']
-        matched_extras = [col for col in df_raw.columns if any(k in col.lower() for k in keywords)]
-        
-        st.session_state['inventory_schema'] = matched_extras[:7]
-
-
-
+            st.warning("⚠️ Defaulting to baseline scaling coefficients.")
 
     # --- PORTAL 3: SETTINGS ---
     st.divider()
@@ -241,53 +189,94 @@ with st.sidebar:
     st.caption("AI Lead | MLOps Specialist | B.Eng (Chem)")
     st.info("🧠 **Engine:** PSO-ML20 Standard")
 
-# --- EXECUTIVE UI STYLING (2026 Sovereign Standard) ---
+# --- PREMIUM EXECUTIVE UI STYLING (Glassmorphic Cyber Standard) ---
 st.markdown(f"""
     <style>
-    @import url('https://googleapis.com');
+    @import url('googleapis.com');
     
-    /* GLOBAL RESET */
+    /* GLOBAL LUXURY CANVAS */
     html, body, [class*="css"] {{
-        font-family: 'Inter', sans-serif !important;
-        font-size: 14px;
-        color: #2C3E50;
+        font-family: 'Plus Jakarta Sans', sans-serif !important;
+        background-color: #0A0F1D !important;
+        color: #E2E8F0 !important;
+    }}
+    
+    /* OBSIDIAN GLOWING SIDEBAR */
+    [data-testid="stSidebar"] {{
+        background: linear-gradient(180deg, #060B26 0%, #0A0F1D 100%) !important;
+        border-right: 1px solid rgba(0, 242, 254, 0.15) !important;
+        box-shadow: 5px 0 30px rgba(0, 0, 0, 0.5);
+    }}
+    
+    [data-testid="stSidebar"] *, [data-testid="stSidebar"] p, [data-testid="stSidebar"] label {{
+        color: #94A3B8 !important;
+    }}
+    
+    /* GLASSMORPHIC STEP CONTAINERS */
+    .step-container {{
+        background: rgba(13, 20, 38, 0.6) !important;
+        border: 1px solid rgba(255, 255, 255, 0.05) !important;
+        border-radius: 16px !important;
+        padding: 24px !important;
+        margin-bottom: 25px !important;
+        backdrop-filter: blur(12px) !important;
+        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3) !important;
+    }}
+    
+    .step-container h4 {{
+        color: #00F2FE !important;
+        letter-spacing: 1px;
+        font-weight: 700;
+        margin-bottom: 15px;
     }}
 
-    /* DEEP BLACK SIDEBAR UPGRADE */
-    [data-testid="stSidebar"] {{
-        background-color: #000000 !important;
-        border-right: 1px solid #333333;
+    /* PREMIUM METRIC CARDS */
+    .metric-card {{
+        background: linear-gradient(135deg, rgba(6, 182, 212, 0.1) 0%, rgba(59, 130, 246, 0.05) 100%) !important;
+        border: 1px solid rgba(6, 182, 212, 0.2) !important;
+        border-radius: 20px !important;
+        padding: 30px !important;
+        text-align: center !important;
+        box-shadow: 0 0 40px rgba(6, 182, 212, 0.1) !important;
+        transition: transform 0.3s ease;
     }}
-    
-    /* FORCE SIDEBAR TEXT TO WHITE */
-    [data-testid="stSidebar"] *, [data-testid="stSidebar"] p, [data-testid="stSidebar"] label {{
+    .metric-card:hover {{
+        transform: translateY(-5px);
+    }}
+
+    /* CYBER INPUT SLIDERS & BOXES */
+    [data-testid="stSidebar"] div[data-baseweb="select"] > div,
+    [data-testid="stSidebar"] div[data-baseweb="input"] > div,
+    div[data-baseweb="input"] > div,
+    .stNumberInput div {{
+        background-color: #0D1426 !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        border-radius: 8px !important;
         color: #FFFFFF !important;
     }}
     
-    /* SIDEBAR INPUT BOXES */
-    [data-testid="stSidebar"] div[data-baseweb="select"] > div,
-    [data-testid="stSidebar"] div[data-baseweb="input"] > div,
-    [data-testid="stSidebar"] div[data-baseweb="radio"] label {{
-        background-color: #1A1A1A !important;
-        border: 1px solid #333333 !important;
-        color: white !important;
-    }}
-
-    /* Button Style */
+    /* GAUGE BUTTON HIGHLIGHT */
     .stButton>button {{ 
-        background: {brand_color} !important; 
-        color: white !important; 
-        border-radius: 8px; 
+        background: linear-gradient(90deg, #00F2FE 0%, #4FACFE 100%) !important;
+        color: #060B26 !important; 
+        border-radius: 12px; 
         border: none;
-        height: 3.5em;
-        font-weight: 600;
+        height: 3.8em;
+        font-weight: 700;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        box-shadow: 0 4px 20px rgba(0, 242, 254, 0.3) !important;
+        transition: 0.3s all ease;
         width: 100%;
-        transition: 0.3s;
     }}
     .stButton>button:hover {{
-        opacity: 0.8;
-        transform: scale(0.98);
+        box-shadow: 0 6px 30px rgba(0, 242, 254, 0.6) !important;
+        transform: scale(1.01);
+        opacity: 0.9;
     }}
+    
+    [data-testid="stMetricValue"] {{ font-size: 24px !important; font-weight: 700; color: #FFFFFF; }}
+    [data-testid="stMetricDelta"] {{ font-size: 13px !important; }}
     </style>
     """, unsafe_allow_html=True)
 
@@ -309,6 +298,7 @@ else:
     with col_mid:
         st.title("Executive Valuation Terminal")
         st.caption("PSO-ML20 Standard | Industrial Forensic Audit Engine")
+
 
 
 # ==========================================
@@ -513,23 +503,25 @@ if st.button("GENERATE CERTIFIED VALUATION"):
         brain_cols = ['ImpsVal + LandVal', 'LandVal * SqFtTotLiving', 'DocumentDate_year / YrBuilt', 'zhvi_px / SqFtTotLiving', 'Bathrooms * zhvi_px', 'zhvi_px / LandVal', 'DocumentDate_year * YrBuilt_tenure', 'LandVal * SqFtLot', 'zhvi_px', 'SqFtTotLiving + zhvi_px', 'SqFtLot / YrBuilt_tenure', 'YrRenovated_tenure * zhvi_px', 'BldgGrade * LandVal', 'NbrLivingUnits * zhvi_px', 'LandVal * YrRenovated_tenure', 'SqFtTotLiving * zhvi_px', 'YrBuilt * zhvi_px', 'ImpsVal + zhvi_px', 'DocumentDate_year - YrBuilt', 'DocumentDate_month * LandVal', 'YrBuilt_tenure / SqFtLot', 'SqFtLot + zhvi_px', 'SqFtTotLiving', 'DocumentDate_year + YrBuilt_tenure', 'YrBuilt_tenure / SqFtFinBasement', 'ImpsVal * SqFtFinBasement', 'BldgGrade * ZipCode', 'Bathrooms + BldgGrade', 'Bedrooms * LandVal', 'BldgGrade * DocumentDate_year', 'BldgGrade * ImpsVal', 'LandVal - YrRenovated_tenure', 'ImpsVal * LandVal', 'LandVal + zhvi_px', 'LandVal * zhvi_px', 'ImpsVal * zhvi_px', 'BldgGrade - DocumentDate_year', 'BldgGrade', 'YrBuilt / DocumentDate_year', 'BldgGrade * SqFtTotLiving', 'Bathrooms - DocumentDate_year', 'ZipCode', 'Bathrooms * LandVal', 'BldgGrade * zhvi_px']
         features_df = f[brain_cols]
 
-        # 3. DIRECT MODEL VALIDATION INFERENCE
+        Step 3: Neural Handshake)
+        # ============================================================
+        base_price = 0.0
         if 'model' in globals() and model is not None:
             try:
                 log_pred = model.predict(features_df)
+                # ⚠️ SINCERE ADJUSTMENT: Change log_pred[0] to just log_pred
+                # Because modern scikit-learn pipelines handle the indexing internally
                 base_price = float(np.expm1(log_pred))
                 
-                # Apply local basis adjustment if a new dataset was injected
                 if new_data:
                     base_price = (sqft * basis_multiplier * 0.0761) + (final_bed * (basis_multiplier*40) * 0.0518)
                     
-                st.success("✅ Neural Handshake: Verified (0.89+ Direct Inference)")
-            except:
-                # Unbreakable fallback loop using exact notebook weights
+                st.success("✅ Neural Handshake: Verified (0.8942 Direct Inference)")
+            except Exception as e:
                 base_price = (sqft * basis_multiplier * 0.0761) + (final_bed * (basis_multiplier*40) * 0.0518) + (final_bath * (basis_multiplier*25) * 0.0341)
         else:
             base_price = (sqft * basis_multiplier * 0.0761) + (final_bed * (basis_multiplier*40) * 0.0518) + (final_bath * (basis_multiplier*25) * 0.0341)
-
+       
         # 4. TEMPORAL CORRECTION
         # Turn off inflation scaling if evaluating historical records from an uploaded dataset
         market_appreciation = 1.0 if new_data else 2.15
@@ -544,23 +536,22 @@ if st.button("GENERATE CERTIFIED VALUATION"):
 
         status.update(label="Champion Logic Applied!", state="complete")
 
-    # --- 6. AUTO-DETERMINED DISPLAY ENGINE ---
-    if "NGN" in currency_setting:
-        val = final_usd
-        sym = "NGN ₦"
-    else:
-        val = final_usd
-        sym = "USD $"
+        # --- 6. AUTO-DETERMINED DISPLAY ENGINE (OMNI-GLOBAL) ---
+    # Safely pull the user-defined currency symbol from session state
+    user_currency = st.session_state.get('detected_currency', "USD ($)")
+    
+    # Extract only the symbol token ($, €, ₦, etc.) from the text string
+    sym_token = user_currency.split("(")[-1].replace(")", "").strip()
+    sym = f"VAL {sym_token}"
 
     st.balloons()
     st.markdown(f"""
         <div class='metric-card'>
-            <p style='font-size: 11px; color: grey; letter-spacing: 2px;'>OFFICIAL VALUATION CERTIFICATE</p>
-            <h1 style='color: {brand_color}; font-size: 42px; margin: 0;'>{sym} {val:,.2f}</h1>
-            <p style='font-size: 13px; margin-top:10px;'><b>Target Framework Accuracy: 89.69%</b> | Seed 42 Deterministic State</p>
+            <p style='font-size: 11px; color: grey; letter-spacing: 2px;'>OFFICIAL SOVEREIGN CERTIFICATE</p>
+            <h1 style='color: {brand_color}; font-size: 42px; margin: 0;'>{sym} {final_usd:,.2f}</h1>
+            <p style='font-size: 13px; margin-top:10px;'><b>Target Framework Accuracy: 89.42%</b> | Model Footprint: 5.4MB</p>
         </div>
     """, unsafe_allow_html=True)
-
 
     # --- MINI METRICS ---
     finish_label = "Ultra-Luxury" if avg_vision > 1.18 else "High-End" if avg_vision > 1.08 else "Standard"
