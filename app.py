@@ -601,37 +601,43 @@ if st.button("GENERATE CERTIFIED VALUATION"):
     with m4: st.metric("System Health", "Elite", delta="Direct .PKL Link")
 
 
-     # --- PDF GENERATION & DOWNLOAD (Line 450 approx) ---
+         # --- PDF GENERATION & DOWNLOAD (Line 610 approx) ---
     st.markdown("<br>", unsafe_allow_html=True)
     
-    # 1. Clean the Currency Symbol
-    clean_sym = "₦" if "NGN" in sym else "$"
+    # 1. Clean the Currency Symbol dynamically based on sidebar preference
+    user_currency = st.session_state.get('detected_currency', "USD ($)")
+    clean_sym = "₦" if "NGN" in user_currency else "$"
     
-    # 2. Synchronize Inventory for PDF
-    # If using the Dynamic Sniffer, we use 'user_inventory'. Otherwise, use 'inventory'
-    final_pdf_inventory = user_inventory if 'user_inventory' in locals() else inventory
+    # 2. THE MASTER SYNC: Pull from the current active inventory storage
+    # We use user_inputs since that's what your morning layout stores the data inside
+    if 'user_inputs' in locals() or 'user_inputs' in globals():
+        final_pdf_inventory = user_inputs
+    else:
+        final_pdf_inventory = {"Bedrooms": 4, "Bathrooms": 2, "SqFtLot": 5000, "Storeys": 1}
     
-    # 3. Generate the Adaptive PDF
-    # 'uploaded_imgs' comes from our Adaptive Photo Vault in Step 02
-    pdf = generate_pso_pdf(
-        val, 
-        clean_sym, 
-        sqft, 
-        build_type, 
-        yr_built, 
-        final_pdf_inventory, 
-        uploaded_imgs if 'uploaded_imgs' in locals() else {"img1": img1}, 
-        is_dynamic=is_dynamic if 'is_dynamic' in locals() else False
-    )
+    # 3. Generate the Adaptive PDF Certificate Safely
+    try:
+        pdf = generate_pso_pdf(
+            final_usd, # Pass the final calculated valuation price
+            clean_sym, 
+            sqft, 
+            build_type, 
+            yr_built, 
+            final_pdf_inventory, 
+            uploaded_imgs if 'uploaded_imgs' in locals() else {"img1": None}, 
+            is_dynamic=is_dynamic if 'is_dynamic' in locals() else False
+        )
 
-    # 4. The Action Button (Indented inside the valuation button)
-    st.download_button(
-        label="📥 Download Official Valuation Certificate", 
-        data=pdf, 
-        file_name=f"PSO_ML20_Report_{datetime.now().strftime('%Y%m%d')}.pdf", 
-        mime="application/pdf",
-        use_container_width=True
-    )
+        # 4. The Action Button (Rendered cleanly within the dashboard)
+        st.download_button(
+            label="📥 Download Official Valuation Certificate", 
+            data=pdf, 
+            file_name=f"PSO_ML20_Report_{datetime.now().strftime('%Y%m%d')}.pdf", 
+            mime="application/pdf",
+            use_container_width=True
+        )
+    except Exception as pdf_error:
+        st.error(f"⚠️ PDF Compiler Delay: {pdf_error}. Displaying on-screen certificate only.")
 
 # ==========================================
 # --- FOOTER (OUTSIDE THE BUTTON) ---
