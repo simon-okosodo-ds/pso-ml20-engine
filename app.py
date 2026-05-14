@@ -246,18 +246,18 @@ repo_logo = os.path.join(base_dir, "branding", "logo.png")
 repo_qr = os.path.join(base_dir, "branding", "qr.png")
 
 if "persistent_logo_bytes" in st.session_state:
-    col_l1, col_l2, col_l3 = st.columns()
+    col_l1, col_l2, col_l3 = st.columns(3)
     with col_l2:
         st.image(st.session_state["persistent_logo_bytes"], use_container_width=True)
     st.markdown("<br>", unsafe_allow_html=True)
 elif os.path.exists(repo_logo):
-    col_l1, col_l2, col_l3 = st.columns()
+    col_l1, col_l2, col_l3 = st.columns(3)
     with col_l2:
         st.image(repo_logo, use_container_width=True)
     st.markdown("<br>", unsafe_allow_html=True)
 
 if os.path.exists(repo_qr):
-    col_text, col_qr = st.columns()
+    col_text, col_qr = st.columns([5, 1])
     with col_text:
         st.markdown("""
             <div style='display: flex; flex-direction: column; justify-content: center; height: 100%;'>
