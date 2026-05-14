@@ -569,15 +569,16 @@ if trigger_valuation:
         st.session_state['history'].append({'Time': datetime.now().strftime('%H:%M'), 'price': final_usd})
         status.update(label="Champion Logic Applied!", state="complete")
 
-            # ============================================================
-    # 🌐 STEP 6: OMNI-GLOBAL OUTPUT CERTIFICATE (VARIABLE SYNCHRONIZED)
+                # ============================================================
+    # 🌐 STEP 6: OMNI-GLOBAL OUTPUT CERTIFICATE (FORCED INTERPRETATION)
     # ============================================================
     sym_token = user_currency.split("(")[-1].replace(")", "").strip()
     sym = f"VAL {sym_token}"
 
     st.balloons()
     
-    # 🟢 THE MASTER REPAIR: Notice the 'f' before the triple quotes. This activates variable injection.
+    # 🟢 THE DEFINITIVE FIX: Ensuring st.markdown is used with unsafe_allow_html=True
+    # This instructs Streamlit to render the tags cleanly instead of displaying raw text code
     st.markdown(f"""
         <div style='background-color: #FFFFFF !important; 
                     padding: 40px !important; 
@@ -588,7 +589,8 @@ if trigger_valuation:
                     margin-top: 25px !important;
                     margin-bottom: 25px !important;
                     display: block !important;'>
-            <p style='font-size: 11px !important; font-family: Arial, Helvetica, sans-serif !important; font-weight: 700 !important; color: #7F8C8D !important; letter-spacing: 2px !important; text-transform: uppercase; margin: 0 0 15px 0;'>
+            
+            <p style='font-size: 11px !important; font-family: Arial, Helvetica, sans-serif !important; font-weight: 700 !important; color: #7F8C8D !important; letter-spacing: 2px !important; text-transform: uppercase !important; margin: 0 0 15px 0;'>
                 OFFICIAL GLOBAL CERTIFICATE
             </p>
             
@@ -608,8 +610,10 @@ if trigger_valuation:
             <p style='font-size: 13px !important; font-family: Arial, Helvetica, sans-serif !important; color: #2C3E50 !important; margin-top: 20px !important; font-weight: 600;'>
                 <b>Target Framework Accuracy: 89.42%</b> | Model Footprint: 5.4MB
             </p>
+            
         </div>
     """, unsafe_allow_html=True)
+
 
 
     # --- DISPLAY MINI METRICS ---
