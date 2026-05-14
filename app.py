@@ -204,10 +204,9 @@ with st.sidebar:
     st.markdown("<br><br><br><br><br><br><br><br>", unsafe_allow_html=True)
     st.divider()
 
-        # ============================================================
+            # ============================================================
     # 🏅 PORTAL 4: COMPACT BOTTOM-ANCHORED CREDENTIALS CARD
     # ============================================================
-    # Shrunk font dimensions and restricted box padding for a compact layout look
     st.markdown("""
         <div style='background-color: #0B1120; 
                     padding: 10px 14px; 
@@ -526,15 +525,14 @@ st.markdown("<br>", unsafe_allow_html=True) # Subtle space before the central ac
 
 
 # ============================================================
-# ⚡ THE BOLD, CENTRALIZED CALCULATION ENGINE PORTAL (FIXED)
+# ⚡ THE BOLD, CENTRALIZED CALCULATION ENGINE PORTAL
 # ============================================================
-# Using a balanced 3-column layout matrix to center the action element
 btn_left, btn_center, btn_right = st.columns([1, 2, 1])
 
 with btn_center:
-    # 🟢 THE FIX: The button is indented properly, and the conditional uses the variable
     trigger_valuation = st.button("⚡ GENERATE CERTIFIED VALUATION", use_container_width=True)
 
+# 🟢 THE FIX: The math runs directly off the centered button variable
 if trigger_valuation:
     with st.status("Deploying Neural Champion Logic...", expanded=False) as status:
         
