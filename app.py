@@ -526,18 +526,23 @@ st.markdown("<br>", unsafe_allow_html=True) # Subtle space before the central ac
 
 
 # ============================================================
-# ⚡ THE BOLD, CENTRALIZED CALCULATION ENGINE PORTAL
+# ⚡ THE BOLD, CENTRALIZED CALCULATION ENGINE PORTAL (FIXED)
 # ============================================================
-# Using a balanced 3-column matrix layout to anchor the action button in the center
+# Using a balanced 3-column layout matrix to center the action element
 btn_left, btn_center, btn_right = st.columns([1, 2, 1])
 
 with btn_center:
-    # Clicking this prominent centralized element triggers the 44-point LightGBM logic loop
-    trigger_valuation = st.button("⚡ GENERATE CERTIFIED VALUATION")
+    # 🟢 THE FIX: The button is indented properly, and the conditional uses the variable
+    trigger_valuation = st.button("⚡ GENERATE CERTIFIED VALUATION", use_container_width=True)
 
 if trigger_valuation:
     with st.status("Deploying Neural Champion Logic...", expanded=False) as status:
-        # (Your model prediction math, Step 6, and PDF Viewer follow seamlessly right below...)
+        
+        # 1. AI Vision Analysis (Safe Extraction)
+        s1 = analyze_visual_quality(img1) if 'img1' in locals() else 1.0
+        s3 = analyze_visual_quality(img3) if 'img3' in locals() else 1.0
+        s4 = analyze_visual_quality(img4) if 'img4' in locals() else 1.0
+        avg_vision = (s1 + s3 + s4) / 3
 
 
 # --- CALCULATION (DIRECT 20-PHASE INFERENCE) ---
