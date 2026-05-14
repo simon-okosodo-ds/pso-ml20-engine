@@ -209,131 +209,127 @@ with st.sidebar:
     st.caption("AI Lead | MLOps Specialist | B.Eng (Chem)")
     st.info("🧠 **Engine:** PSO-ML20 Standard")
 
-# --- EXECUTIVE UI STYLING (2040 Scoped Cyber Slate & White Rectangular Boxes) ---
+# --- EXECUTIVE UI STYLING (World-Class Classic Institutional Standard) ---
 st.markdown(f"""
     <style>
-    /* 1. SECURE IMPORT OF FUTURE TECH FONTS */
-    @import url('googleapis.com');
-    
-    /* 2. MAIN APPLICATION CANVAS SCOPING - CLEARS THE BLENDING */
+    /* 1. MAIN APERITIF CANVAS (Muted, Precise, Highly Legible) */
     .main .block-container p, 
     .main .block-container span, 
     .main .block-container label,
-    .main .block-container div:not([data-baseweb="input"]):not([data-baseweb="select"]) {{
-        font-family: 'Space Grotesk', sans-serif !important;
-        font-size: 14px !important;
+    .main .block-container div {{
+        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif !important;
+        font-size: 13px !important; /* Slightly smaller, crisper font size */
         color: #2C3E50 !important;
-        letter-spacing: -0.2px !important;
-        line-height: 1.5 !important; /* Forces breathing room between text rows */
+        letter-spacing: -0.1px !important;
+        line-height: 1.4 !important;
     }}
     
-    /* UNIVERSAL HEADERS SHARPENING */
+    /* INSTITUTIONAL BOLD HEADERS */
     .main h1, .main h2, .main h3, .main h4 {{
-        font-family: 'Space Grotesk', sans-serif !important;
+        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif !important;
         color: #1A2530 !important;
-        font-weight: 700 !important;
-        letter-spacing: -0.5px !important;
+        font-weight: 700 !important; /* Bold classic weight */
+        letter-spacing: -0.6px !important;
     }}
 
-    /* 3. SIGNATURE WHITE RECTANGULAR BOX DIVIDERS */
+    /* 2. SOLID WHITE RECTANGULAR CARD DIVIDERS */
     .step-container {{ 
-        margin-bottom: 40px !important; 
+        margin-bottom: 35px !important; 
         padding: 30px !important; 
-        border-radius: 12px !important; 
-        background-color: #FFFFFF !important; /* Pure white crisp back */
-        border: 1px solid #EAECEE !important; /* Thin architectural slate perimeter frame */
-        box-shadow: 0 4px 15px rgba(0,0,0,0.02) !important;
+        border-radius: 8px !important; /* Classic tight corner radius */
+        background-color: #FFFFFF !important; 
+        border: 1px solid #EAECEE !important; 
+        box-shadow: 0 2px 10px rgba(0,0,0,0.02) !important;
     }}
     
     .step-container h4 {{
-        text-transform: uppercase !important;
-        font-size: 15px !important;
-        border-bottom: 2px solid #F4F6F6 !important;
-        padding-bottom: 12px !important;
-        margin-top: 0px !important;
-        margin-bottom: 22px !important;
-    }}
-    
-    /* 4. HIGH-SPEED INPUT CELLS (MONOSPACE DATA) */
-    .main div[data-baseweb="input"] input, 
-    .main div[data-baseweb="select"] div,
-    .stNumberInput input {{
-        font-family: 'JetBrains Mono', monospace !important;
+        font-size: 14px !important;
         font-weight: 700 !important;
-        color: #1A2530 !important;
+        text-transform: uppercase !important;
+        border-bottom: 2px solid #F4F6F6 !important;
+        padding-bottom: 10px !important;
+        margin-top: 0px !important;
+        margin-bottom: 20px !important;
     }}
-    
-    /* 5. BLACK OBSIDIAN SIDEBAR OVERLAP SAFE-ZONE */
+
+    /* 3. HARDENED SIDEBAR ENVIRONMENT (FIXES OVERLAPPING PERMANENTLY) */
     [data-testid="stSidebar"] {{
         background-color: #000000 !important;
         border-right: 1px solid #222222 !important;
     }}
     
-    /* Target text inside sidebar directly without collapsing system paddings */
+    /* Target sidebar text layout rows with clean padding separation rules */
     [data-testid="stSidebar"] p,
     [data-testid="stSidebar"] label,
     [data-testid="stSidebar"] span,
     [data-testid="stSidebar"] h1,
     [data-testid="stSidebar"] h2,
-    [data-testid="stSidebar"] h3 {{
-        font-family: 'Space Grotesk', sans-serif !important;
+    [data-testid="stSidebar"] h3,
+    [data-testid="stSidebar"] .stMarkdown div {{
+        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif !important;
+        font-size: 12px !important; /* Smaller, sharper executive layout text */
+        font-weight: 600 !important; /* Bold, professional emphasis */
         color: #FFFFFF !important;
-        line-height: 1.6 !important; /* Resolves vertical stacking and layout overlapping */
+        line-height: 1.8 !important; /* 🟢 ENFORCED SEPARATION: Guarantees space between lines */
+        margin-bottom: 8px !important; /* Forces breathing room between widgets */
     }}
     
+    /* Ensure input selection boxes don't compress */
     [data-testid="stSidebar"] div[data-baseweb="select"] > div,
     [data-testid="stSidebar"] div[data-baseweb="input"] > div,
     [data-testid="stSidebar"] div[data-baseweb="radio"] label {{
         background-color: #1A1A1A !important;
         border: 1px solid #333333 !important;
         color: #FFFFFF !important;
-        font-family: 'JetBrains Mono', monospace !important;
+        font-size: 12px !important;
     }}
 
-    /* 6. SYSTEM GAUGE GENERATE CERTIFICATE BUTTON */
+    /* 4. EXECUTIVE RUN BUTTON */
     .stButton>button {{ 
         background: {brand_color} !important; 
         color: white !important; 
-        border-radius: 8px !important; 
+        border-radius: 6px !important; 
         border: none !important;
-        height: 3.6em !important;
-        font-family: 'Space Grotesk', sans-serif !important;
-        font-size: 14px !important;
+        height: 3.4em !important;
+        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif !important;
+        font-size: 13px !important;
         font-weight: 700 !important;
-        letter-spacing: 1px !important;
         text-transform: uppercase !important;
+        letter-spacing: 0.5px !important;
         width: 100% !important;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.05) !important;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05) !important;
         transition: 0.2s all ease;
     }}
     .stButton>button:hover {{
         opacity: 0.90;
-        transform: translateY(-1px);
+        transform: scale(0.99);
     }}
     
-    /* 7. GLASS/WHITE HYBRID METRIC LOGS WINDOW */
+    /* 5. METRIC WINDOW COMPARTMENT */
     .metric-card {{
         background: #FFFFFF !important;
         padding: 40px !important;
-        border-radius: 12px !important;
-        box-shadow: 0 4px 25px rgba(0,0,0,0.06) !important;
+        border-radius: 8px !important;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.05) !important;
         text-align: center !important;
         border: 1px solid #EAECEE !important;
         margin-top: 25px !important;
     }}
     
     [data-testid="stMetricValue"] {{ 
-        font-family: 'JetBrains Mono', monospace !important; 
+        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif !important; 
         font-size: 26px !important; 
         font-weight: 700 !important; 
         color: #1A2530 !important; 
     }}
     [data-testid="stMetricDelta"] {{ 
-        font-family: 'Space Grotesk', sans-serif !important; 
-        font-size: 13px !important; 
+        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif !important; 
+        font-size: 12px !important; 
+        font-weight: 600 !important;
     }}
     </style>
     """, unsafe_allow_html=True)
+
 
 # --- 7. HEADER & LOGO INJECTION (INDUSTRIAL SEEDED REPO STANDARD) ---
 st.markdown("<br>", unsafe_allow_html=True)
