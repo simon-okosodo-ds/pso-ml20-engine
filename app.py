@@ -224,12 +224,9 @@ with st.sidebar:
 
     """, unsafe_allow_html=True)
 
-# --- EXECUTIVE UI STYLING (Hardened Non-f-string Text Layout Container) ---
-# 🟢 THE FIX: By removing the 'f' from f""", Python treats this as pure text.
-# Single braces { and } are now 100% legal and will never crash the login gate.
+# --- EXECUTIVE UI STYLING ---
 st.markdown("""
     <style>
-    /* GLOBAL TEXT SCALING RESTORATION */
     .main .block-container p, 
     .main .block-container span, 
     .main .block-container label,
@@ -240,7 +237,6 @@ st.markdown("""
         line-height: 1.5 !important;
     }
     
-    /* RE-ESTABLISHING CRISP HEADERS VISIBILITY */
     .main h1, .main h2, .main h3, .main h4 {
         font-family: Arial, Helvetica, sans-serif !important;
         color: #1A2530 !important;
@@ -249,7 +245,6 @@ st.markdown("""
         display: block !important;
     }
 
-    /* THE SIGNATURE WHITE RECTANGULAR DIVIDER CONTAINERS */
     .step-container { 
         margin-bottom: 40px !important; 
         padding: 30px !important; 
@@ -268,7 +263,6 @@ st.markdown("""
         margin-top: 0px !important;
     }
     
-    /* SIDEBAR CONTROL CONFIG */
     [data-testid="stSidebar"] {
         background-color: #060B26 !important;
         border-right: 1px solid rgba(0, 242, 254, 0.15) !important;
@@ -294,7 +288,7 @@ st.markdown("""
         color: #FFFFFF !important;
         line-height: 1.6 !important;
         display: block !important;
-    }
+    }}
     
     [data-testid="stSidebar"] div[data-baseweb="select"] > div,
     [data-testid="stSidebar"] div[data-baseweb="input"] > div {
@@ -305,9 +299,8 @@ st.markdown("""
         margin-bottom: 6px !important;
     }
 
-    /* REGULAR EXECUTIVE GAUGE BUTTON */
     .stButton>button { 
-        background: #00F2FE !important; /* Fixed base color to prevent script name errors */
+        background: #00F2FE !important; 
         color: white !important; 
         border-radius: 8px !important; 
         border: none !important;
@@ -324,7 +317,6 @@ st.markdown("""
         transform: scale(0.99);
     }
     
-    /* STATIONARY METRIC HOUSING CERTIFICATE CARD */
     .metric-card {
         background: #FFFFFF !important;
         padding: 40px !important;
@@ -338,6 +330,7 @@ st.markdown("""
     [data-testid="stMetricDelta"] { font-size: 13px !important; }
     </style>
     """, unsafe_allow_html=True)
+
 
 
 # --- 7. HEADER & LOGO INJECTION (PERMANENT SYSTEM STATE & LAYOUT SYNC) ---
