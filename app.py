@@ -644,18 +644,32 @@ if st.button("GENERATE CERTIFIED VALUATION"):
             final_usd = (base_price * market_appreciation * quality_force * avg_vision) * 1.05
 
 
-    # ============================================================
-    # 🌐 STEP 6: OMNI-GLOBAL OUTPUT CERTIFICATE
+       # ============================================================
+    # 🌐 STEP 6: OMNI-GLOBAL OUTPUT CERTIFICATE (WHITE PLATFORM RESTORED)
     # ============================================================
     sym_token = user_currency.split("(")[-1].replace(")", "").strip()
     sym = f"VAL {sym_token}"
 
     st.balloons()
+    
+    # 🟢 THE FIX: Enforcing a solid white container layout box specifically for this component
     st.markdown(f"""
-        <div class='metric-card'>
-            <p style='font-size: 11px; color: grey; letter-spacing: 2px;'>OFFICIAL GLOBAL CERTIFICATE</p>
-            <h1 style='color: #2C3E50; font-size: 42px; margin: 0;'>{sym} {final_usd:,.2f}</h1>
-            <p style='font-size: 13px; margin-top:10px;'><b>Target Framework Accuracy: 89.42%</b> | Model Footprint: 5.4MB</p>
+        <div style='background-color: #FFFFFF !important; 
+                    padding: 40px !important; 
+                    border-radius: 12px !important; 
+                    box-shadow: 0 4px 15px rgba(0,0,0,0.05) !important; 
+                    text-align: center !important; 
+                    border: 1px solid #EAECEE !important;
+                    margin-bottom: 25px !important;'>
+            <p style='font-size: 11px !important; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif !important; font-weight: 700 !important; color: #7F8C8D !important; letter-spacing: 2px !important; text-transform: uppercase; margin: 0 0 10px 0;'>
+                OFFICIAL GLOBAL CERTIFICATE
+            </p>
+            <h1 style='color: #1A2530 !important; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif !important; font-size: 42px !important; font-weight: 700 !important; margin: 0; padding: 0;'>
+                {sym} {final_usd:,.2f}
+            </h1>
+            <p style='font-size: 13px !important; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif !important; color: #2C3E50 !important; margin-top: 15px !important; font-weight: 500;'>
+                <b>Target Framework Accuracy: 89.42%</b> | Model Footprint: 5.4MB
+            </p>
         </div>
     """, unsafe_allow_html=True)
 
