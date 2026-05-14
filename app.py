@@ -569,17 +569,18 @@ if trigger_valuation:
         st.session_state['history'].append({'Time': datetime.now().strftime('%H:%M'), 'price': final_usd})
         status.update(label="Champion Logic Applied!", state="complete")
 
-                    # ============================================================
-    # 🌐 STEP 6: OMNI-GLOBAL OUTPUT CERTIFICATE (DUPLICATE PURGED)
+                        # ============================================================
+    # 🌐 STEP 6: OMNI-GLOBAL OUTPUT CERTIFICATE (QUOTES SYNCHRONIZED)
     # ============================================================
     sym_token = user_currency.split("(")[-1].replace(")", "").strip()
     sym = f"VAL {sym_token}"
 
     st.balloons()
     
-    # 🟢 THE UNBREAKABLE PLATFORM FRAME: Fully enclosed in st.markdown
+    # 🟢 THE MASTER CORRECTION: Forced to use double triple quotes (""")
+    # This prevents the inner single quotes (') from breaking string compilation execution limits
     st.markdown(f"""
-        <div style='background-color: #FFFFFF !important; 
+        <div style="background-color: #FFFFFF !important; 
                     padding: 40px !important; 
                     border-radius: 12px !important; 
                     box-shadow: 0 4px 15px rgba(0,0,0,0.06) !important; 
@@ -587,13 +588,13 @@ if trigger_valuation:
                     border: 1px solid #EAECEE !important;
                     margin-top: 25px !important;
                     margin-bottom: 25px !important;
-                    display: block !important;'>
+                    display: block !important;">
             
-            <p style='font-size: 11px !important; font-family: Arial, Helvetica, sans-serif !important; font-weight: 700 !important; color: #7F8C8D !important; letter-spacing: 2px !important; text-transform: uppercase !important; margin: 0 0 15px 0;'>
+            <p style="font-size: 11px !important; font-family: Arial, Helvetica, sans-serif !important; font-weight: 700 !important; color: #7F8C8D !important; letter-spacing: 2px !important; text-transform: uppercase !important; margin: 0 0 15px 0;">
                 OFFICIAL GLOBAL CERTIFICATE
             </p>
             
-            <div style='color: #000000 !important; 
+            <div style="color: #000000 !important; 
                         font-family: Arial, Helvetica, sans-serif !important; 
                         font-size: 44px !important; 
                         font-weight: 900 !important; 
@@ -602,11 +603,11 @@ if trigger_valuation:
                         display: block !important; 
                         visibility: visible !important;
                         opacity: 1.0 !important;
-                        line-height: 1.1 !important;'>
+                        line-height: 1.1 !important;">
                 {sym} {final_usd:,.2f}
             </div>
             
-            <p style='font-size: 13px !important; font-family: Arial, Helvetica, sans-serif !important; color: #2C3E50 !important; margin-top: 20px !important; font-weight: 600;'>
+            <p style="font-size: 13px !important; font-family: Arial, Helvetica, sans-serif !important; color: #2C3E50 !important; margin-top: 20px !important; font-weight: 600;">
                 <b>Target Framework Accuracy: 89.42%</b> | Model Footprint: 5.4MB
             </p>
             
