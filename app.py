@@ -569,16 +569,15 @@ if trigger_valuation:
         st.session_state['history'].append({'Time': datetime.now().strftime('%H:%M'), 'price': final_usd})
         status.update(label="Champion Logic Applied!", state="complete")
 
-                # ============================================================
-    # 🌐 STEP 6: OMNI-GLOBAL OUTPUT CERTIFICATE (FORCED INTERPRETATION)
+                    # ============================================================
+    # 🌐 STEP 6: OMNI-GLOBAL OUTPUT CERTIFICATE (DUPLICATE PURGED)
     # ============================================================
     sym_token = user_currency.split("(")[-1].replace(")", "").strip()
     sym = f"VAL {sym_token}"
 
     st.balloons()
     
-    # 🟢 THE DEFINITIVE FIX: Ensuring st.markdown is used with unsafe_allow_html=True
-    # This instructs Streamlit to render the tags cleanly instead of displaying raw text code
+    # 🟢 THE UNBREAKABLE PLATFORM FRAME: Fully enclosed in st.markdown
     st.markdown(f"""
         <div style='background-color: #FFFFFF !important; 
                     padding: 40px !important; 
@@ -614,8 +613,7 @@ if trigger_valuation:
         </div>
     """, unsafe_allow_html=True)
 
-
-
+    
     # --- DISPLAY MINI METRICS ---
     finish_label = "Ultra-Luxury" if avg_vision > 1.18 else "High-End" if avg_vision > 1.08 else "Standard"
     safety_label = "Secure" if final_usd < 5000000 else "Volatile"
