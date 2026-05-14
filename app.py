@@ -145,35 +145,23 @@ if not st.session_state['authenticated']:
 with st.sidebar:
     st.title("🛡️ System Control")
     
-        # --- PORTAL 1: PERMANENT BRANDING OVERWRITE LAYER ---
+            # --- PORTAL 1: SESSION-STATE INTEL BRANDING LAYER ---
     with st.expander("🎨 Custom Branding", expanded=False):
-        os.makedirs("branding", exist_ok=True)
-        logo_path = "branding/logo.png"
-        qr_path = "branding/qr.png"
-        
-        # Initialize permanent path tracking keys in session state memory
-        if "active_logo" not in st.session_state: 
-            st.session_state["active_logo"] = logo_path
-        if "active_qr" not in st.session_state: 
-            st.session_state["active_qr"] = qr_path
-        
-        # 1. LOGO UPLOADER: Overwrites file and locks session key
+        # 1. LOGO INGESTION: Encapsulates image file bytes directly into session memory
         uploaded_logo = st.file_uploader("Change Company Logo", type=['png', 'jpg'], key="logo_up")
         if uploaded_logo:
-            with open(logo_path, "wb") as f:
-                f.write(uploaded_logo.getbuffer())
-            st.session_state["active_logo"] = logo_path # Locks new image state
-            st.success("✅ New Logo saved permanently to core disk.")
+            # Read the raw byte data stream completely
+            st.session_state["persistent_logo_bytes"] = uploaded_logo.read()
+            st.success("✅ Logo locked into active session cache.")
             
-        # 2. QR CODE UPLOADER: Overwrites file and locks session key
+        # 2. QR CODE INGESTION: Encapsulates image file bytes directly into session memory
         uploaded_qr = st.file_uploader("Change System QR", type=['png', 'jpg'], key="qr_up")
         if uploaded_qr:
-            with open(qr_path, "wb") as f:
-                f.write(uploaded_qr.getbuffer())
-            st.session_state["active_qr"] = qr_path # Locks new image state
-            st.success("✅ New QR Code saved permanently to core disk.")
+            st.session_state["persistent_qr_bytes"] = uploaded_qr.read()
+            st.success("✅ QR Code locked into active session cache.")
             
         brand_color = st.color_picker("Pick your Brand Color", "#00F2FE")
+                                      
 
     
         # --- PORTAL 2: MARKET LEARNER (THE CSV UPLOADER) ---
@@ -321,23 +309,25 @@ st.markdown(f"""
 
 # (Paste the new CSS Style block right here)
 
-# --- 7. HEADER & LOGO INJECTION (PERMANENT SYSTEM STATE & LAYOUT SYNC) ---
+# --- 7. HEADER & LOGO INJECTION (HYBRID STATE RE-RENDER) ---
 st.markdown("<br>", unsafe_allow_html=True)
 
-# 1. Pull persistent structural file paths from your session state anchors safely
-current_logo = st.session_state.get("active_logo", "branding/logo.png")
-current_qr = st.session_state.get("active_qr", "branding/qr.png")
-
-# 2. THE BIG LOGO STRIKE: Displays your active permanent logo at the absolute top center
-if os.path.exists(current_logo):
-    col_l1, col_l2, col_l3 = st.columns([1, 2, 1]) # Restores the perfect center weight
+# 1. PERMANENT TOP LOGO: Prioritizes active upload bytes, falls back to base repo file path
+if "persistent_logo_bytes" in st.session_state:
+    col_l1, col_l2, col_l3 = st.columns([1, 2, 1])
     with col_l2:
-        st.image(current_logo, use_container_width=True)
+        # Render image directly from memory stream bytes
+        st.image(st.session_state["persistent_logo_bytes"], use_container_width=True)
+    st.markdown("<br>", unsafe_allow_html=True)
+elif os.path.exists("branding/logo.png"):
+    col_l1, col_l2, col_l3 = st.columns([1, 2, 1])
+    with col_l2:
+        st.image("branding/logo.png", use_container_width=True)
     st.markdown("<br>", unsafe_allow_html=True)
 
-# 3. HORIZONTAL SYSTEM HEADER: Centers text parameters level with the permanent QR code
-if os.path.exists(current_qr):
-    col_text, col_qr = st.columns([5, 1]) # Restores the strict 5:1 proportional spacing layout
+# 2. SYMMETRICAL MAIN SYSTEM HEADER & QR LEVELER
+if "persistent_qr_bytes" in st.session_state:
+    col_text, col_qr = st.columns([5, 1])
     with col_text:
         st.markdown("""
             <div style='display: flex; flex-direction: column; justify-content: center; height: 100%;'>
@@ -350,9 +340,23 @@ if os.path.exists(current_qr):
             </div>
         """, unsafe_allow_html=True)
     with col_qr:
-        st.image(current_qr, use_container_width=True)
+        st.image(st.session_state["persistent_qr_bytes"], use_container_width=True)
+elif os.path.exists("branding/qr.png"):
+    col_text, col_qr = st.columns([5, 1])
+    with col_text:
+        st.markdown("""
+            <div style='display: flex; flex-direction: column; justify-content: center; height: 100%;'>
+                <h1 style='margin: 0; padding: 0; color: #1A2530 !important; font-size: 32px !important; font-weight: 800 !important; letter-spacing: -1px !important; opacity: 1 !important;'>
+                    Executive Valuation Terminal
+                </h1>
+                <p style='margin: 5px 0 0 0; padding: 0; color: #566573 !important; font-size: 14px !important; font-weight: 500 !important; opacity: 1 !important; letter-spacing: 0.5px;'>
+                    PSO-ML20 Standard | Industrial Forensic Audit Engine
+                </p>
+            </div>
+        """, unsafe_allow_html=True)
+    with col_qr:
+        st.image("branding/qr.png", use_container_width=True)
 else:
-    # Clean fallback layout if no security QR image asset exists on disk yet
     st.markdown("""
         <div>
             <h1 style='margin: 0; padding: 0; color: #1A2530 !important; font-size: 32px !important; font-weight: 800 !important; letter-spacing: -1px !important; opacity: 1 !important;'>
