@@ -643,8 +643,8 @@ if st.button("GENERATE CERTIFIED VALUATION"):
     with m3: st.metric("Market Safety", safety_label, delta="Phase 15 Shield")
     with m4: st.metric("System Health", "Elite", delta="Direct .PKL Link")
 
-        # ============================================================
-    # 📄 INTERACTIVE DOCUMENT AUDIT PORTAL (PREVIEW BEFORE DOWNLOAD)
+            # ============================================================
+    # 📄 INTERACTIVE DOCUMENT AUDIT PORTAL (STREAM REPAIRED)
     # ============================================================
     st.markdown("<br>", unsafe_allow_html=True)
     
@@ -654,13 +654,12 @@ if st.button("GENERATE CERTIFIED VALUATION"):
     else:
         final_pdf_inventory = {"Bedrooms": 4, "Bathrooms": 2}
         
-    # 2. 🟢 THE FIX: Safely determine the dynamic sync state before passing to compiler
-    # This prevents the 'is_dynamic' NameError permanently
+    # 2. Determine the dynamic sync state before passing to compiler
     pdf_sync_mode = is_dynamic if 'is_dynamic' in locals() else False
     
     try:
         # Run report labs inside memory stream buffer
-        pdf_data = generate_pso_pdf(
+        pdf_buffer = generate_pso_pdf(
             final_usd, 
             sym_token if 'sym_token' in locals() else "$", 
             sqft if 'sqft' in locals() else 2500, 
@@ -670,6 +669,10 @@ if st.button("GENERATE CERTIFIED VALUATION"):
             uploaded_imgs if 'uploaded_imgs' in locals() else {"img1": None}, 
             is_dynamic=pdf_sync_mode
         )
+        
+        # 🟢 THE CRITICAL FIX: Extract the raw byte contents from the BytesIO buffer stream
+        # This converts the _io.BytesIO object into raw bytes required by base64
+        pdf_data = pdf_buffer.getvalue() if hasattr(pdf_buffer, 'getvalue') else pdf_buffer
         
         # Transform binary pdf array into secure base64 string
         import base64
