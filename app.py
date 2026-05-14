@@ -2,20 +2,18 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import joblib
-from PIL import Image, ImageOps, ImageFilter
-from datetime import datetime
 import io
 import os
-import base64
-from reportlab.lib.pagesizes import letter
+from PIL import Image, ImageOps, ImageFilter
 from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import letter
 from reportlab.lib.utils import ImageReader
+from datetime import datetime
 
 # ============================================================
-# 🛡️ GLOBAL PROPTECH TERMINOLOGY CONVERTER
+# 🛡️ GLOBAL PropTech TERMINOLOGY CONVERTER 
 # ============================================================
 def clean_label(name):
-    """Converts raw dataset column names into premium classic titles."""
     mapping = {
         'SqFtTotLiving': 'Total Living Area (Sqft)',
         'BldgGrade': 'Construction Grade (1-12)',
@@ -26,7 +24,7 @@ def clean_label(name):
     }
     return mapping.get(name, str(name).replace('_', ' ').title())
 
-# --- 1. ANTI-BIAS VISION ENGINE (THE MATERIAL SENSOR) ---
+# --- 1. ANTI-BIAS VISION ENGINE ---
 def analyze_visual_quality(uploaded_file):
     if uploaded_file is None:
         return 1.0
@@ -36,8 +34,8 @@ def analyze_visual_quality(uploaded_file):
         edges = img.filter(ImageFilter.FIND_EDGES)
         edge_array = np.array(edges)
         material_score = np.mean(edge_array) 
-        if material_score > 30: return 1.22    # Ultra-Premium Pattern
-        if material_score > 15: return 1.12    # Modern Detail
+        if material_score > 30: return 1.22    
+        if material_score > 15: return 1.12    
         return 1.05                            
     except:
         return 1.0
@@ -48,21 +46,18 @@ def generate_pso_pdf(val, sym, sqft, build_type, yr, inventory, images, is_dynam
     p = canvas.Canvas(buffer, pagesize=letter)
     currency_label = sym.strip()
     
-    # --- 1. THE INDUSTRIAL FRAME ---
     p.setStrokeColorRGB(0.8, 0.8, 0.8)
     p.setLineWidth(1)
     p.rect(30, 30, 552, 732, fill=0)
 
-    # --- 2. BACKGROUND WATERMARK ---
     p.saveState()
-    p.setFont("Helvetica-Bold", 45)
+    p.setFont("Helvetica-Bold", 50)
     p.setFillColorRGB(0.97, 0.97, 0.97)
     p.translate(300, 400)
     p.rotate(45)
     p.drawCentredString(0, 0, "PSO-ML20 CERTIFIED")
     p.restoreState()
 
-    # --- 3. HEADER ---
     p.setFont("Helvetica-Bold", 14)
     p.setFillColorRGB(0.1, 0.2, 0.3)
     p.drawString(60, 720, "OFFICIAL VALUATION CERTIFICATE")
@@ -70,12 +65,10 @@ def generate_pso_pdf(val, sym, sqft, build_type, yr, inventory, images, is_dynam
     p.drawString(60, 705, f"Date: {datetime.now().strftime('%Y-%m-%d')} | System: PSO-ML20-GLOBAL")
     p.line(60, 700, 540, 700) 
     
-    # --- 4. THE VALUATION ---
-    p.setFont("Helvetica-Bold", 22)
+    p.setFont("Helvetica-Bold", 24)
     p.setFillColorRGB(0.11, 0.51, 0.28)
     p.drawString(60, 660, f"CERTIFIED VALUE: {currency_label} {val:,.2f}")
     
-    # --- 5. ADAPTIVE AUDIT SUMMARY ---
     p.setFillColorRGB(0, 0, 0)
     p.setFont("Helvetica-Bold", 11)
     p.drawString(60, 620, "PHYSICAL AUDIT SUMMARY:")
@@ -85,11 +78,10 @@ def generate_pso_pdf(val, sym, sqft, build_type, yr, inventory, images, is_dynam
     p.drawString(70, y_text, f"• Primary Area: {sqft:,.0f} Sqft")
     y_text -= 15
     for key, value in inventory.items():
-        if y_text > 500:
+        if y_text > 500: 
             p.drawString(70, y_text, f"• {key}: {value}")
             y_text -= 15
 
-    # --- 6. VISUAL PROOF ---
     first_img = next((img for img in images.values() if img is not None), None)
     if first_img:
         try:
@@ -100,7 +92,6 @@ def generate_pso_pdf(val, sym, sqft, build_type, yr, inventory, images, is_dynam
             p.drawString(60, 345, "Fig 1: Primary Evidence Scan")
         except: pass
 
-    # --- 7. METHODOLOGY DISCLOSURE ---
     p.setFont("Helvetica-Oblique", 7)
     p.setFillColorRGB(0.4, 0.4, 0.4)
     y_pos = 100
@@ -121,14 +112,92 @@ def generate_pso_pdf(val, sym, sqft, build_type, yr, inventory, images, is_dynam
 
 # --- 3. SYSTEM CONFIG & AUTH ---
 st.set_page_config(page_title="PSO-ML20 Executive", page_icon="🛡️", layout="wide")
+if 'authenticated' not in st.session_state: st.session_state['authenticated'] = False
 if 'history' not in st.session_state: st.session_state['history'] = []
 
-# --- EXECUTIVE UI STYLING (HARDENED SINGLE STRING PROTOCOL) ---
-# 🟢 THE MASTER FIX: This block uses standard text quotes with NO 'f' prefix. 
-# It is completely isolated from python formatting variables to guarantee zero syntax crashes.
+# --- 5. ACCESS GATE (PROTECTING ENTIRE INFRASTRUCTURE) ---
+if not st.session_state['authenticated']:
+    st.markdown("<div style='text-align: center; margin-top: 100px;'><h3>🛡️ PSO-ML20 Secure Gateway</h3></div>", unsafe_allow_html=True)
+    col1, col2, col3 = st.columns([1, 2, 1])
+    with col2:
+        access_key = st.text_input("Enter Key", type="password")
+        if st.button("Unlock Terminal"):
+            if access_key == "ELITE2026":
+                st.session_state['authenticated'] = True
+                st.rerun()
+    st.stop()
+
+# --- 6. SIDEBAR: CONTROL & INTELLIGENCE ---
+with st.sidebar:
+    st.markdown("<h3 style='margin-bottom: 0px;'>🛡️ System Control</h3>", unsafe_allow_html=True)
+    
+    with st.expander("🎨 Custom Branding", expanded=False):
+        uploaded_logo = st.file_uploader("Change Company Logo", type=['png', 'jpg'], key="logo_up")
+        if uploaded_logo:
+            st.session_state["persistent_logo_bytes"] = uploaded_logo.read()
+            st.success("✅ Logo locked to active cache.")
+            
+        uploaded_qr = st.file_uploader("Change System QR", type=['png', 'jpg'], key="qr_up")
+        if uploaded_qr:
+            st.session_state["persistent_qr_bytes"] = uploaded_qr.read()
+            st.success("✅ QR Code locked to active cache.")
+            
+        brand_color = st.color_picker("Pick your Brand Color", "#00F2FE")
+
+    st.markdown("<br><br>", unsafe_allow_html=True)
+    st.divider()
+
+    st.write("📂 **Market Knowledge Portal**")
+    new_data = st.file_uploader("Upload local market data (CSV)", type=['csv'])
+    
+    if new_data:
+        df_raw = pd.read_csv(new_data)
+        st.session_state['full_columns'] = df_raw.columns.tolist()
+        
+        detected_currency = st.selectbox(
+            "Select Spreadsheet Currency Baseline",
+            ["USD ($)", "EUR (€)", "CNY (¥)", "NGN (₦)", "GBP (£)"],
+            help="Select the currency your uploaded CSV columns are written in."
+        )
+        st.session_state['detected_currency'] = detected_currency
+        
+        price_col = next((c for c in df_raw.columns if 'price' in c.lower() or 'val' in c.lower()), None)
+        if price_col:
+            avg_price = df_raw[price_col].mean()
+            st.session_state['local_basis'] = avg_price / (2000 * 0.0761)
+            st.success(f"✅ Market DNA Mapped to {detected_currency}.")
+        else:
+            st.session_state['local_basis'] = 1950
+            st.warning("⚠️ Defaulting to baseline scaling coefficients.")
+            
+    else:
+        detected_currency = st.selectbox(
+            "Select Active Terminal Currency",
+            ["USD ($)", "EUR (€)", "CNY (¥)", "NGN (₦)", "GBP (£)"],
+            help="Set the valuation currency environment for the 5.4MB brain."
+        )
+        st.session_state['detected_currency'] = detected_currency
+        st.session_state['local_basis'] = 1950
+
+    st.markdown("<br><br><br><br><br><br>", unsafe_allow_html=True)
+    st.divider()
+
+    st.markdown("""
+        <div style='background-color: #0B1120; padding: 10px 14px; border: 1px solid #1E293B; border-radius: 6px; margin-top: 5px; box-shadow: 0 4px 10px rgba(0,0,0,0.2);'>
+            <p style='margin: 0 !important; padding: 0 !important; color: #64748B !important; font-size: 9px !important; text-transform: uppercase !important; letter-spacing: 1.2px !important; font-weight: 700 !important; line-height: 1.0 !important;'>System Architect</p>
+            <h6 style='margin: 3px 0 0 0 !important; padding: 0 !important; color: #FFFFFF !important; font-size: 13px !important; font-weight: 700 !important; letter-spacing: -0.2px !important; line-height: 1.1 !important;'>Patrick Simon Okosodo</h6>
+            <p style='margin: 1px 0 0 0 !important; padding: 0 !important; color: #38BDF8 !important; font-size: 10px !important; font-weight: 600 !important; line-height: 1.2 !important;'>AI Lead | MLOps Specialist | B.Eng (Chem)</p>
+            <div style='margin-top: 6px; padding-top: 6px; border-top: 1px solid #1E293B; display: flex; align-items: center; gap: 5px;'>
+                <span style='font-size: 11px;'>🧠</span>
+                <span style='color: #475569 !important; font-size: 10px !important; font-weight: 600 !important;'>Engine: <span style='color: #00F2FE !important;'>PSO-ML20 Standard</span></span>
+            </div>
+        </div>
+    """, unsafe_allow_html=True)
+
+
+# --- EXECUTIVE UI STYLING (Hardened Non-f-string Text Layout Container) ---
 st.markdown("""
     <style>
-    /* GLOBAL TEXT SCALING RESTORATION */
     .main .block-container p, 
     .main .block-container span, 
     .main .block-container label,
@@ -139,7 +208,6 @@ st.markdown("""
         line-height: 1.5 !important;
     }
     
-    /* RE-ESTABLISHING CRISP HEADERS VISIBILITY */
     .main h1, .main h2, .main h3, .main h4 {
         font-family: Arial, Helvetica, sans-serif !important;
         color: #1A2530 !important;
@@ -148,7 +216,6 @@ st.markdown("""
         display: block !important;
     }
 
-    /* THE SIGNATURE WHITE RECTANGULAR DIVIDER CONTAINERS */
     .step-container { 
         margin-bottom: 40px !important; 
         padding: 30px !important; 
@@ -167,7 +234,6 @@ st.markdown("""
         margin-top: 0px !important;
     }
     
-    /* SIDEBAR CONTROL CONFIG */
     [data-testid="stSidebar"] {
         background-color: #060B26 !important;
         border-right: 1px solid rgba(0, 242, 254, 0.15) !important;
@@ -204,7 +270,6 @@ st.markdown("""
         margin-bottom: 6px !important;
     }
 
-    /* REGULAR EXECUTIVE GAUGE BUTTON */
     .stButton>button { 
         background: #00F2FE !important; 
         color: white !important; 
@@ -223,7 +288,6 @@ st.markdown("""
         transform: scale(0.99);
     }
     
-    /* STATIONARY METRIC HOUSING CERTIFICATE CARD */
     .metric-card {
         background: #FFFFFF !important;
         padding: 40px !important;
@@ -238,7 +302,7 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# --- 7. HEADER & LOGO INJECTION (PERMANENT SYSTEM STATE & LAYOUT SYNC) ---
+# --- 7. HEADER & LOGO INJECTION (RESOLVED DIRECTORY STANDARD) ---
 st.markdown("<br>", unsafe_allow_html=True)
 
 base_dir = os.path.dirname(__file__) if '__file__' in locals() else "."
@@ -276,6 +340,8 @@ else:
     """, unsafe_allow_html=True)
 
 st.markdown("<hr style='border: 0; border-top: 1px solid #EAECEE; margin-top: 25px; margin-bottom: 35px;'>", unsafe_allow_html=True)
+
+
 
 # ==========================================
 # 🛡️ 01. PRIMARY PARAMETERS
