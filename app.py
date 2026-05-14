@@ -229,7 +229,7 @@ with st.sidebar:
 # ============================================================================
 st.markdown(f"""
     <style>
-    /* MAIN CANVAS TYPOGRAPHY SCOPING */
+        /* MAIN CANVAS TYPOGRAPHY SCOPING */
     .main .block-container p, 
     .main .block-container span, 
     .main .block-container label,
@@ -247,6 +247,7 @@ st.markdown(f"""
         letter-spacing: -0.5px !important;
         display: block !important;
     }}
+
 
     /* WHITE RECTANGULAR BOX DIVIDERS */
     .step-container {{ 
