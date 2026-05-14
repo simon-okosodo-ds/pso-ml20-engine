@@ -569,29 +569,42 @@ if trigger_valuation:
         st.session_state['history'].append({'Time': datetime.now().strftime('%H:%M'), 'price': final_usd})
         status.update(label="Champion Logic Applied!", state="complete")
 
-    # ============================================================
-    # 🌐 STEP 6: OMNI-GLOBAL OUTPUT CERTIFICATE (WHITE PLATFORM CARD)
+        # ============================================================
+    # 🌐 STEP 6: OMNI-GLOBAL OUTPUT CERTIFICATE (MAXIMUM CONTRAST FIXED)
     # ============================================================
     sym_token = user_currency.split("(")[-1].replace(")", "").strip()
     sym = f"VAL {sym_token}"
 
     st.balloons()
     st.markdown(f"""
-        <div class='metric-card' style='background-color: #FFFFFF !important; 
+        <div style='background-color: #FFFFFF !important; 
                     padding: 40px !important; 
                     border-radius: 12px !important; 
-                    box-shadow: 0 4px 15px rgba(0,0,0,0.05) !important; 
+                    box-shadow: 0 4px 15px rgba(0,0,0,0.06) !important; 
                     text-align: center !important; 
                     border: 1px solid #EAECEE !important;
                     margin-top: 25px !important;
-                    margin-bottom: 25px !important;'>
-            <p style='font-size: 11px !important; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif !important; font-weight: 700 !important; color: #7F8C8D !important; letter-spacing: 2px !important; text-transform: uppercase; margin: 0 0 10px 0;'>
+                    margin-bottom: 25px !important;
+                    display: block !important;'>
+            <p style='font-size: 11px !important; font-family: Arial, Helvetica, sans-serif !important; font-weight: 700 !important; color: #7F8C8D !important; letter-spacing: 2px !important; text-transform: uppercase; margin: 0 0 15px 0;'>
                 OFFICIAL GLOBAL CERTIFICATE
             </p>
-            <h1 style='color: #0B1120 !important; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif !important; font-size: 42px !important; font-weight: 800 !important; margin: 0; padding: 0; display: block !important; opacity: 1 !important;'>
+            
+            <!-- 🟢 THE CRITICAL CONTRAST SHIELD: Bypassing h1 completely to lock in pitch black text -->
+            <div style='color: #000000 !important; 
+                        font-family: Arial, Helvetica, sans-serif !important; 
+                        font-size: 44px !important; 
+                        font-weight: 900 !important; 
+                        margin: 0 !important; 
+                        padding: 0 !important; 
+                        display: block !important; 
+                        visibility: visible !important;
+                        opacity: 1.0 !important;
+                        line-height: 1.1 !important;'>
                 {sym} {final_usd:,.2f}
-            </h1>
-            <p style='font-size: 13px !important; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif !important; color: #2C3E50 !important; margin-top: 15px !important; font-weight: 500;'>
+            </div>
+            
+            <p style='font-size: 13px !important; font-family: Arial, Helvetica, sans-serif !important; color: #2C3E50 !important; margin-top: 20px !important; font-weight: 600;'>
                 <b>Target Framework Accuracy: 89.42%</b> | Model Footprint: 5.4MB
             </p>
         </div>
