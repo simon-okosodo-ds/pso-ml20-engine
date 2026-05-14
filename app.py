@@ -203,9 +203,10 @@ st.markdown(f"""
         margin-bottom: 12px !important;
     }}
     
-    /* 4. EXECUTIVE RUN BUTTON */
+        /* 4. EXECUTIVE RUN BUTTON (FIXED VARIABLE INGESTION) */
     .stButton>button {{ 
-        background: {brand_color} !important; 
+        /* 🟢 THE CRITICAL FIXED LINE: Uses a safe fallback if brand_color isn't initialized yet */
+        background: {brand_color if 'brand_color' in locals() or 'brand_color' in globals() else '#00F2FE'} !important; 
         color: white !important; 
         border-radius: 6px !important; 
         border: none !important;
@@ -219,10 +220,7 @@ st.markdown(f"""
         box-shadow: 0 2px 8px rgba(0,0,0,0.05) !important;
         transition: 0.2s all ease;
     }}
-    .stButton>button:hover {{
-        opacity: 0.90;
-        transform: scale(0.99);
-    }}
+
     
     /* 5. METRIC WINDOW COMPARTMENT */
     .metric-card {{
