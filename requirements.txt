@@ -5,3 +5,4 @@ Pillow
 reportlab
 joblib
 lightgbm
+streamlit-pdf-viewer
