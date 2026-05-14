@@ -209,105 +209,109 @@ with st.sidebar:
     st.caption("AI Lead | MLOps Specialist | B.Eng (Chem)")
     st.info("🧠 **Engine:** PSO-ML20 Standard")
 
-# --- EXECUTIVE UI STYLING (Sovereign Scoped CSS Standard) ---
+# --- EXECUTIVE UI STYLING (2040 Cyber Precision & White Rectangular Boxes) ---
 st.markdown(f"""
     <style>
+    /* 1. IMPORTING 2040 CYBER CORE FONTS FROM GOOGLE API */
     @import url('googleapis.com');
     
-    /* 1. MAIN CANVAS TYPOGRAPHY SCOPING (Does not touch sidebar) */
-    .main .block-container {{
-        font-family: 'Inter', sans-serif !important;
+    /* GLOBAL TEXT SCALING & FUTURE TYPOGRAPHY RESTORATION */
+    html, body, p, div, label, span {{
+        font-family: 'Space Grotesk', sans-serif !important; /* Tech-futuristic layout font */
         font-size: 14px !important;
         color: #2C3E50 !important;
+        letter-spacing: -0.2px !important;
     }}
     
-    .main h1, .main h2, .main h3, .main h4 {{
-        font-family: 'Inter', sans-serif !important;
-        color: #1A2530 !important;
-        font-weight: 700 !important;
-        letter-spacing: -0.5px !important;
-    }}
-
-    /* 2. SPECIFIC SECTION 01-05 WHITE CARD DIVIDERS */
+    /* 2. THE SIGNATURE WHITE RECTANGULAR DIVIDER CONTAINERS */
     .step-container {{ 
-        margin-bottom: 35px !important; 
+        margin-bottom: 40px !important; 
         padding: 30px !important; 
         border-radius: 12px !important; 
         background-color: #FFFFFF !important; /* Pure white rectangle panel back */
-        border: 1px solid #EAECEE !important; /* Thin crisp gray frame border */
-        box-shadow: 0 4px 15px rgba(0,0,0,0.02) !important;
+        border: 1px solid #EAECEE !important; /* Thin gray structural perimeter frame */
+        box-shadow: 0 4px 15px rgba(0,0,0,0.03) !important;
     }}
     
     .step-container h4 {{
+        font-family: 'Space Grotesk', sans-serif !important;
+        color: #1A2530 !important;
         font-size: 16px !important;
-        margin-top: 0px !important;
+        font-weight: 700 !important;
+        letter-spacing: -0.5px !important;
+        text-transform: uppercase !important; /* Structural 2040 alignment look */
         margin-bottom: 20px !important;
+        margin-top: 0px !important;
         border-bottom: 2px solid #F2F4F4;
         padding-bottom: 10px;
     }}
-
-    /* 3. SOLID BLACK SIDEBAR ENVIRONMENT HOUSING */
+    
+    /* MONOSPACE CODE PRECISION NUMBERS FOR INPUT METRICS */
+    .stNumberInput input, .stSelectbox div {{
+        font-family: 'JetBrains Mono', monospace !important; /* Monospace for crisp numerical data */
+        font-weight: 700 !important;
+    }}
+    
+    /* SIDEBAR CONTROL CONFIG */
     [data-testid="stSidebar"] {{
         background-color: #000000 !important;
-        border-right: 1px solid #222222 !important;
+        border-right: 1px solid #333333;
     }}
     
-    /* Forces only sidebar text to white, preventing text overlap blending */
-    [data-testid="stSidebar"] p, 
-    [data-testid="stSidebar"] label, 
-    [data-testid="stSidebar"] span, 
-    [data-testid="stSidebar"] div,
-    [data-testid="stSidebar"] h1,
-    [data-testid="stSidebar"] h2,
-    [data-testid="stSidebar"] h3 {{
+    [data-testid="stSidebar"] *, [data-testid="stSidebar"] p, [data-testid="stSidebar"] label {{
+        font-family: 'Space Grotesk', sans-serif !important;
         color: #FFFFFF !important;
     }}
     
-    /* Sidebar Input boxes contrast containment */
     [data-testid="stSidebar"] div[data-baseweb="select"] > div,
     [data-testid="stSidebar"] div[data-baseweb="input"] > div,
-    [data-testid="stSidebar"] div[data-baseweb="radio"] label {{
+    [data-testid="stSidebar"] div[data-baseweb="radio"] label,
+    [data-testid="stSidebar"] div[data-baseweb="radio"] div {{
         background-color: #1A1A1A !important;
         border: 1px solid #333333 !important;
-        color: #FFFFFF !important;
+        color: white !important;
+        font-family: 'JetBrains Mono', monospace !important;
     }}
 
-    /* 4. HIGH-SPEED CALCULATION GAUGE BUTTON */
+    /* REGULAR EXECUTIVE GAUGE BUTTON */
     .stButton>button {{ 
         background: {brand_color} !important; 
         color: white !important; 
         border-radius: 8px !important; 
         border: none !important;
-        height: 3.6em !important;
+        height: 3.5em !important;
+        font-family: 'Space Grotesk', sans-serif !important;
         font-size: 14px !important;
-        font-weight: 600 !important;
-        letter-spacing: 0.5px !important;
+        font-weight: 700 !important;
+        letter-spacing: 1px !important;
+        text-transform: uppercase !important; /* Industrial layout finish */
         width: 100% !important;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.05) !important;
-        transition: 0.2s all ease;
+        transition: 0.3s all ease;
     }}
     .stButton>button:hover {{
-        opacity: 0.90;
-        transform: translateY(-1px);
+        opacity: 0.85;
+        transform: scale(0.99);
     }}
     
-    /* 5. METRIC OUTPUT WRAPPER WINDOW */
+    /* STATIONARY METRIC HOUSING CERTIFICATE CARD */
     .metric-card {{
         background: #FFFFFF !important;
         padding: 40px !important;
         border-radius: 12px !important;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.06) !important;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05) !important;
         text-align: center !important;
         border: 1px solid #EAECEE !important;
-        margin-top: 25px !important;
     }}
     
-    [data-testid="stMetricValue"] {{ font-size: 24px !important; font-weight: 700 !important; color: #1A2530 !important; }}
-    [data-testid="stMetricDelta"] {{ font-size: 13px !important; }}
+    [data-testid="stMetricValue"] {{ 
+        font-family: 'JetBrains Mono', monospace !important; 
+        font-size: 24px !important; 
+        font-weight: 700 !important; 
+        color: #1A2530 !important; 
+    }}
+    [data-testid="stMetricDelta"] {{ font-family: 'Space Grotesk', sans-serif !important; font-size: 13px !important; }}
     </style>
     """, unsafe_allow_html=True)
-
-# (Paste the new CSS Style block right here)
 
 # --- 7. HEADER & LOGO INJECTION (INDUSTRIAL SEEDED REPO STANDARD) ---
 st.markdown("<br>", unsafe_allow_html=True)
