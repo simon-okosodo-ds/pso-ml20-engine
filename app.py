@@ -195,13 +195,14 @@ with st.sidebar:
     """, unsafe_allow_html=True)
 
 
-# --- EXECUTIVE UI STYLING (Hardened Non-f-string Text Layout Container) ---
+# --- EXECUTIVE UI PREMIUM STYLING (World-Class Classic Scoped) ---
 st.markdown("""
     <style>
+    /* 1. MAIN CANVAS TYPOGRAPHY SCOPING */
     .main .block-container p, 
     .main .block-container span, 
     .main .block-container label,
-    .main .block-container div {
+    .main .block-container div:not([data-baseweb="input"]):not([data-baseweb="select"]) {
         font-family: Arial, Helvetica, sans-serif !important;
         font-size: 14px !important;
         color: #2C3E50 !important;
@@ -212,10 +213,10 @@ st.markdown("""
         font-family: Arial, Helvetica, sans-serif !important;
         color: #1A2530 !important;
         font-weight: 700 !important;
-        letter-spacing: 0px !important;
         display: block !important;
     }
 
+    /* THE SIGNATURE WHITE RECTANGULAR DIVIDER CONTAINERS */
     .step-container { 
         margin-bottom: 40px !important; 
         padding: 30px !important; 
@@ -229,47 +230,49 @@ st.markdown("""
         color: #2C3E50 !important;
         font-size: 16px !important;
         font-weight: 700 !important;
-        letter-spacing: 0px !important;
         margin-bottom: 20px !important;
         margin-top: 0px !important;
     }
     
+    /* 2. SOLID BLACK OBSIDIAN SIDEBAR (ICON SHIELD ACTIVE) */
     [data-testid="stSidebar"] {
         background-color: #060B26 !important;
         border-right: 1px solid rgba(0, 242, 254, 0.15) !important;
     }
     
     [data-testid="stSidebar"] [data-testid="stVerticalBlock"] {
-        gap: 28px !important; 
+        gap: 24px !important; /* Insulates widget categories vertically */
     }
     
-    [data-testid="stSidebar"] .element-container {
-        margin-bottom: 15px !important; 
-    }
-    
+    /* 🟢 THE ICON FIX: We strictly target ONLY human text elements inside the sidebar,
+       explicitly bypassing Streamlit's inner icon codes, buttons, and sub-labels */
     [data-testid="stSidebar"] p,
-    [data-testid="stSidebar"] label,
-    [data-testid="stSidebar"] span,
-    [data-testid="stSidebar"] h1,
-    [data-testid="stSidebar"] h2,
-    [data-testid="stSidebar"] h3 {
+    [data-testid="stSidebar"] div[data-testid="stMarkdownContainer"] p,
+    [data-testid="stSidebar"] .stExpander details summary {
         font-family: Arial, Helvetica, sans-serif !important;
-        font-size: 12px !important;
+        font-size: 13px !important;
         font-weight: 600 !important;
         color: #FFFFFF !important;
-        line-height: 1.6 !important;
-        display: block !important;
+        line-height: 1.5 !important;
+    }
+
+    /* Target sidebar input labels specifically without breaking internal structural tags */
+    [data-testid="stSidebar"] label p {
+        font-size: 12px !important;
+        color: #94A3B8 !important;
+        font-weight: 600 !important;
     }
     
+    /* Input field container framing contrast settings */
     [data-testid="stSidebar"] div[data-baseweb="select"] > div,
     [data-testid="stSidebar"] div[data-baseweb="input"] > div {
         background-color: #0D1426 !important;
-        border: 1px solid rgba(0, 242, 254, 0.15) !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
         color: #FFFFFF !important;
-        margin-top: 6px !important;
-        margin-bottom: 6px !important;
+        margin-top: 4px !important;
     }
 
+    /* CENTRAL EXECUTIVE RUN BUTTON STYLE */
     .stButton>button { 
         background: #00F2FE !important; 
         color: white !important; 
@@ -278,16 +281,17 @@ st.markdown("""
         height: 3.5em !important;
         font-family: Arial, Helvetica, sans-serif !important;
         font-size: 14px !important;
-        font-weight: 600 !important;
-        letter-spacing: 0px !important;
+        font-weight: 700 !important;
+        text-transform: uppercase !important;
         width: 100% !important;
         transition: 0.3s all ease;
-    }
+    }}
     .stButton>button:hover {
         opacity: 0.85;
         transform: scale(0.99);
     }
     
+    /* VALUATION RESULT CERTIFICATE WHITE COMPARTMENT CARD */
     .metric-card {
         background: #FFFFFF !important;
         padding: 40px !important;
@@ -296,11 +300,9 @@ st.markdown("""
         text-align: center !important;
         border: 1px solid #EAECEE !important;
     }
-    
-    [data-testid="stMetricValue"] { font-size: 22px !important; font-weight: 600 !important; color: #2C3E50 !important; }
-    [data-testid="stMetricDelta"] { font-size: 13px !important; }
     </style>
 """, unsafe_allow_html=True)
+
 
 # --- 7. HEADER & LOGO INJECTION (RESOLVED DIRECTORY STANDARD) ---
 st.markdown("<br>", unsafe_allow_html=True)
