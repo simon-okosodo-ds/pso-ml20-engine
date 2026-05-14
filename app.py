@@ -626,10 +626,7 @@ if trigger_valuation:
                     visibility: visible !important;
                     opacity: 1.0 !important;">
             
-            <p style="font-size: 11px !important; font-family: Arial, Helvetica, sans-serif !important; font-weight: 700 !important; color: #7F8C8D !important; letter-spacing: 2px !important; text-transform: uppercase !important; margin: 0 0 15px 0; padding: 0 !important; display: block !important; visibility: visible !important; opacity: 1.0 !important;">
-                OFFICIAL GLOBAL CERTIFICATE
-            </p>
-            
+                        
             <div style="color: #000000 !important; 
                         font-family: Arial, Helvetica, sans-serif !important; 
                         font-size: 44px !important; 
