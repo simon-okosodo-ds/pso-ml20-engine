@@ -593,29 +593,27 @@ if trigger_valuation:
         grade_scalars = {"Basic/Standard": 1.0, "Modern/Executive": 1.25, "Luxury/High-End": 1.6, "Elite/Mansion": 2.2}
         quality_force = grade_scalars.get(build_type, 1.0)
         
-        # 5. ABSOLUTE VALUE ASSEMBLY
+                # 5. ABSOLUTE VALUE ASSEMBLY (INDENTED STEP COMPLETED)
         if eclipse_mode:
             final_usd = (base_price * market_appreciation * quality_force * avg_vision) * 0.92
         else:
             final_usd = (base_price * market_appreciation * quality_force * avg_vision) * 1.05
 
         st.session_state['history'].append({'Time': datetime.now().strftime('%H:%M'), 'price': final_usd})
-        status.update(label="Champion Logic Applied!", state="complete")
-
-                                # ============================================================
-    # 🌐 STEP 6: OMNI-GLOBAL OUTPUT CERTIFICATE (STATUS CLOSED & FIXED)
-    # ============================================================
-    # 1. Force the Streamlit Status container to explicitly close and save its state
-    if 'status' in locals() or 'status' in globals():
+        
+        # 🟢 THE FIRST STATUS TERMINATION CHASSIS:
         status.update(label="Champion Logic Applied!", state="complete", expanded=False)
 
-    # 2. Isolate selected symbol elements from the active session state string array safely
+    # 🟢 THE CRITICAL ALIGNMENT BREAKPOINT: Shifting left to exactly 4 spaces closes the 'with' scope!
+    # ============================================================
+    # 🌐 STEP 6: OMNI-GLOBAL OUTPUT CERTIFICATE (PRODUCTION HARDENED)
+    # ============================================================
     sym_token = user_currency.split("(")[-1].replace(")", "").strip() if 'user_currency' in locals() else "$"
     sym = f"VAL {sym_token}"
 
     st.balloons()
     
-    # 3. 🟢 THE FIXED NATIVE CELL: Fully isolated outside the status window layout limits
+    # Render component outside status boundaries to stop plain text strings rendering
     st.markdown(f"""
         <div style="background-color: #FFFFFF !important; 
                     padding: 40px !important; 
@@ -653,7 +651,7 @@ if trigger_valuation:
         </div>
     """, unsafe_allow_html=True)
     
-    # --- DISPLAY MINI METRICS ---
+       # --- DISPLAY MINI METRICS ---
     finish_label = "Ultra-Luxury" if avg_vision > 1.18 else "High-End" if avg_vision > 1.08 else "Standard"
     safety_label = "Secure" if final_usd < 5000000 else "Volatile"
     
