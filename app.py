@@ -230,17 +230,8 @@ with st.sidebar:
 st.markdown(f"""
     <style>
         /* MAIN CANVAS TYPOGRAPHY SCOPING */
-    .main .block-container p, 
-    .main .block-container span, 
-    .main .block-container label,
-    .main .block-container div {{
-        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif !important;
-        font-size: 14px !important;
-        color: #2C3E50 !important;
-        line-height: 1.5 !important;
-    }}
     
-    .main h1, .main h2, .main h3, .main h4 {{
+        .main h1, .main h2, .main h3, .main h4 {{
         font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif !important;
         color: #1A2530 !important;
         font-weight: 700 !important;
