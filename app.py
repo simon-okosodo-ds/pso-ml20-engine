@@ -602,17 +602,20 @@ if trigger_valuation:
         st.session_state['history'].append({'Time': datetime.now().strftime('%H:%M'), 'price': final_usd})
         status.update(label="Champion Logic Applied!", state="complete")
 
-                            # ============================================================
-    # 🌐 STEP 6: OMNI-GLOBAL OUTPUT CERTIFICATE (QUOTES SYNCHRONIZED)
+                                # ============================================================
+    # 🌐 STEP 6: OMNI-GLOBAL OUTPUT CERTIFICATE (STATUS CLOSED & FIXED)
     # ============================================================
-    # Isolate selected symbol elements from the active session state string array
+    # 1. Force the Streamlit Status container to explicitly close and save its state
+    if 'status' in locals() or 'status' in globals():
+        status.update(label="Champion Logic Applied!", state="complete", expanded=False)
+
+    # 2. Isolate selected symbol elements from the active session state string array safely
     sym_token = user_currency.split("(")[-1].replace(")", "").strip() if 'user_currency' in locals() else "$"
     sym = f"VAL {sym_token}"
 
     st.balloons()
     
-    # 🟢 THE NATIVE DISPLAY PORTAL: Double triple quotes prevent any inner style clashes.
-    # Inline styles bypass global class theme pollution, forcing solid jet-black text values.
+    # 3. 🟢 THE FIXED NATIVE CELL: Fully isolated outside the status window layout limits
     st.markdown(f"""
         <div style="background-color: #FFFFFF !important; 
                     padding: 40px !important; 
@@ -626,7 +629,10 @@ if trigger_valuation:
                     visibility: visible !important;
                     opacity: 1.0 !important;">
             
-                        
+            <p style="font-size: 11px !important; font-family: Arial, Helvetica, sans-serif !important; font-weight: 700 !important; color: #7F8C8D !important; letter-spacing: 2px !important; text-transform: uppercase !important; margin: 0 0 15px 0; padding: 0 !important; display: block !important; visibility: visible !important; opacity: 1.0 !important;">
+                OFFICIAL GLOBAL CERTIFICATE
+            </p>
+            
             <div style="color: #000000 !important; 
                         font-family: Arial, Helvetica, sans-serif !important; 
                         font-size: 44px !important; 
@@ -646,8 +652,6 @@ if trigger_valuation:
             
         </div>
     """, unsafe_allow_html=True)
-
-
     
     # --- DISPLAY MINI METRICS ---
     finish_label = "Ultra-Luxury" if avg_vision > 1.18 else "High-End" if avg_vision > 1.08 else "Standard"
