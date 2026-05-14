@@ -202,12 +202,31 @@ with st.sidebar:
 
     # 🟢 THE REMOVAL: PORTAL 3 (The old radio button that was forcing only USD and NGN) is completely deleted here.
 
-    # --- PORTAL 4: ARCHITECT CREDENTIALS ---
+        # --- PORTAL 4: ARCHITECT CREDENTIALS (UNIFIED CYBER STRUCTURAL SEAL) ---
     st.divider()
-    st.write("**System Architect**")
-    st.write("Patrick Simon Okosodo")
-    st.caption("AI Lead | MLOps Specialist | B.Eng (Chem)")
-    st.info("🧠 **Engine:** PSO-ML20 Standard")
+    
+    # 🟢 THE MASTER COMPACTION: We bypass Streamlit block container generation 
+    # and bundle all metadata into a single, tightly-spaced HTML element.
+    st.markdown("""
+        <div style='background-color: #111625; padding: 16px; border: 1px solid #1E293B; border-radius: 8px; margin-top: 10px;'>
+            <p style='margin: 0 !important; padding: 0 !important; color: #94A3B8 !important; font-size: 10px !important; text-transform: uppercase !important; letter-spacing: 1.5px !important; font-weight: 700 !important; line-height: 1.0 !important;'>
+                System Architect
+            </p>
+            <h5 style='margin: 4px 0 0 0 !important; padding: 0 !important; color: #FFFFFF !important; font-size: 15px !important; font-weight: 700 !important; letter-spacing: -0.3px !important; line-height: 1.1 !important;'>
+                Patrick Simon Okosodo
+            </h5>
+            <p style='margin: 2px 0 0 0 !important; padding: 0 !important; color: #38BDF8 !important; font-size: 11px !important; font-weight: 600 !important; line-height: 1.2 !important;'>
+                AI Lead | MLOps Specialist | B.Eng (Chem)
+            </p>
+            <div style='margin-top: 8px; padding-top: 8px; border-top: 1px solid #1E293B; display: flex; align-items: center; gap: 6px;'>
+                <span style='font-size: 14px;'>🧠</span>
+                <span style='color: #64748B !important; font-size: 11px !important; font-weight: 600 !important; letter-spacing: 0.2px;'>
+                    Engine: <span style='color: #00F2FE !important;'>PSO-ML20 Standard</span>
+                </span>
+            </div>
+        </div>
+    """, unsafe_allow_html=True)
+
 
 # --- EXECUTIVE UI STYLING (World-Class Classic Institutional Standard) ---
 st.markdown(f"""
@@ -240,50 +259,36 @@ st.markdown(f"""
         background-color: #FFFFFF !important; 
         border: 1px solid #EAECEE !important; 
         box-shadow: 0 2px 10px rgba(0,0,0,0.02) !important;
-    }}
-    
-    .step-container h4 {{
-        font-size: 14px !important;
-        font-weight: 700 !important;
-        text-transform: uppercase !important;
-        border-bottom: 2px solid #F4F6F6 !important;
-        padding-bottom: 10px !important;
-        margin-top: 0px !important;
-        margin-bottom: 20px !important;
-    }}
-
-    /* 3. HARDENED SIDEBAR ENVIRONMENT (FIXES OVERLAPPING PERMANENTLY) */
+           /* HARDENED SIDEBAR SEPARATION ENVIRONMENT */
     [data-testid="stSidebar"] {{
-        background-color: #000000 !important;
-        border-right: 1px solid #222222 !important;
+        background-color: #060B26 !important;
+        border-right: 1px solid rgba(0, 242, 254, 0.15) !important;
     }}
     
-    /* Target sidebar text layout rows with clean padding separation rules */
+    /* 🟢 SANITISED SYNTAX LAYER: Using clean standard fallback names removes GitHub's red flags */
     [data-testid="stSidebar"] p,
     [data-testid="stSidebar"] label,
     [data-testid="stSidebar"] span,
     [data-testid="stSidebar"] h1,
     [data-testid="stSidebar"] h2,
-    [data-testid="stSidebar"] h3,
-    [data-testid="stSidebar"] .stMarkdown div {{
-        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif !important;
-        font-size: 12px !important; /* Smaller, sharper executive layout text */
-        font-weight: 600 !important; /* Bold, professional emphasis */
+    [data-testid="stSidebar"] h3 {{
+        font-family: Arial, Helvetica, sans-serif !important; /* Clears quotes conflict entirely */
+        font-size: 12px !important;
+        font-weight: 600 !important;
         color: #FFFFFF !important;
-        line-height: 1.8 !important; /* 🟢 ENFORCED SEPARATION: Guarantees space between lines */
-        margin-bottom: 8px !important; /* Forces breathing room between widgets */
+        line-height: 1.5 !important;
+        margin-bottom: 6px !important;
     }}
     
-    /* Ensure input selection boxes don't compress */
+    /* Sidebar input selection box contrast constraints */
     [data-testid="stSidebar"] div[data-baseweb="select"] > div,
-    [data-testid="stSidebar"] div[data-baseweb="input"] > div,
-    [data-testid="stSidebar"] div[data-baseweb="radio"] label {{
-        background-color: #1A1A1A !important;
-        border: 1px solid #333333 !important;
+    [data-testid="stSidebar"] div[data-baseweb="input"] > div {{
+        background-color: #0D1426 !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
         color: #FFFFFF !important;
-        font-size: 12px !important;
+        margin-bottom: 12px !important;
     }}
-
+    
     /* 4. EXECUTIVE RUN BUTTON */
     .stButton>button {{ 
         background: {brand_color} !important; 
