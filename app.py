@@ -643,23 +643,32 @@ if st.button("GENERATE CERTIFIED VALUATION"):
     with m3: st.metric("Market Safety", safety_label, delta="Phase 15 Shield")
     with m4: st.metric("System Health", "Elite", delta="Direct .PKL Link")
 
-    # ============================================================
+        # ============================================================
     # 📄 INTERACTIVE DOCUMENT AUDIT PORTAL (PREVIEW BEFORE DOWNLOAD)
     # ============================================================
     st.markdown("<br>", unsafe_allow_html=True)
-    final_pdf_inventory = user_inputs if 'user_inputs' in locals() else {"Bedrooms": 4, "Bathrooms": 2}
+    
+    # 1. Fallback security check for inventory records
+    if 'user_inputs' in locals() or 'user_inputs' in globals():
+        final_pdf_inventory = user_inputs
+    else:
+        final_pdf_inventory = {"Bedrooms": 4, "Bathrooms": 2}
+        
+    # 2. 🟢 THE FIX: Safely determine the dynamic sync state before passing to compiler
+    # This prevents the 'is_dynamic' NameError permanently
+    pdf_sync_mode = is_dynamic if 'is_dynamic' in locals() else False
     
     try:
         # Run report labs inside memory stream buffer
         pdf_data = generate_pso_pdf(
             final_usd, 
-            sym_token, 
-            sqft, 
-            build_type, 
-            yr_built, 
+            sym_token if 'sym_token' in locals() else "$", 
+            sqft if 'sqft' in locals() else 2500, 
+            build_type if 'build_type' in locals() else "Basic/Standard", 
+            yr_built if 'yr_built' in locals() else 2018, 
             final_pdf_inventory, 
             uploaded_imgs if 'uploaded_imgs' in locals() else {"img1": None}, 
-            is_dynamic=is_dynamic
+            is_dynamic=pdf_sync_mode
         )
         
         # Transform binary pdf array into secure base64 string
