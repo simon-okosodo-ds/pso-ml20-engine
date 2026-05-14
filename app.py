@@ -121,112 +121,14 @@ def generate_pso_pdf(val, sym, sqft, build_type, yr, inventory, images, is_dynam
 
 # --- 3. SYSTEM CONFIG & AUTH ---
 st.set_page_config(page_title="PSO-ML20 Executive", page_icon="🛡️", layout="wide")
-
-# --- 4. HIGH-SPEED CHAMPION BRAIN LOADING ---
-@st.cache_resource
-def load_pso_brain():
-    try:
-        model = joblib.load('pso_super_brain.pkl')
-        if hasattr(model, 'feature_names_in_'):
-            features = model.feature_names_in_.tolist()
-        else:
-            features = ['SqFtTotLiving', 'BldgGrade', 'YrBuilt', 'Bedrooms', 'Bathrooms', 'SqFtLot']
-        return model, features
-    except:
-        return None, ['SqFtTotLiving', 'BldgGrade', 'YrBuilt', 'Bedrooms', 'Bathrooms', 'SqFtLot']
-
-model, brain_features = load_pso_brain()
-
-if 'authenticated' not in st.session_state: st.session_state['authenticated'] = False
 if 'history' not in st.session_state: st.session_state['history'] = []
 
-# --- 5. ACCESS GATE ---
-if not st.session_state['authenticated']:
-    st.markdown("<div style='text-align: center; margin-top: 100px;'><h3>🛡️ PSO-ML20 Secure Gateway</h3></div>", unsafe_allow_html=True)
-    col1, col2, col3 = st.columns([1,2,1])
-    with col2:
-        access_key = st.text_input("Enter Key", type="password")
-        if st.button("Unlock Terminal"):
-            if access_key == "ELITE2026":
-                st.session_state['authenticated'] = True
-                st.rerun()
-    st.stop()
-
-# --- 6. SIDEBAR: CONTROL & INTELLIGENCE ---
-with st.sidebar:
-    st.markdown("<h3 style='margin-bottom: 0px;'>🛡️ System Control</h3>", unsafe_allow_html=True)
-    
-    # --- PORTAL 1: CUSTOM BRANDING ---
-    with st.expander("🎨 Custom Branding", expanded=False):
-        uploaded_logo = st.file_uploader("Change Company Logo", type=['png', 'jpg'], key="logo_up")
-        if uploaded_logo:
-            st.session_state["persistent_logo_bytes"] = uploaded_logo.read()
-            st.success("✅ Logo locked to active cache.")
-            
-        uploaded_qr = st.file_uploader("Change System QR", type=['png', 'jpg'], key="qr_up")
-        if uploaded_qr:
-            st.session_state["persistent_qr_bytes"] = uploaded_qr.read()
-            st.success("✅ QR Code locked to active cache.")
-            
-        brand_color = st.color_picker("Pick your Brand Color", "#00F2FE")
-
-    st.markdown("<br><br>", unsafe_allow_html=True)
-    st.divider()
-
-    # --- PORTAL 2: MARKET LEARNER (THE CSV UPLOADER) ---
-    st.write("📂 **Market Knowledge Portal**")
-    new_data = st.file_uploader("Upload local market data (CSV)", type=['csv'])
-    
-    if new_data:
-        df_raw = pd.read_csv(new_data)
-        st.session_state['full_columns'] = df_raw.columns.tolist()
-        
-        detected_currency = st.selectbox(
-            "Select Spreadsheet Currency Baseline",
-            ["USD (\$)", "EUR (€)", "CNY (¥)", "NGN (₦)", "GBP (£)"],
-            help="Select the currency your uploaded CSV columns are written in."
-        )
-        st.session_state['detected_currency'] = detected_currency
-        
-        price_col = next((c for c in df_raw.columns if 'price' in c.lower() or 'val' in c.lower()), None)
-        if price_col:
-            avg_price = df_raw[price_col].mean()
-            st.session_state['local_basis'] = avg_price / (2000 * 0.0761)
-            st.success(f"✅ Market DNA Mapped to {detected_currency}.")
-        else:
-            st.session_state['local_basis'] = 1950
-            st.warning("⚠️ Defaulting to baseline scaling coefficients.")
-            
-    else:
-        detected_currency = st.selectbox(
-            "Select Active Terminal Currency",
-            ["USD (\$)", "EUR (€)", "CNY (¥)", "NGN (₦)", "GBP (£)"],
-            help="Set the valuation currency environment for the 5.4MB brain."
-        )
-        st.session_state['detected_currency'] = detected_currency
-        st.session_state['local_basis'] = 1950
-
-    st.markdown("<br><br><br><br><br><br>", unsafe_allow_html=True)
-    st.divider()
-
-    # --- PORTAL 4: COMPACT BOTTOM-ANCHORED CREDENTIALS CARD ---
-    st.markdown("""
-        <div style='background-color: #0B1120; padding: 10px 14px; border: 1px solid #1E293B; border-radius: 6px; margin-top: 5px; box-shadow: 0 4px 10px rgba(0,0,0,0.2);'>
-            <p style='margin: 0 !important; padding: 0 !important; color: #64748B !important; font-size: 9px !important; text-transform: uppercase !important; letter-spacing: 1.2px !important; font-weight: 700 !important; line-height: 1.0 !important;'>System Architect</p>
-            <h6 style='margin: 3px 0 0 0 !important; padding: 0 !important; color: #FFFFFF !important; font-size: 13px !important; font-weight: 700 !important; letter-spacing: -0.2px !important; line-height: 1.1 !important;'>Patrick Simon Okosodo</h6>
-            <p style='margin: 1px 0 0 0 !important; padding: 0 !important; color: #38BDF8 !important; font-size: 10px !important; font-weight: 600 !important; line-height: 1.2 !important;'>AI Lead | MLOps Specialist | B.Eng (Chem)</p>
-            <div style='margin-top: 6px; padding-top: 6px; border-top: 1px solid #1E293B; display: flex; align-items: center; gap: 5px;'>
-                <span style='font-size: 11px;'>🧠</span>
-                <span style='color: #475569 !important; font-size: 10px !important; font-weight: 600 !important;'>Engine: <span style='color: #00F2FE !important;'>PSO-ML20 Standard</span></span>
-            </div>
-        </div>
-    """, unsafe_allow_html=True)
-
-    """, unsafe_allow_html=True)
-
-# --- EXECUTIVE UI STYLING ---
+# --- EXECUTIVE UI STYLING (HARDENED SINGLE STRING PROTOCOL) ---
+# 🟢 THE MASTER FIX: This block uses standard text quotes with NO 'f' prefix. 
+# It is completely isolated from python formatting variables to guarantee zero syntax crashes.
 st.markdown("""
     <style>
+    /* GLOBAL TEXT SCALING RESTORATION */
     .main .block-container p, 
     .main .block-container span, 
     .main .block-container label,
@@ -237,6 +139,7 @@ st.markdown("""
         line-height: 1.5 !important;
     }
     
+    /* RE-ESTABLISHING CRISP HEADERS VISIBILITY */
     .main h1, .main h2, .main h3, .main h4 {
         font-family: Arial, Helvetica, sans-serif !important;
         color: #1A2530 !important;
@@ -245,6 +148,7 @@ st.markdown("""
         display: block !important;
     }
 
+    /* THE SIGNATURE WHITE RECTANGULAR DIVIDER CONTAINERS */
     .step-container { 
         margin-bottom: 40px !important; 
         padding: 30px !important; 
@@ -263,6 +167,7 @@ st.markdown("""
         margin-top: 0px !important;
     }
     
+    /* SIDEBAR CONTROL CONFIG */
     [data-testid="stSidebar"] {
         background-color: #060B26 !important;
         border-right: 1px solid rgba(0, 242, 254, 0.15) !important;
@@ -288,7 +193,7 @@ st.markdown("""
         color: #FFFFFF !important;
         line-height: 1.6 !important;
         display: block !important;
-    }}
+    }
     
     [data-testid="stSidebar"] div[data-baseweb="select"] > div,
     [data-testid="stSidebar"] div[data-baseweb="input"] > div {
@@ -299,6 +204,7 @@ st.markdown("""
         margin-bottom: 6px !important;
     }
 
+    /* REGULAR EXECUTIVE GAUGE BUTTON */
     .stButton>button { 
         background: #00F2FE !important; 
         color: white !important; 
@@ -317,6 +223,7 @@ st.markdown("""
         transform: scale(0.99);
     }
     
+    /* STATIONARY METRIC HOUSING CERTIFICATE CARD */
     .metric-card {
         background: #FFFFFF !important;
         padding: 40px !important;
@@ -329,13 +236,10 @@ st.markdown("""
     [data-testid="stMetricValue"] { font-size: 22px !important; font-weight: 600 !important; color: #2C3E50 !important; }
     [data-testid="stMetricDelta"] { font-size: 13px !important; }
     </style>
-    """, unsafe_allow_html=True)
-
-
+""", unsafe_allow_html=True)
 
 # --- 7. HEADER & LOGO INJECTION (PERMANENT SYSTEM STATE & LAYOUT SYNC) ---
 st.markdown("<br>", unsafe_allow_html=True)
-import os
 
 base_dir = os.path.dirname(__file__) if '__file__' in locals() else "."
 repo_logo = os.path.join(base_dir, "branding", "logo.png")
@@ -357,12 +261,8 @@ if os.path.exists(repo_qr):
     with col_text:
         st.markdown("""
             <div style='display: flex; flex-direction: column; justify-content: center; height: 100%;'>
-                <h1 style='margin: 0; padding: 0; color: #1A2530 !important; font-size: 32px !important; font-weight: 800 !important; letter-spacing: -1px !important; opacity: 1 !important;'>
-                    Executive Valuation Terminal
-                </h1>
-                <p style='margin: 5px 0 0 0; padding: 0; color: #566573 !important; font-size: 14px !important; font-weight: 500 !important; opacity: 1 !important; letter-spacing: 0.5px;'>
-                    PSO-ML20 Standard | Industrial Forensic Audit Engine
-                </p>
+                <h1 style='margin: 0; padding: 0; color: #1A2530 !important; font-size: 32px !important; font-weight: 800 !important; letter-spacing: -1px !important;'>Executive Valuation Terminal</h1>
+                <p style='margin: 5px 0 0 0; padding: 0; color: #566573 !important; font-size: 14px !important; font-weight: 500; letter-spacing: 0.5px;'>PSO-ML20 Standard | Industrial Forensic Audit Engine</p>
             </div>
         """, unsafe_allow_html=True)
     with col_qr:
@@ -370,12 +270,8 @@ if os.path.exists(repo_qr):
 else:
     st.markdown("""
         <div>
-            <h1 style='margin: 0; padding: 0; color: #1A2530 !important; font-size: 32px !important; font-weight: 800 !important; letter-spacing: -1px !important; opacity: 1 !important;'>
-                Executive Valuation Terminal
-            </h1>
-            <p style='margin: 5px 0 0 0; padding: 0; color: #566573 !important; font-size: 14px !important; font-weight: 500 !important; opacity: 1 !important; letter-spacing: 0.5px;'>
-                    PSO-ML20 Standard | Industrial Forensic Audit Engine
-            </p>
+            <h1 style='margin: 0; padding: 0; color: #1A2530 !important; font-size: 32px !important; font-weight: 800 !important; letter-spacing: -1px !important;'>Executive Valuation Terminal</h1>
+            <p style='margin: 5px 0 0 0; padding: 0; color: #566573 !important; font-size: 14px !important; font-weight: 500; letter-spacing: 0.5px;'>PSO-ML20 Standard | Industrial Forensic Audit Engine</p>
         </div>
     """, unsafe_allow_html=True)
 
