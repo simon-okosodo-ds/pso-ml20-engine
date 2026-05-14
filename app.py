@@ -643,10 +643,11 @@ if st.button("GENERATE CERTIFIED VALUATION"):
     with m3: st.metric("Market Safety", safety_label, delta="Phase 15 Shield")
     with m4: st.metric("System Health", "Elite", delta="Direct .PKL Link")
 
-                # ============================================================
-    # 📄 INTERACTIVE DOCUMENT AUDIT PORTAL (BROWSER PREVIEW FIX)
+                    # ============================================================
+    # 📄 INTERACTIVE DOCUMENT AUDIT PORTAL (NATIVE PLUG-IN FIX)
     # ============================================================
     st.markdown("<br>", unsafe_allow_html=True)
+    from streamlit_pdf_viewer import pdf_viewer # 🟢 Import native streaming viewer
     
     if 'user_inputs' in locals() or 'user_inputs' in globals():
         final_pdf_inventory = user_inputs
@@ -671,23 +672,14 @@ if st.button("GENERATE CERTIFIED VALUATION"):
         # Extract the raw byte contents from the BytesIO buffer stream
         pdf_data = pdf_buffer.getvalue() if hasattr(pdf_buffer, 'getvalue') else pdf_buffer
         
-        # Transform binary pdf array into secure base64 string
-        import base64
-        base64_pdf = base64.b64encode(pdf_data).decode('utf-8')
-        
-        # 🟢 THE CRITICAL BROWSER BYPASS: Switch from iframe to a native html object container
-        # This completely stops browsers from rendering a blank box
-        pdf_display = f'''
-            <object data="data:application/pdf;base64,{base64_pdf}" type="application/pdf" width="100%" height="600px" style="border:1px solid #EAECEE; border-radius:12px;">
-                <embed src="data:application/pdf;base64,{base64_pdf}" type="application/pdf" />
-                <p>Your browser layout does not support live previews. Use the download button below to access the certificate file natively.</p>
-            </object>
-        '''
-        
         # Render the PDF Preview frame inside a white container panel card
         st.markdown("<div class='step-container'>", unsafe_allow_html=True)
         st.markdown("#### 📄 Real-Time Document Audit Preview")
-        st.markdown(pdf_display, unsafe_allow_html=True)
+        
+        # 🟢 THE CRITICAL FIX: Render bytes directly through native Streamlit Canvas
+        # This completely bypasses browser security sandboxes
+        pdf_viewer(input=pdf_data, height=600, width=800)
+        
         st.markdown("<br>", unsafe_allow_html=True)
         
         # Downstream action utility download trigger button
