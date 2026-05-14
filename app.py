@@ -196,88 +196,147 @@ with st.sidebar:
     st.caption("AI Lead | MLOps Specialist | B.Eng (Chem)")
     st.info("🧠 **Engine:** PSO-ML20 Standard")
 
-# --- EXECUTIVE UI STYLING (Restored Fonts & White Rectangular Boxes) ---
+# --- EXECUTIVE UI STYLING (Sovereign Scoped CSS Standard) ---
 st.markdown(f"""
     <style>
     @import url('googleapis.com');
     
-    /* GLOBAL TEXT SCALING RESTORATION */
-    html, body, p, div, label, span {{
+    /* 1. MAIN CANVAS TYPOGRAPHY SCOPING (Does not touch sidebar) */
+    .main .block-container {{
         font-family: 'Inter', sans-serif !important;
         font-size: 14px !important;
         color: #2C3E50 !important;
     }}
     
-    /* THE SIGNATURE WHITE RECTANGULAR DIVIDER CONTAINERS */
+    .main h1, .main h2, .main h3, .main h4 {{
+        font-family: 'Inter', sans-serif !important;
+        color: #1A2530 !important;
+        font-weight: 700 !important;
+        letter-spacing: -0.5px !important;
+    }}
+
+    /* 2. SPECIFIC SECTION 01-05 WHITE CARD DIVIDERS */
     .step-container {{ 
-        margin-bottom: 40px !important; 
+        margin-bottom: 35px !important; 
         padding: 30px !important; 
         border-radius: 12px !important; 
         background-color: #FFFFFF !important; /* Pure white rectangle panel back */
-        border: 1px solid #EAECEE !important; /* Thin gray structural perimeter frame */
-        box-shadow: 0 4px 15px rgba(0,0,0,0.03) !important;
+        border: 1px solid #EAECEE !important; /* Thin crisp gray frame border */
+        box-shadow: 0 4px 15px rgba(0,0,0,0.02) !important;
     }}
     
     .step-container h4 {{
-        color: #2C3E50 !important;
         font-size: 16px !important;
-        font-weight: 700 !important;
-        letter-spacing: -0.5px !important;
-        margin-bottom: 20px !important;
         margin-top: 0px !important;
+        margin-bottom: 20px !important;
+        border-bottom: 2px solid #F2F4F4;
+        padding-bottom: 10px;
     }}
-    
-    /* SIDEBAR CONTROL CONFIG */
+
+    /* 3. SOLID BLACK SIDEBAR ENVIRONMENT HOUSING */
     [data-testid="stSidebar"] {{
         background-color: #000000 !important;
-        border-right: 1px solid #333333;
+        border-right: 1px solid #222222 !important;
     }}
     
-    [data-testid="stSidebar"] *, [data-testid="stSidebar"] p, [data-testid="stSidebar"] label {{
+    /* Forces only sidebar text to white, preventing text overlap blending */
+    [data-testid="stSidebar"] p, 
+    [data-testid="stSidebar"] label, 
+    [data-testid="stSidebar"] span, 
+    [data-testid="stSidebar"] div,
+    [data-testid="stSidebar"] h1,
+    [data-testid="stSidebar"] h2,
+    [data-testid="stSidebar"] h3 {{
         color: #FFFFFF !important;
     }}
     
+    /* Sidebar Input boxes contrast containment */
     [data-testid="stSidebar"] div[data-baseweb="select"] > div,
     [data-testid="stSidebar"] div[data-baseweb="input"] > div,
-    [data-testid="stSidebar"] div[data-baseweb="radio"] label,
-    [data-testid="stSidebar"] div[data-baseweb="radio"] div {{
+    [data-testid="stSidebar"] div[data-baseweb="radio"] label {{
         background-color: #1A1A1A !important;
         border: 1px solid #333333 !important;
-        color: white !important;
+        color: #FFFFFF !important;
     }}
 
-    /* REGULAR EXECUTIVE GAUGE BUTTON */
+    /* 4. HIGH-SPEED CALCULATION GAUGE BUTTON */
     .stButton>button {{ 
         background: {brand_color} !important; 
         color: white !important; 
         border-radius: 8px !important; 
         border: none !important;
-        height: 3.5em !important;
+        height: 3.6em !important;
         font-size: 14px !important;
         font-weight: 600 !important;
         letter-spacing: 0.5px !important;
         width: 100% !important;
-        transition: 0.3s all ease;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05) !important;
+        transition: 0.2s all ease;
     }}
     .stButton>button:hover {{
-        opacity: 0.85;
-        transform: scale(0.99);
+        opacity: 0.90;
+        transform: translateY(-1px);
     }}
     
-    /* STATIONARY METRIC HOUSING CERTIFICATE CARD */
+    /* 5. METRIC OUTPUT WRAPPER WINDOW */
     .metric-card {{
         background: #FFFFFF !important;
         padding: 40px !important;
         border-radius: 12px !important;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.05) !important;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.06) !important;
         text-align: center !important;
         border: 1px solid #EAECEE !important;
+        margin-top: 25px !important;
     }}
     
-    [data-testid="stMetricValue"] {{ font-size: 22px !important; font-weight: 600 !important; color: #2C3E50 !important; }}
+    [data-testid="stMetricValue"] {{ font-size: 24px !important; font-weight: 700 !important; color: #1A2530 !important; }}
     [data-testid="stMetricDelta"] {{ font-size: 13px !important; }}
     </style>
     """, unsafe_allow_html=True)
+
+# (Paste the new CSS Style block right here)
+
+# --- 7. HEADER & LOGO INJECTION ---
+st.markdown("<br>", unsafe_allow_html=True)
+# (Keep your existing columns logic for client_logo, my_qr, title, etc.)
+
+# ==========================================
+# 🛡️ 01. PRIMARY PARAMETERS
+# ==========================================
+st.markdown("<div class='step-container'>", unsafe_allow_html=True)
+st.markdown("#### 01. Primary Asset Parameters")
+c1, c2, c3 = st.columns(3)
+with c1:
+    sqft = st.number_input("Property Area (Sqft)", value=2500, step=50)
+with c2:
+    build_type = st.selectbox("Quality Category", 
+        ["Basic/Standard", "Modern/Executive", "Luxury/High-End", "Elite/Mansion"])
+with c3:
+    yr_built = st.number_input("Year of Construction", 1900, 2026, 2018)
+st.markdown("</div>", unsafe_allow_html=True)
+
+
+# ==========================================
+# 🛡️ 02. FORENSIC EVIDENCE VAULT
+# ==========================================
+st.markdown("<div class='step-container'>", unsafe_allow_html=True)
+st.markdown("#### 02. Forensic Evidence Vault")
+st.warning("**PROTOCOL:** Capture full-view photos from floor-to-ceiling for accurate material analysis.")
+
+with st.expander("Expand 10-Point Evidence Portals", expanded=True):
+    v1, v2 = st.columns(2)
+    img1 = v1.file_uploader("1. Exterior Elevation", type=['jpg', 'png'])
+    img2 = v2.file_uploader("2. Compound Paving", type=['jpg', 'png'])
+    img3 = v1.file_uploader("3. Living Room View", type=['jpg', 'png'])
+    img4 = v2.file_uploader("4. Kitchen Architecture", type=['jpg', 'png'])
+    img5 = v1.file_uploader("5. Master Bedroom", type=['jpg', 'png'])
+    img6 = v2.file_uploader("6. Master Bathroom", type=['jpg', 'png'])
+    img7 = v1.file_uploader("7. Corridors & Staircase", type=['jpg', 'png'])
+    img8 = v2.file_uploader("8. Energy/Power Unit", type=['jpg', 'png'])
+    img9 = v1.file_uploader("9. Boys Quarters (BQ)", type=['jpg', 'png'])
+    img10 = v2.file_uploader("10. Security & Gatehouse", type=['jpg', 'png'])
+st.markdown("</div>", unsafe_allow_html=True)
+
 
 # ============================================================
 # 🛡️ STEP 03: FORENSIC DATASET INVENTORY (PRODUCTION HARDENED)
