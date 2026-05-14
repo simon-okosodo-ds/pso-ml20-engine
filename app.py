@@ -588,7 +588,7 @@ if trigger_valuation:
             <p style='font-size: 11px !important; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif !important; font-weight: 700 !important; color: #7F8C8D !important; letter-spacing: 2px !important; text-transform: uppercase; margin: 0 0 10px 0;'>
                 OFFICIAL GLOBAL CERTIFICATE
             </p>
-            <h1 style='color: #1A2530 !important; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif !important; font-size: 42px !important; font-weight: 700 !important; margin: 0; padding: 0;'>
+            <h1 style='color: #0B1120 !important; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif !important; font-size: 42px !important; font-weight: 800 !important; margin: 0; padding: 0; display: block !important; opacity: 1 !important;'>
                 {sym} {final_usd:,.2f}
             </h1>
             <p style='font-size: 13px !important; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif !important; color: #2C3E50 !important; margin-top: 15px !important; font-weight: 500;'>
