@@ -643,18 +643,16 @@ if st.button("GENERATE CERTIFIED VALUATION"):
     with m3: st.metric("Market Safety", safety_label, delta="Phase 15 Shield")
     with m4: st.metric("System Health", "Elite", delta="Direct .PKL Link")
 
-            # ============================================================
-    # 📄 INTERACTIVE DOCUMENT AUDIT PORTAL (STREAM REPAIRED)
+                # ============================================================
+    # 📄 INTERACTIVE DOCUMENT AUDIT PORTAL (BROWSER PREVIEW FIX)
     # ============================================================
     st.markdown("<br>", unsafe_allow_html=True)
     
-    # 1. Fallback security check for inventory records
     if 'user_inputs' in locals() or 'user_inputs' in globals():
         final_pdf_inventory = user_inputs
     else:
         final_pdf_inventory = {"Bedrooms": 4, "Bathrooms": 2}
         
-    # 2. Determine the dynamic sync state before passing to compiler
     pdf_sync_mode = is_dynamic if 'is_dynamic' in locals() else False
     
     try:
@@ -670,16 +668,23 @@ if st.button("GENERATE CERTIFIED VALUATION"):
             is_dynamic=pdf_sync_mode
         )
         
-        # 🟢 THE CRITICAL FIX: Extract the raw byte contents from the BytesIO buffer stream
-        # This converts the _io.BytesIO object into raw bytes required by base64
+        # Extract the raw byte contents from the BytesIO buffer stream
         pdf_data = pdf_buffer.getvalue() if hasattr(pdf_buffer, 'getvalue') else pdf_buffer
         
         # Transform binary pdf array into secure base64 string
         import base64
         base64_pdf = base64.b64encode(pdf_data).decode('utf-8')
-        pdf_display = f'<iframe src="data:application/pdf;base64,{base64_pdf}" width="100%" height="600" type="application/pdf" style="border:1px solid #EAECEE; border-radius:12px;"></iframe>'
         
-        # Render the PDF Preview frame inside a white container
+        # 🟢 THE CRITICAL BROWSER BYPASS: Switch from iframe to a native html object container
+        # This completely stops browsers from rendering a blank box
+        pdf_display = f'''
+            <object data="data:application/pdf;base64,{base64_pdf}" type="application/pdf" width="100%" height="600px" style="border:1px solid #EAECEE; border-radius:12px;">
+                <embed src="data:application/pdf;base64,{base64_pdf}" type="application/pdf" />
+                <p>Your browser layout does not support live previews. Use the download button below to access the certificate file natively.</p>
+            </object>
+        '''
+        
+        # Render the PDF Preview frame inside a white container panel card
         st.markdown("<div class='step-container'>", unsafe_allow_html=True)
         st.markdown("#### 📄 Real-Time Document Audit Preview")
         st.markdown(pdf_display, unsafe_allow_html=True)
