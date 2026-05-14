@@ -141,35 +141,36 @@ if not st.session_state['authenticated']:
                 st.rerun()
     st.stop()
 
-# --- 6. SIDEBAR: CONTROL & INTELLIGENCE ---
+# --- 6. SIDEBAR: CONTROL & INTELLIGENCE (PREMIUM VERTICAL SPACING) ---
 with st.sidebar:
-    st.title("🛡️ System Control")
+    st.markdown("<h3 style='margin-bottom: 0px;'>🛡️ System Control</h3>", unsafe_allow_html=True)
     
-            # --- PORTAL 1: SESSION-STATE INTEL BRANDING LAYER ---
+    # ============================================================
+    # 🎨 PORTAL 1: CUSTOM BRANDING
+    # ============================================================
     with st.expander("🎨 Custom Branding", expanded=False):
-        # 1. LOGO INGESTION: Encapsulates image file bytes directly into session memory
         uploaded_logo = st.file_uploader("Change Company Logo", type=['png', 'jpg'], key="logo_up")
         if uploaded_logo:
-            # Read the raw byte data stream completely
             st.session_state["persistent_logo_bytes"] = uploaded_logo.read()
-            st.success("✅ Logo locked into active session cache.")
+            st.success("✅ Logo locked to active cache.")
             
-        # 2. QR CODE INGESTION: Encapsulates image file bytes directly into session memory
         uploaded_qr = st.file_uploader("Change System QR", type=['png', 'jpg'], key="qr_up")
         if uploaded_qr:
             st.session_state["persistent_qr_bytes"] = uploaded_qr.read()
-            st.success("✅ QR Code locked into active session cache.")
+            st.success("✅ QR Code locked to active cache.")
             
         brand_color = st.color_picker("Pick your Brand Color", "#00F2FE")
-                                      
 
-    
-        # --- PORTAL 2: MARKET LEARNER (THE CSV UPLOADER) ---
+    # 🟢 INDUSTRIAL VERTICAL SPACER 1: Pushes Portal 2 down aggressively
+    st.markdown("<br><br><br>", unsafe_allow_html=True)
     st.divider()
+
+    # ============================================================
+    # 📂 PORTAL 2: MARKET LEARNER (THE CSV UPLOADER)
+    # ============================================================
     st.write("📂 **Market Knowledge Portal**")
     new_data = st.file_uploader("Upload local market data (CSV)", type=['csv'])
     
-    # 🟢 THE FIX: If a new dataset is uploaded, show ALL 5 currencies in the selectbox
     if new_data:
         df_raw = pd.read_csv(new_data)
         st.session_state['full_columns'] = df_raw.columns.tolist()
@@ -191,7 +192,6 @@ with st.sidebar:
             st.warning("⚠️ Defaulting to baseline scaling coefficients.")
             
     else:
-        # 🟢 THE FIX: If NO file is uploaded, keep a clean baseline selector that supports all currencies manually
         detected_currency = st.selectbox(
             "Select Active Terminal Currency",
             ["USD ($)", "EUR (€)", "CNY (¥)", "NGN (₦)", "GBP (£)"],
@@ -200,33 +200,39 @@ with st.sidebar:
         st.session_state['detected_currency'] = detected_currency
         st.session_state['local_basis'] = 1950
 
-    # 🟢 THE REMOVAL: PORTAL 3 (The old radio button that was forcing only USD and NGN) is completely deleted here.
-
-        # --- PORTAL 4: ARCHITECT CREDENTIALS (UNIFIED CYBER STRUCTURAL SEAL) ---
+    # 🟢 INDUSTRIAL VERTICAL SPACER 2: Pushes your credentials to the absolute bottom margin
+    st.markdown("<br><br><br><br><br><br><br><br>", unsafe_allow_html=True)
     st.divider()
-    
-    # 🟢 THE MASTER COMPACTION: We bypass Streamlit block container generation 
-    # and bundle all metadata into a single, tightly-spaced HTML element.
+
+        # ============================================================
+    # 🏅 PORTAL 4: COMPACT BOTTOM-ANCHORED CREDENTIALS CARD
+    # ============================================================
+    # Shrunk font dimensions and restricted box padding for a compact layout look
     st.markdown("""
-        <div style='background-color: #111625; padding: 16px; border: 1px solid #1E293B; border-radius: 8px; margin-top: 10px;'>
-            <p style='margin: 0 !important; padding: 0 !important; color: #94A3B8 !important; font-size: 10px !important; text-transform: uppercase !important; letter-spacing: 1.5px !important; font-weight: 700 !important; line-height: 1.0 !important;'>
+        <div style='background-color: #0B1120; 
+                    padding: 10px 14px; 
+                    border: 1px solid #1E293B; 
+                    border-radius: 6px; 
+                    margin-top: 5px; 
+                    box-shadow: 0 4px 10px rgba(0,0,0,0.2);'>
+            <p style='margin: 0 !important; padding: 0 !important; color: #64748B !important; font-size: 9px !important; text-transform: uppercase !important; letter-spacing: 1.2px !important; font-weight: 700 !important; line-height: 1.0 !important;'>
                 System Architect
             </p>
-            <h5 style='margin: 4px 0 0 0 !important; padding: 0 !important; color: #FFFFFF !important; font-size: 15px !important; font-weight: 700 !important; letter-spacing: -0.3px !important; line-height: 1.1 !important;'>
+            <h6 style='margin: 3px 0 0 0 !important; padding: 0 !important; color: #FFFFFF !important; font-size: 13px !important; font-weight: 700 !important; letter-spacing: -0.2px !important; line-height: 1.1 !important;'>
                 Patrick Simon Okosodo
-            </h5>
-            <p style='margin: 2px 0 0 0 !important; padding: 0 !important; color: #38BDF8 !important; font-size: 11px !important; font-weight: 600 !important; line-height: 1.2 !important;'>
+            </h6>
+            <p style='margin: 1px 0 0 0 !important; padding: 0 !important; color: #38BDF8 !important; font-size: 10px !important; font-weight: 600 !important; line-height: 1.2 !important;'>
                 AI Lead | MLOps Specialist | B.Eng (Chem)
             </p>
-            <div style='margin-top: 8px; padding-top: 8px; border-top: 1px solid #1E293B; display: flex; align-items: center; gap: 6px;'>
-                <span style='font-size: 14px;'>🧠</span>
-                <span style='color: #64748B !important; font-size: 11px !important; font-weight: 600 !important; letter-spacing: 0.2px;'>
+            <div style='margin-top: 6px; padding-top: 6px; border-top: 1px solid #1E293B; display: flex; align-items: center; gap: 5px;'>
+                <span style='font-size: 11px;'>🧠</span>
+                <span style='color: #475569 !important; font-size: 10px !important; font-weight: 600 !important;'>
                     Engine: <span style='color: #00F2FE !important;'>PSO-ML20 Standard</span>
                 </span>
             </div>
         </div>
     """, unsafe_allow_html=True)
-
+  
 
 # --- EXECUTIVE UI STYLING (World-Class Classic Institutional Standard) ---
 st.markdown(f"""
@@ -416,10 +422,11 @@ with c2:
 with c3:
     yr_built = st.number_input("Year of Construction", 1900, 2026, 2018)
 st.markdown("</div>", unsafe_allow_html=True)
+st.markdown("<br><br>", unsafe_allow_html=True) # 🟢 ENFORCED SEPARATION SPACE
 
 
 # ==========================================
-# 🛡️ 02. FORENSIC EVIDENCE VAULT
+# 🛡️ 02. FORENSIC EVIDENCE VAULT (REPAIRED)
 # ==========================================
 st.markdown("<div class='step-container'>", unsafe_allow_html=True)
 st.markdown("#### 02. Forensic Evidence Vault")
@@ -437,7 +444,9 @@ with st.expander("Expand 10-Point Evidence Portals", expanded=True):
     img8 = v2.file_uploader("8. Energy/Power Unit", type=['jpg', 'png'])
     img9 = v1.file_uploader("9. Boys Quarters (BQ)", type=['jpg', 'png'])
     img10 = v2.file_uploader("10. Security & Gatehouse", type=['jpg', 'png'])
+
 st.markdown("</div>", unsafe_allow_html=True)
+st.markdown("<br><br>", unsafe_allow_html=True) # 🟢 ENFORCED SEPARATION SPACE
 
 
 # ============================================================
@@ -446,13 +455,11 @@ st.markdown("</div>", unsafe_allow_html=True)
 st.markdown("<div class='step-container'>", unsafe_allow_html=True)
 st.markdown("#### 03. Forensic Dataset Inventory")
 
-# 1. Safely pull your top 10 attributes from the active .pkl brain features list
 if 'brain_features' in locals() or 'brain_features' in globals():
     active_features = brain_features[:10]
 else:
     active_features = ['SqFtTotLiving', 'BldgGrade', 'YrBuilt', 'Bedrooms', 'Bathrooms', 'SqFtLot']
 
-# 2. Build the exact fixed 10-point data layout you prefer
 i_cols = st.columns(4)
 with i_cols[0]: num_bed = st.number_input("Bedrooms", 0, 20, 4, key="inv_bed")
 with i_cols[1]: num_bath = st.number_input("Bathrooms", 0, 20, 2, key="inv_bath")
@@ -469,13 +476,13 @@ i_cols_row3 = st.columns(2)
 with i_cols_row3[0]: cctv = st.number_input("CCTV Cameras", 0, 100, 0, key="inv_cctv")
 with i_cols_row3[1]: bq_units = st.number_input("BQ Units", 0, 10, 0, key="inv_bq")
 
-# 3. Synchronize storage explicitly into user_inputs for the progress bars & math
 user_inputs = {
     "Bedrooms": num_bed, "Bathrooms": num_bath, "Storeys": storeys, "SqFtLot": sqft_lot,
     "Unit Density": unit_density, "Solar KVA": solar_kva, "AC Units": ac_units,
     "Gen (KVA)": gen_kva, "CCTV Cameras": cctv, "BQ Units": bq_units
 }
 st.markdown("</div>", unsafe_allow_html=True)
+st.markdown("<br><br>", unsafe_allow_html=True) # 🟢 ENFORCED SEPARATION SPACE
 
 
 # --- STEP 4 (NEW) ---
@@ -486,20 +493,22 @@ eclipse_mode = st.toggle("Activate 'Total Eclipse' Mode", help="Removes institut
 if eclipse_mode:
     st.warning("⚠️ TOTAL ECLIPSE ACTIVE: Institutional Crutches Removed. Reconstructing value via Physical Atoms.")
 st.markdown("</div>", unsafe_allow_html=True)
+st.markdown("<br><br>", unsafe_allow_html=True) # 🟢 ENFORCED SEPARATION SPACE FOR STEP 04
 
-# --- 05. SYSTEM INTEGRITY CHECK (MASTER 20-POINT SYNC) ---
-st.markdown("<br>", unsafe_allow_html=True)
 
-# 🟢 STRUCTURAL VARIABLE FIX: Checked user_inputs definition to prevent NameError
+# ==========================================
+# 🛡️ 05. SYSTEM INTEGRITY CHECK (PROGRESS BAR)
+# ==========================================
+st.markdown("<div class='step-container'>", unsafe_allow_html=True)
+st.markdown("#### 05. System Integrity Check")
+
 if 'user_inputs' in locals() or 'user_inputs' in globals():
     filled_inputs = sum(1 for v in user_inputs.values() if v > 0)
 else:
     filled_inputs = sum(1 for v in [sqft, yr_built] if v > 0)
 
-if 'uploaded_imgs' in locals() or 'uploaded_imgs' in globals():
-    filled_photos = sum(1 for p in uploaded_imgs.values() if p is not None)
-else:
-    filled_photos = 0
+manual_photos = [img1, img2, img3, img4, img5, img6, img7, img8, img9, img10]
+filled_photos = sum(1 for p in manual_photos if p is not None)
 
 total_progress = min((filled_inputs + filled_photos) / 15, 1.0) 
 
@@ -512,6 +521,23 @@ elif total_progress > 0.7:
     st.warning("⚠️ High Confidence reached. Missing minor visual anchors.")
 else:
     st.info("💡 Complete the Evidence Vault and Inventory to reach Certified status.")
+st.markdown("</div>", unsafe_allow_html=True)
+st.markdown("<br>", unsafe_allow_html=True) # Subtle space before the central action
+
+
+# ============================================================
+# ⚡ THE BOLD, CENTRALIZED CALCULATION ENGINE PORTAL
+# ============================================================
+# Using a balanced 3-column matrix layout to anchor the action button in the center
+btn_left, btn_center, btn_right = st.columns([1, 2, 1])
+
+with btn_center:
+    # Clicking this prominent centralized element triggers the 44-point LightGBM logic loop
+    trigger_valuation = st.button("⚡ GENERATE CERTIFIED VALUATION")
+
+if trigger_valuation:
+    with st.status("Deploying Neural Champion Logic...", expanded=False) as status:
+        # (Your model prediction math, Step 6, and PDF Viewer follow seamlessly right below...)
 
 
 # --- CALCULATION (DIRECT 20-PHASE INFERENCE) ---
