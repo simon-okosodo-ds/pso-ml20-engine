@@ -224,101 +224,120 @@ with st.sidebar:
 
     """, unsafe_allow_html=True)
 
-# ============================================================================
-# 🛡️ GLOBAL SCOPED UI STYLING & GHOST ELIMINATOR
-# ============================================================================
-st.markdown(f"""
+# --- EXECUTIVE UI STYLING (Hardened Non-f-string Text Layout Container) ---
+# 🟢 THE FIX: By removing the 'f' from f""", Python treats this as pure text.
+# Single braces { and } are now 100% legal and will never crash the login gate.
+st.markdown("""
     <style>
-        /* MAIN CANVAS TYPOGRAPHY SCOPING */
+    /* GLOBAL TEXT SCALING RESTORATION */
+    .main .block-container p, 
+    .main .block-container span, 
+    .main .block-container label,
+    .main .block-container div {
+        font-family: Arial, Helvetica, sans-serif !important;
+        font-size: 14px !important;
+        color: #2C3E50 !important;
+        line-height: 1.5 !important;
+    }
     
-                /* RE-ESTABLISHING CRISP HEADERS VISIBILITY (FIXED DEPLOYMENT SYNTAX) */
-    .main h1, .main h2, .main h3, .main h4 {{
+    /* RE-ESTABLISHING CRISP HEADERS VISIBILITY */
+    .main h1, .main h2, .main h3, .main h4 {
         font-family: Arial, Helvetica, sans-serif !important;
         color: #1A2530 !important;
         font-weight: 700 !important;
         letter-spacing: 0px !important;
         display: block !important;
-    }}
+    }
 
-
-    /* WHITE RECTANGULAR BOX DIVIDERS */
-    .step-container {{ 
+    /* THE SIGNATURE WHITE RECTANGULAR DIVIDER CONTAINERS */
+    .step-container { 
         margin-bottom: 40px !important; 
         padding: 30px !important; 
         border-radius: 12px !important; 
         background-color: #FFFFFF !important; 
         border: 1px solid #EAECEE !important; 
         box-shadow: 0 4px 15px rgba(0,0,0,0.03) !important;
-    }}
+    }
     
-    .step-container h4 {{
+    .step-container h4 {
+        color: #2C3E50 !important;
         font-size: 16px !important;
-        color: #1A2530 !important;
-        text-transform: uppercase !important;
-        border-bottom: 2px solid #F4F6F6 !important;
-        padding-bottom: 12px !important;
+        font-weight: 700 !important;
+        letter-spacing: 0px !important;
+        margin-bottom: 20px !important;
         margin-top: 0px !important;
-        margin-bottom: 22px !important;
-    }}
-
-    /* HARDENED SIDEBAR ENVIRONMENT & SPACING SHIELD */
-    [data-testid="stSidebar"] {{
+    }
+    
+    /* SIDEBAR CONTROL CONFIG */
+    [data-testid="stSidebar"] {
         background-color: #060B26 !important;
         border-right: 1px solid rgba(0, 242, 254, 0.15) !important;
-    }}
+    }
     
-    /* THE CRITICAL OVERLAP SHIELD: Forces 28px vertical distance between widgets */
-    [data-testid="stSidebar"] [data-testid="stVerticalBlock"] {{
+    [data-testid="stSidebar"] [data-testid="stVerticalBlock"] {
         gap: 28px !important; 
-    }}
+    }
     
-    [data-testid="stSidebar"] .element-container {{
+    [data-testid="stSidebar"] .element-container {
         margin-bottom: 15px !important; 
-    }}
+    }
     
     [data-testid="stSidebar"] p,
     [data-testid="stSidebar"] label,
     [data-testid="stSidebar"] span,
     [data-testid="stSidebar"] h1,
     [data-testid="stSidebar"] h2,
-    [data-testid="stSidebar"] h3 {{
+    [data-testid="stSidebar"] h3 {
         font-family: Arial, Helvetica, sans-serif !important;
         font-size: 12px !important;
         font-weight: 600 !important;
         color: #FFFFFF !important;
         line-height: 1.6 !important;
         display: block !important;
-    }}
+    }
     
     [data-testid="stSidebar"] div[data-baseweb="select"] > div,
-    [data-testid="stSidebar"] div[data-baseweb="input"] > div {{
+    [data-testid="stSidebar"] div[data-baseweb="input"] > div {
         background-color: #0D1426 !important;
         border: 1px solid rgba(0, 242, 254, 0.15) !important;
         color: #FFFFFF !important;
         margin-top: 6px !important;
         margin-bottom: 6px !important;
-    }}
+    }
 
-    /* REGULAR RUN BUTTON */
-    .stButton>button {{ 
-        background: {brand_color if 'brand_color' in locals() or 'brand_color' in globals() else '#00F2FE'} !important; 
+    /* REGULAR EXECUTIVE GAUGE BUTTON */
+    .stButton>button { 
+        background: #00F2FE !important; /* Fixed base color to prevent script name errors */
         color: white !important; 
         border-radius: 8px !important; 
         border: none !important;
         height: 3.5em !important;
-        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif !important;
+        font-family: Arial, Helvetica, sans-serif !important;
         font-size: 14px !important;
-        font-weight: 700 !important;
-        text-transform: uppercase !important;
-        letter-spacing: 0.5px !important;
+        font-weight: 600 !important;
+        letter-spacing: 0px !important;
         width: 100% !important;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.05) !important;
-        transition: 0.2s all ease;
-    }}
+        transition: 0.3s all ease;
+    }
+    .stButton>button:hover {
+        opacity: 0.85;
+        transform: scale(0.99);
+    }
+    
+    /* STATIONARY METRIC HOUSING CERTIFICATE CARD */
+    .metric-card {
+        background: #FFFFFF !important;
+        padding: 40px !important;
+        border-radius: 12px !important;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05) !important;
+        text-align: center !important;
+        border: 1px solid #EAECEE !important;
+    }
+    
+    [data-testid="stMetricValue"] { font-size: 22px !important; font-weight: 600 !important; color: #2C3E50 !important; }
+    [data-testid="stMetricDelta"] { font-size: 13px !important; }
     </style>
     """, unsafe_allow_html=True)
-
-# 🛑 THE TOTAL CLEANUP ZONE: The ghost text block was captured and deleted right here.
 
 
 # --- 7. HEADER & LOGO INJECTION (PERMANENT SYSTEM STATE & LAYOUT SYNC) ---
