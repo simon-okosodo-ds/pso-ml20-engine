@@ -309,20 +309,24 @@ st.markdown(f"""
 
 # (Paste the new CSS Style block right here)
 
-# --- 7. HEADER & LOGO INJECTION (HYBRID STATE RE-RENDER) ---
+# --- 7. HEADER & LOGO INJECTION (INDUSTRIAL SEEDED REPO STANDARD) ---
 st.markdown("<br>", unsafe_allow_html=True)
 
-# 1. PERMANENT TOP LOGO: Prioritizes active upload bytes, falls back to base repo file path
+# Define the absolute repository paths
+repo_logo = "branding/logo.png"
+repo_qr = "branding/qr.png"
+
+# 1. PERMANENT TOP LOGO LAYER
+# Checks if the user uploaded a new logo this session first; checks GitHub repo folder second
 if "persistent_logo_bytes" in st.session_state:
     col_l1, col_l2, col_l3 = st.columns([1, 2, 1])
     with col_l2:
-        # Render image directly from memory stream bytes
         st.image(st.session_state["persistent_logo_bytes"], use_container_width=True)
     st.markdown("<br>", unsafe_allow_html=True)
-elif os.path.exists("branding/logo.png"):
+elif os.path.exists(repo_logo):
     col_l1, col_l2, col_l3 = st.columns([1, 2, 1])
     with col_l2:
-        st.image("branding/logo.png", use_container_width=True)
+        st.image(repo_logo, use_container_width=True)
     st.markdown("<br>", unsafe_allow_html=True)
 
 # 2. SYMMETRICAL MAIN SYSTEM HEADER & QR LEVELER
@@ -341,7 +345,7 @@ if "persistent_qr_bytes" in st.session_state:
         """, unsafe_allow_html=True)
     with col_qr:
         st.image(st.session_state["persistent_qr_bytes"], use_container_width=True)
-elif os.path.exists("branding/qr.png"):
+elif os.path.exists(repo_qr):
     col_text, col_qr = st.columns([5, 1])
     with col_text:
         st.markdown("""
@@ -355,7 +359,7 @@ elif os.path.exists("branding/qr.png"):
             </div>
         """, unsafe_allow_html=True)
     with col_qr:
-        st.image("branding/qr.png", use_container_width=True)
+        st.image(repo_qr, use_container_width=True)
 else:
     st.markdown("""
         <div>
@@ -369,6 +373,7 @@ else:
     """, unsafe_allow_html=True)
 
 st.markdown("<hr style='border: 0; border-top: 1px solid #EAECEE; margin-top: 25px; margin-bottom: 35px;'>", unsafe_allow_html=True)
+
 
 # ==========================================
 # 🛡️ 01. PRIMARY PARAMETERS
