@@ -569,13 +569,15 @@ if trigger_valuation:
         st.session_state['history'].append({'Time': datetime.now().strftime('%H:%M'), 'price': final_usd})
         status.update(label="Champion Logic Applied!", state="complete")
 
-        # ============================================================
-    # 🌐 STEP 6: OMNI-GLOBAL OUTPUT CERTIFICATE (MAXIMUM CONTRAST FIXED)
+            # ============================================================
+    # 🌐 STEP 6: OMNI-GLOBAL OUTPUT CERTIFICATE (VARIABLE SYNCHRONIZED)
     # ============================================================
     sym_token = user_currency.split("(")[-1].replace(")", "").strip()
     sym = f"VAL {sym_token}"
 
     st.balloons()
+    
+    # 🟢 THE MASTER REPAIR: Notice the 'f' before the triple quotes. This activates variable injection.
     st.markdown(f"""
         <div style='background-color: #FFFFFF !important; 
                     padding: 40px !important; 
@@ -590,7 +592,6 @@ if trigger_valuation:
                 OFFICIAL GLOBAL CERTIFICATE
             </p>
             
-            <!-- 🟢 THE CRITICAL CONTRAST SHIELD: Bypassing h1 completely to lock in pitch black text -->
             <div style='color: #000000 !important; 
                         font-family: Arial, Helvetica, sans-serif !important; 
                         font-size: 44px !important; 
@@ -609,6 +610,7 @@ if trigger_valuation:
             </p>
         </div>
     """, unsafe_allow_html=True)
+
 
     # --- DISPLAY MINI METRICS ---
     finish_label = "Ultra-Luxury" if avg_vision > 1.18 else "High-End" if avg_vision > 1.08 else "Standard"
