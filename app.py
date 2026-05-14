@@ -296,40 +296,48 @@ st.markdown(f"""
 
 # (Paste the new CSS Style block right here)
 
-# --- 7. HEADER & LOGO INJECTION (EXECUTIVE ALIGNMENT REPAIRED) ---
+# --- 7. HEADER & LOGO INJECTION (PREMIUM PRODUCTION TOPPING) ---
 st.markdown("<br>", unsafe_allow_html=True)
 
+# 1. THE BIG LOGO STRIKE: If a logo is uploaded, place it prominently at the absolute top center
+if client_logo:
+    col_l1, col_l2, col_l3 = st.columns([1, 2, 1])
+    with col_l2:
+        st.image(client_logo, use_container_width=True)
+    st.markdown("<br>", unsafe_allow_html=True)
+
+# 2. HORIZONTAL SYSTEM HEADER: Leveling the main text parameters and the security QR code symmetrically
 if my_qr:
-    # 🟢 THE FIX: Restoring strict custom layout weighting [1, 4, 1] 
-    # This leaves 1 unit for the logo, 4 units for your title, and 1 unit for the QR code
-    c_logo, col_mid, c_qr = st.columns([1, 4, 1])
-    with c_logo:
-        if client_logo: 
-            st.image(client_logo, use_container_width=True)
-        else:
-            st.markdown("<div style='border:1px dashed #CCCCCC; padding:20px; text-align:center; color:grey; border-radius:8px; font-size:11px;'>[ Logo Slot ]</div>", unsafe_allow_html=True)
-    with col_mid:
-        st.markdown("<h2 style='margin:0; padding:0; color:#1A2530;'>Executive Valuation Terminal</h2>", unsafe_allow_html=True)
-        st.markdown("<p style='margin:0; padding:0; color:grey; font-size:13px;'>PSO-ML20 Standard | Industrial Forensic Audit Engine</p>", unsafe_allow_html=True)
-    with c_qr:
-        if my_qr: 
-            st.image(my_qr, use_container_width=True)
-        else:
-            st.markdown("<div style='border:1px dashed #CCCCCC; padding:20px; text-align:center; color:grey; border-radius:8px; font-size:11px;'>[ QR Slot ]</div>", unsafe_allow_html=True)
+    # Strict wide allocation layout logic: 5 units for core title text, 1 unit for QR image alignment
+    col_text, col_qr = st.columns([5, 1])
+    with col_text:
+        st.markdown("""
+            <div style='display: flex; flex-direction: column; justify-content: center; height: 100%;'>
+                <h1 style='margin: 0; padding: 0; color: #1A2530 !important; font-size: 32px !important; font-weight: 800 !important; letter-spacing: -1px !important; opacity: 1 !important;'>
+                    Executive Valuation Terminal
+                </h1>
+                <p style='margin: 5px 0 0 0; padding: 0; color: #566573 !important; font-size: 14px !important; font-weight: 500 !important; opacity: 1 !important; letter-spacing: 0.5px;'>
+                    PSO-ML20 Standard | Industrial Forensic Audit Engine
+                </p>
+            </div>
+        """, unsafe_allow_html=True)
+    with col_qr:
+        # Symmetrical right alignment matrix
+        st.image(my_qr, use_container_width=True)
 else:
-    # Restoring strict custom layout weighting [1, 5] if no QR code is uploaded yet
-    c_logo, col_mid = st.columns([1, 5])
-    with c_logo:
-        if client_logo: 
-            st.image(client_logo, use_container_width=True)
-        else:
-            st.markdown("<div style='border:1px dashed #CCCCCC; padding:20px; text-align:center; color:grey; border-radius:8px; font-size:11px;'>[ Logo Slot ]</div>", unsafe_allow_html=True)
-    with col_mid:
-        st.markdown("<h2 style='margin:0; padding:0; color:#1A2530;'>Executive Valuation Terminal</h2>", unsafe_allow_html=True)
-        st.markdown("<p style='margin:0; padding:0; color:grey; font-size:13px;'>PSO-ML20 Standard | Industrial Forensic Audit Engine</p>", unsafe_allow_html=True)
+    # Clean fallback statement text container if no security QR is active
+    st.markdown("""
+        <div>
+            <h1 style='margin: 0; padding: 0; color: #1A2530 !important; font-size: 32px !important; font-weight: 800 !important; letter-spacing: -1px !important; opacity: 1 !important;'>
+                Executive Valuation Terminal
+            </h1>
+            <p style='margin: 5px 0 0 0; padding: 0; color: #566573 !important; font-size: 14px !important; font-weight: 500 !important; opacity: 1 !important; letter-spacing: 0.5px;'>
+                PSO-ML20 Standard | Industrial Forensic Audit Engine
+            </p>
+        </div>
+    """, unsafe_allow_html=True)
 
-st.markdown("<hr style='border:0; border-top:1px solid #EAECEE; margin-bottom:30px;'>", unsafe_allow_html=True)
-
+st.markdown("<hr style='border: 0; border-top: 1px solid #EAECEE; margin-top: 25px; margin-bottom: 35px;'>", unsafe_allow_html=True)
 
 # ==========================================
 # 🛡️ 01. PRIMARY PARAMETERS
