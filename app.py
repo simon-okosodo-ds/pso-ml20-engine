@@ -428,29 +428,63 @@ if eclipse_mode:
 st.markdown("</div>", unsafe_allow_html=True)
 st.markdown("<br><br>", unsafe_allow_html=True)
 
-# --- 05. SYSTEM INTEGRITY CHECK (PROGRESS COMPLETED) ---
+
+# ============================================================
+# 🛡️ STEP 05: SYSTEM INTEGRITY CHECK (RESTORED TO FIX CRASH)
+# ============================================================
+st.markdown("<div class='step-container'>", unsafe_allow_html=True)
+st.markdown("#### 05. System Integrity Check")
+
+# 1. Count active parameter inputs accurately
+if 'user_inputs' in locals() or 'user_inputs' in globals():
+    filled_inputs = sum(1 for v in user_inputs.values() if v > 0)
+else:
+    filled_inputs = sum(1 for v in [sqft, yr_built] if v > 0)
+
+# 2. Track uploaded images safely to map neural progress
+manual_photos = [
+    img1 if 'img1' in locals() else None,
+    img2 if 'img2' in locals() else None,
+    img3 if 'img3' in locals() else None,
+    img4 if 'img4' in locals() else None,
+    img5 if 'img5' in locals() else None,
+    img6 if 'img6' in locals() else None,
+    img7 if 'img7' in locals() else None,
+    img8 if 'img8' in locals() else None,
+    img9 if 'img9' in locals() else None,
+    img10 if 'img10' in locals() else None
+]
+filled_photos = sum(1 for p in manual_photos if p is not None)
+
+# 3. Structural assignment locks the progress score in global memory
+total_progress = min((filled_inputs + filled_photos) / 15, 1.0) 
+
+st.write(f"📊 **Neural Confidence:** {int(total_progress * 100)}%")
+st.progress(total_progress)
+
 if total_progress >= 1.0:
     st.success("✅ FULL FORENSIC INTEGRITY: System Hardened.")
 elif total_progress > 0.7:
     st.warning("⚠️ High Confidence reached. Missing minor visual anchors.")
 else:
     st.info("💡 Complete the Evidence Vault and Inventory to reach Certified status.")
+
 st.markdown("</div>", unsafe_allow_html=True)
-st.markdown("<br>", unsafe_allow_html=True)
+st.markdown("<br><br>", unsafe_allow_html=True)
+
 
 # ============================================================
-# ⚡ THE BOLD, CENTRALIZED CALCULATION ENGINE PORTAL
+# ⚡ THE BOLD, CENTRALIZED CALCULATION ENGINE PORTAL (CLEANED)
 # ============================================================
-btn_left, btn_center, btn_right = st.columns()
+btn_left, btn_center, btn_right = st.columns([1, 2, 1])
 
 with btn_center:
     trigger_valuation = st.button("⚡ GENERATE CERTIFIED VALUATION", use_container_width=True)
 
-
 if trigger_valuation:
     with st.status("Deploying Neural Champion Logic...", expanded=False) as status:
         
-        # 1. AI Vision Analysis (Safe Extraction)
+        # 1. AI Vision Analysis (Safe Spatial Data Extraction)
         s1 = analyze_visual_quality(img1) if 'img1' in locals() else 1.0
         s2 = analyze_visual_quality(img2) if 'img2' in locals() else 1.0
         s3 = analyze_visual_quality(img3) if 'img3' in locals() else 1.0
@@ -462,19 +496,20 @@ if trigger_valuation:
         s9 = analyze_visual_quality(img9) if 'img9' in locals() else 1.0
         s10 = analyze_visual_quality(img10) if 'img10' in locals() else 1.0
         
-        # Aggregate complete onsite visual sensor data arrays
         avg_vision = (s1 + s2 + s3 + s4 + s5 + s6 + s7 + s8 + s9 + s10) / 10
 
         # 2. 44-POINT MATRIX RECONSTRUCTION
         user_currency = st.session_state.get('detected_currency', "USD ($)")
         basis_multiplier = st.session_state.get('local_basis', 1950)
 
-        # Extraction from manual user input slots
         final_bed = user_inputs.get("Bedrooms", 4) if 'user_inputs' in locals() else 4
         final_bath = user_inputs.get("Bathrooms", 2) if 'user_inputs' in locals() else 2
         final_lot = user_inputs.get("SqFtLot", 5000) if 'user_inputs' in locals() else 5000
         final_storeys = user_inputs.get("Storeys", 1) if 'user_inputs' in locals() else 1
         final_density = user_inputs.get("Unit Density", 1) if 'user_inputs' in locals() else 1
+
+
+
 
         # Base Data Structure initialization matching notebook parameters
         base_data = {
