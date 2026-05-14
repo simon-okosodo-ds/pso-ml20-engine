@@ -209,107 +209,129 @@ with st.sidebar:
     st.caption("AI Lead | MLOps Specialist | B.Eng (Chem)")
     st.info("🧠 **Engine:** PSO-ML20 Standard")
 
-# --- EXECUTIVE UI STYLING (2040 Cyber Precision & White Rectangular Boxes) ---
+# --- EXECUTIVE UI STYLING (2040 Scoped Cyber Slate & White Rectangular Boxes) ---
 st.markdown(f"""
     <style>
-    /* 1. IMPORTING 2040 CYBER CORE FONTS FROM GOOGLE API */
+    /* 1. SECURE IMPORT OF FUTURE TECH FONTS */
     @import url('googleapis.com');
     
-    /* GLOBAL TEXT SCALING & FUTURE TYPOGRAPHY RESTORATION */
-    html, body, p, div, label, span {{
-        font-family: 'Space Grotesk', sans-serif !important; /* Tech-futuristic layout font */
+    /* 2. MAIN APPLICATION CANVAS SCOPING - CLEARS THE BLENDING */
+    .main .block-container p, 
+    .main .block-container span, 
+    .main .block-container label,
+    .main .block-container div:not([data-baseweb="input"]):not([data-baseweb="select"]) {{
+        font-family: 'Space Grotesk', sans-serif !important;
         font-size: 14px !important;
         color: #2C3E50 !important;
         letter-spacing: -0.2px !important;
+        line-height: 1.5 !important; /* Forces breathing room between text rows */
     }}
     
-    /* 2. THE SIGNATURE WHITE RECTANGULAR DIVIDER CONTAINERS */
+    /* UNIVERSAL HEADERS SHARPENING */
+    .main h1, .main h2, .main h3, .main h4 {{
+        font-family: 'Space Grotesk', sans-serif !important;
+        color: #1A2530 !important;
+        font-weight: 700 !important;
+        letter-spacing: -0.5px !important;
+    }}
+
+    /* 3. SIGNATURE WHITE RECTANGULAR BOX DIVIDERS */
     .step-container {{ 
         margin-bottom: 40px !important; 
         padding: 30px !important; 
         border-radius: 12px !important; 
-        background-color: #FFFFFF !important; /* Pure white rectangle panel back */
-        border: 1px solid #EAECEE !important; /* Thin gray structural perimeter frame */
-        box-shadow: 0 4px 15px rgba(0,0,0,0.03) !important;
+        background-color: #FFFFFF !important; /* Pure white crisp back */
+        border: 1px solid #EAECEE !important; /* Thin architectural slate perimeter frame */
+        box-shadow: 0 4px 15px rgba(0,0,0,0.02) !important;
     }}
     
     .step-container h4 {{
-        font-family: 'Space Grotesk', sans-serif !important;
-        color: #1A2530 !important;
-        font-size: 16px !important;
-        font-weight: 700 !important;
-        letter-spacing: -0.5px !important;
-        text-transform: uppercase !important; /* Structural 2040 alignment look */
-        margin-bottom: 20px !important;
+        text-transform: uppercase !important;
+        font-size: 15px !important;
+        border-bottom: 2px solid #F4F6F6 !important;
+        padding-bottom: 12px !important;
         margin-top: 0px !important;
-        border-bottom: 2px solid #F2F4F4;
-        padding-bottom: 10px;
+        margin-bottom: 22px !important;
     }}
     
-    /* MONOSPACE CODE PRECISION NUMBERS FOR INPUT METRICS */
-    .stNumberInput input, .stSelectbox div {{
-        font-family: 'JetBrains Mono', monospace !important; /* Monospace for crisp numerical data */
+    /* 4. HIGH-SPEED INPUT CELLS (MONOSPACE DATA) */
+    .main div[data-baseweb="input"] input, 
+    .main div[data-baseweb="select"] div,
+    .stNumberInput input {{
+        font-family: 'JetBrains Mono', monospace !important;
         font-weight: 700 !important;
+        color: #1A2530 !important;
     }}
     
-    /* SIDEBAR CONTROL CONFIG */
+    /* 5. BLACK OBSIDIAN SIDEBAR OVERLAP SAFE-ZONE */
     [data-testid="stSidebar"] {{
         background-color: #000000 !important;
-        border-right: 1px solid #333333;
+        border-right: 1px solid #222222 !important;
     }}
     
-    [data-testid="stSidebar"] *, [data-testid="stSidebar"] p, [data-testid="stSidebar"] label {{
+    /* Target text inside sidebar directly without collapsing system paddings */
+    [data-testid="stSidebar"] p,
+    [data-testid="stSidebar"] label,
+    [data-testid="stSidebar"] span,
+    [data-testid="stSidebar"] h1,
+    [data-testid="stSidebar"] h2,
+    [data-testid="stSidebar"] h3 {{
         font-family: 'Space Grotesk', sans-serif !important;
         color: #FFFFFF !important;
+        line-height: 1.6 !important; /* Resolves vertical stacking and layout overlapping */
     }}
     
     [data-testid="stSidebar"] div[data-baseweb="select"] > div,
     [data-testid="stSidebar"] div[data-baseweb="input"] > div,
-    [data-testid="stSidebar"] div[data-baseweb="radio"] label,
-    [data-testid="stSidebar"] div[data-baseweb="radio"] div {{
+    [data-testid="stSidebar"] div[data-baseweb="radio"] label {{
         background-color: #1A1A1A !important;
         border: 1px solid #333333 !important;
-        color: white !important;
+        color: #FFFFFF !important;
         font-family: 'JetBrains Mono', monospace !important;
     }}
 
-    /* REGULAR EXECUTIVE GAUGE BUTTON */
+    /* 6. SYSTEM GAUGE GENERATE CERTIFICATE BUTTON */
     .stButton>button {{ 
         background: {brand_color} !important; 
         color: white !important; 
         border-radius: 8px !important; 
         border: none !important;
-        height: 3.5em !important;
+        height: 3.6em !important;
         font-family: 'Space Grotesk', sans-serif !important;
         font-size: 14px !important;
         font-weight: 700 !important;
         letter-spacing: 1px !important;
-        text-transform: uppercase !important; /* Industrial layout finish */
+        text-transform: uppercase !important;
         width: 100% !important;
-        transition: 0.3s all ease;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05) !important;
+        transition: 0.2s all ease;
     }}
     .stButton>button:hover {{
-        opacity: 0.85;
-        transform: scale(0.99);
+        opacity: 0.90;
+        transform: translateY(-1px);
     }}
     
-    /* STATIONARY METRIC HOUSING CERTIFICATE CARD */
+    /* 7. GLASS/WHITE HYBRID METRIC LOGS WINDOW */
     .metric-card {{
         background: #FFFFFF !important;
         padding: 40px !important;
         border-radius: 12px !important;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.05) !important;
+        box-shadow: 0 4px 25px rgba(0,0,0,0.06) !important;
         text-align: center !important;
         border: 1px solid #EAECEE !important;
+        margin-top: 25px !important;
     }}
     
     [data-testid="stMetricValue"] {{ 
         font-family: 'JetBrains Mono', monospace !important; 
-        font-size: 24px !important; 
+        font-size: 26px !important; 
         font-weight: 700 !important; 
         color: #1A2530 !important; 
     }}
-    [data-testid="stMetricDelta"] {{ font-family: 'Space Grotesk', sans-serif !important; font-size: 13px !important; }}
+    [data-testid="stMetricDelta"] {{ 
+        font-family: 'Space Grotesk', sans-serif !important; 
+        font-size: 13px !important; 
+    }}
     </style>
     """, unsafe_allow_html=True)
 
