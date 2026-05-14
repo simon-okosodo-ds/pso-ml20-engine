@@ -1,23 +1,21 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-import time
-import io
-from datetime import datetime
+import joblib
 from PIL import Image, ImageOps, ImageFilter
+from datetime import datetime
+import io
+import os
+import base64
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 from reportlab.lib.utils import ImageReader
-import joblib
-import os
-
-# We define the model as None first to prevent the NameError
-model = None 
 
 # ============================================================
-# 🛡️ GLOBAL PropTech TERMINOLOGY CONVERTER (Forced to Top)
+# 🛡️ GLOBAL PROPTECH TERMINOLOGY CONVERTER
 # ============================================================
 def clean_label(name):
+    """Converts raw dataset column names into premium classic titles."""
     mapping = {
         'SqFtTotLiving': 'Total Living Area (Sqft)',
         'BldgGrade': 'Construction Grade (1-12)',
@@ -27,7 +25,6 @@ def clean_label(name):
         'YrRenovated': 'Year of Last Renovation'
     }
     return mapping.get(name, str(name).replace('_', ' ').title())
-
 
 # --- 1. ANTI-BIAS VISION ENGINE (THE MATERIAL SENSOR) ---
 def analyze_visual_quality(uploaded_file):
@@ -58,7 +55,7 @@ def generate_pso_pdf(val, sym, sqft, build_type, yr, inventory, images, is_dynam
 
     # --- 2. BACKGROUND WATERMARK ---
     p.saveState()
-    p.setFont("Helvetica-Bold", 50)
+    p.setFont("Helvetica-Bold", 45)
     p.setFillColorRGB(0.97, 0.97, 0.97)
     p.translate(300, 400)
     p.rotate(45)
@@ -74,7 +71,7 @@ def generate_pso_pdf(val, sym, sqft, build_type, yr, inventory, images, is_dynam
     p.line(60, 700, 540, 700) 
     
     # --- 4. THE VALUATION ---
-    p.setFont("Helvetica-Bold", 24)
+    p.setFont("Helvetica-Bold", 22)
     p.setFillColorRGB(0.11, 0.51, 0.28)
     p.drawString(60, 660, f"CERTIFIED VALUE: {currency_label} {val:,.2f}")
     
@@ -84,17 +81,15 @@ def generate_pso_pdf(val, sym, sqft, build_type, yr, inventory, images, is_dynam
     p.drawString(60, 620, "PHYSICAL AUDIT SUMMARY:")
     p.setFont("Helvetica", 10)
     
-    # List actual features from the inventory (Dynamic)
     y_text = 600
     p.drawString(70, y_text, f"• Primary Area: {sqft:,.0f} Sqft")
     y_text -= 15
     for key, value in inventory.items():
-        if y_text > 500: # Safety margin
+        if y_text > 500:
             p.drawString(70, y_text, f"• {key}: {value}")
             y_text -= 15
 
-    # --- 6. VISUAL PROOF (Dynamic Logic) ---
-    # We grab the first uploaded image available
+    # --- 6. VISUAL PROOF ---
     first_img = next((img for img in images.values() if img is not None), None)
     if first_img:
         try:
@@ -105,7 +100,7 @@ def generate_pso_pdf(val, sym, sqft, build_type, yr, inventory, images, is_dynam
             p.drawString(60, 345, "Fig 1: Primary Evidence Scan")
         except: pass
 
-    # --- 7. METHODOLOGY DISCLOSURE (Tiny Italics) ---
+    # --- 7. METHODOLOGY DISCLOSURE ---
     p.setFont("Helvetica-Oblique", 7)
     p.setFillColorRGB(0.4, 0.4, 0.4)
     y_pos = 100
@@ -126,6 +121,22 @@ def generate_pso_pdf(val, sym, sqft, build_type, yr, inventory, images, is_dynam
 
 # --- 3. SYSTEM CONFIG & AUTH ---
 st.set_page_config(page_title="PSO-ML20 Executive", page_icon="🛡️", layout="wide")
+
+# --- 4. HIGH-SPEED CHAMPION BRAIN LOADING ---
+@st.cache_resource
+def load_pso_brain():
+    try:
+        model = joblib.load('pso_super_brain.pkl')
+        if hasattr(model, 'feature_names_in_'):
+            features = model.feature_names_in_.tolist()
+        else:
+            features = ['SqFtTotLiving', 'BldgGrade', 'YrBuilt', 'Bedrooms', 'Bathrooms', 'SqFtLot']
+        return model, features
+    except:
+        return None, ['SqFtTotLiving', 'BldgGrade', 'YrBuilt', 'Bedrooms', 'Bathrooms', 'SqFtLot']
+
+model, brain_features = load_pso_brain()
+
 if 'authenticated' not in st.session_state: st.session_state['authenticated'] = False
 if 'history' not in st.session_state: st.session_state['history'] = []
 
@@ -141,71 +152,125 @@ if not st.session_state['authenticated']:
                 st.rerun()
     st.stop()
 
+# --- 6. SIDEBAR: CONTROL & INTELLIGENCE ---
+with st.sidebar:
+    st.markdown("<h3 style='margin-bottom: 0px;'>🛡️ System Control</h3>", unsafe_allow_html=True)
+    
+    # --- PORTAL 1: CUSTOM BRANDING ---
+    with st.expander("🎨 Custom Branding", expanded=False):
+        uploaded_logo = st.file_uploader("Change Company Logo", type=['png', 'jpg'], key="logo_up")
+        if uploaded_logo:
+            st.session_state["persistent_logo_bytes"] = uploaded_logo.read()
+            st.success("✅ Logo locked to active cache.")
+            
+        uploaded_qr = st.file_uploader("Change System QR", type=['png', 'jpg'], key="qr_up")
+        if uploaded_qr:
+            st.session_state["persistent_qr_bytes"] = uploaded_qr.read()
+            st.success("✅ QR Code locked to active cache.")
+            
+        brand_color = st.color_picker("Pick your Brand Color", "#00F2FE")
 
-# --- EXECUTIVE UI STYLING (World-Class Classic Institutional Standard) ---
+    st.markdown("<br><br>", unsafe_allow_html=True)
+    st.divider()
+
+    # --- PORTAL 2: MARKET LEARNER (THE CSV UPLOADER) ---
+    st.write("📂 **Market Knowledge Portal**")
+    new_data = st.file_uploader("Upload local market data (CSV)", type=['csv'])
+    
+    if new_data:
+        df_raw = pd.read_csv(new_data)
+        st.session_state['full_columns'] = df_raw.columns.tolist()
+        
+        detected_currency = st.selectbox(
+            "Select Spreadsheet Currency Baseline",
+            ["USD (\$)", "EUR (€)", "CNY (¥)", "NGN (₦)", "GBP (£)"],
+            help="Select the currency your uploaded CSV columns are written in."
+        )
+        st.session_state['detected_currency'] = detected_currency
+        
+        price_col = next((c for c in df_raw.columns if 'price' in c.lower() or 'val' in c.lower()), None)
+        if price_col:
+            avg_price = df_raw[price_col].mean()
+            st.session_state['local_basis'] = avg_price / (2000 * 0.0761)
+            st.success(f"✅ Market DNA Mapped to {detected_currency}.")
+        else:
+            st.session_state['local_basis'] = 1950
+            st.warning("⚠️ Defaulting to baseline scaling coefficients.")
+            
+    else:
+        detected_currency = st.selectbox(
+            "Select Active Terminal Currency",
+            ["USD (\$)", "EUR (€)", "CNY (¥)", "NGN (₦)", "GBP (£)"],
+            help="Set the valuation currency environment for the 5.4MB brain."
+        )
+        st.session_state['detected_currency'] = detected_currency
+        st.session_state['local_basis'] = 1950
+
+    st.markdown("<br><br><br><br><br><br>", unsafe_allow_html=True)
+    st.divider()
+
+    # --- PORTAL 4: COMPACT BOTTOM-ANCHORED CREDENTIALS CARD ---
+    st.markdown("""
+        <div style='background-color: #0B1120; padding: 10px 14px; border: 1px solid #1E293B; border-radius: 6px; margin-top: 5px; box-shadow: 0 4px 10px rgba(0,0,0,0.2);'>
+            <p style='margin: 0 !important; padding: 0 !important; color: #64748B !important; font-size: 9px !important; text-transform: uppercase !important; letter-spacing: 1.2px !important; font-weight: 700 !important; line-height: 1.0 !important;'>System Architect</p>
+            <h6 style='margin: 3px 0 0 0 !important; padding: 0 !important; color: #FFFFFF !important; font-size: 13px !important; font-weight: 700 !important; letter-spacing: -0.2px !important; line-height: 1.1 !important;'>Patrick Simon Okosodo</h6>
+            <p style='margin: 1px 0 0 0 !important; padding: 0 !important; color: #38BDF8 !important; font-size: 10px !important; font-weight: 600 !important; line-height: 1.2 !important;'>AI Lead | MLOps Specialist | B.Eng (Chem)</p>
+            <div style='margin-top: 6px; padding-top: 6px; border-top: 1px solid #1E293B; display: flex; align-items: center; gap: 5px;'>
+                <span style='font-size: 11px;'>🧠</span>
+                <span style='color: #475569 !important; font-size: 10px !important; font-weight: 600 !important;'>Engine: <span style='color: #00F2FE !important;'>PSO-ML20 Standard</span></span>
+            </div>
+        </div>
+    """, unsafe_allow_html=True)
+
+# --- EXECUTIVE UI STYLING (Sovereign Scoped CSS Standard) ---
 st.markdown(f"""
     <style>
-    /* 1. MAIN APERITIF CANVAS (Muted, Precise, Highly Legible) */
-    .main .block-container p, 
-    .main .block-container span, 
-    .main .block-container label,
-    .main .block-container div {{
+    .main .block-container {{
         font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif !important;
-        font-size: 13px !important; /* Slightly smaller, crisper font size */
+        font-size: 13px !important;
         color: #2C3E50 !important;
-        letter-spacing: -0.1px !important;
-        line-height: 1.4 !important;
     }}
-    
-    /* INSTITUTIONAL BOLD HEADERS */
     .main h1, .main h2, .main h3, .main h4 {{
         font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif !important;
         color: #1A2530 !important;
-        font-weight: 700 !important; /* Bold classic weight */
+        font-weight: 700 !important;
         letter-spacing: -0.6px !important;
     }}
-
-    /* 2. SOLID WHITE RECTANGULAR CARD DIVIDERS */
     .step-container {{ 
         margin-bottom: 35px !important; 
         padding: 30px !important; 
-        border-radius: 8px !important; /* Classic tight corner radius */
+        border-radius: 8px !important; 
         background-color: #FFFFFF !important; 
         border: 1px solid #EAECEE !important; 
         box-shadow: 0 2px 10px rgba(0,0,0,0.02) !important;
-           /* HARDENED SIDEBAR SEPARATION ENVIRONMENT */
-    [data-testid="stSidebar"] {{
-        background-color: #060B26 !important;
-        border-right: 1px solid rgba(0, 242, 254, 0.15) !important;
     }}
-    
-    /* 🟢 SANITISED SYNTAX LAYER: Using clean standard fallback names removes GitHub's red flags */
-    [data-testid="stSidebar"] p,
-    [data-testid="stSidebar"] label,
-    [data-testid="stSidebar"] span,
-    [data-testid="stSidebar"] h1,
-    [data-testid="stSidebar"] h2,
-    [data-testid="stSidebar"] h3 {{
-        font-family: Arial, Helvetica, sans-serif !important; /* Clears quotes conflict entirely */
+    .step-container h4 {{
+        font-size: 14px !important;
+        text-transform: uppercase !important;
+        border-bottom: 2px solid #F4F6F6 !important;
+        padding-bottom: 10px !important;
+        margin-top: 0px !important;
+        margin-bottom: 20px !important;
+    }}
+    [data-testid="stSidebar"] {{
+        background-color: #000000 !important;
+        border-right: 1px solid #222222 !important;
+    }}
+    [data-testid="stSidebar"] p, [data-testid="stSidebar"] label, [data-testid="stSidebar"] span, [data-testid="stSidebar"] h1, [data-testid="stSidebar"] h2, [data-testid="stSidebar"] h3 {{
+        font-family: Arial, Helvetica, sans-serif !important;
         font-size: 12px !important;
         font-weight: 600 !important;
         color: #FFFFFF !important;
         line-height: 1.5 !important;
         margin-bottom: 6px !important;
     }}
-    
-    /* Sidebar input selection box contrast constraints */
-    [data-testid="stSidebar"] div[data-baseweb="select"] > div,
-    [data-testid="stSidebar"] div[data-baseweb="input"] > div {{
-        background-color: #0D1426 !important;
-        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    [data-testid="stSidebar"] div[data-baseweb="select"] > div, [data-testid="stSidebar"] div[data-baseweb="input"] > div {{
+        background-color: #1A1A1A !important;
+        border: 1px solid #333333 !important;
         color: #FFFFFF !important;
-        margin-bottom: 12px !important;
+        font-size: 12px !important;
     }}
-    
-        /* 4. EXECUTIVE RUN BUTTON (FIXED VARIABLE INGESTION) */
     .stButton>button {{ 
-        /* 🟢 THE CRITICAL FIXED LINE: Uses a safe fallback if brand_color isn't initialized yet */
         background: {brand_color if 'brand_color' in locals() or 'brand_color' in globals() else '#00F2FE'} !important; 
         color: white !important; 
         border-radius: 6px !important; 
@@ -218,140 +283,65 @@ st.markdown(f"""
         letter-spacing: 0.5px !important;
         width: 100% !important;
         box-shadow: 0 2px 8px rgba(0,0,0,0.05) !important;
-        transition: 0.2s all ease;
     }}
-
-    
-    /* 5. METRIC WINDOW COMPARTMENT */
-    .metric-card {{
-        background: #FFFFFF !important;
-        padding: 40px !important;
-        border-radius: 8px !important;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.05) !important;
-        text-align: center !important;
-        border: 1px solid #EAECEE !important;
-        margin-top: 25px !important;
-    }}
-    
-    [data-testid="stMetricValue"] {{ 
-        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif !important; 
-        font-size: 26px !important; 
-        font-weight: 700 !important; 
-        color: #1A2530 !important; 
-    }}
-    [data-testid="stMetricDelta"] {{ 
-        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif !important; 
-        font-size: 12px !important; 
-        font-weight: 600 !important;
-    }}
+    [data-testid="stMetricValue"] {{ font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif !important; font-size: 26px !important; font-weight: 700 !important; color: #1A2530 !important; }}
     </style>
     """, unsafe_allow_html=True)
 
+# --- 7. HEADER & LOGO INJECTION (ABSOLUTE DIRECTORY HOOK) ---
+st.markdown("<br>", unsafe_allow_html=True)
+base_dir = os.path.dirname(__file__) if '__file__' in locals() else "."
+repo_logo = os.path.join(base_dir, "branding", "logo.png")
+repo_qr = os.path.join(base_dir, "branding", "qr.png")
 
-# --- 7. HEADER & LOGO INJECTION ---
-# ... (Your absolute resolved directory standard for logo and qr codes is running here) ...
-st.markdown("<hr style='border: 0; border-top: 1px solid #EAECEE; margin-top: 25px; margin-bottom: 35px;'>", unsafe_allow_html=True)
+if "persistent_logo_bytes" in st.session_state:
+    col_l1, col_l2, col_l3 = st.columns([1,2,1])
+    with col_l2: st.image(st.session_state["persistent_logo_bytes"], use_container_width=True)
+    st.markdown("<br>", unsafe_allow_html=True)
+elif os.path.exists(repo_logo):
+    col_l1, col_l2, col_l3 = st.columns([1,2,1])
+    with col_l2: st.image(repo_logo, use_container_width=True)
+    st.markdown("<br>", unsafe_allow_html=True)
 
+if "persistent_qr_bytes" in st.session_state:
+    col_text, col_qr = st.columns([5,1])
+    with col_text:
+        st.markdown("<div style='display:flex; flex-direction:column; justify-content:center; height:100%;'><h1 style='margin:0; padding:0; color:#1A2530 !important; font-size:32px !important; font-weight:800 !important; letter-spacing:-1px !important;'>Executive Valuation Terminal</h1><p style='margin:5px 0 0 0; padding:0; color:#566573 !important; font-size:14px !important; font-weight:500; letter-spacing:0.5px;'>PSO-ML20 Standard | Industrial Forensic Audit Engine</p></div>", unsafe_allow_html=True)
+    with col_qr: st.image(st.session_state["persistent_qr_bytes"], use_container_width=True)
+elif os.path.exists(repo_qr):
+    col_text, col_qr = st.columns([5,1])
+    with col_text:
+        st.markdown("<div style='display:flex; flex-direction:column; justify-content:center; height:100%;'><h1 style='margin:0; padding:0; color:#1A2530 !important; font-size:32px !important; font-weight:800 !important; letter-spacing:-1px !important;'>Executive Valuation Terminal</h1><p style='margin:5px 0 0 0; padding:0; color:#566573 !important; font-size:14px !important; font-weight:500; letter-spacing:0.5px;'>PSO-ML20 Standard | Industrial Forensic Audit Engine</p></div>", unsafe_allow_html=True)
+    with col_qr: st.image(repo_qr, use_container_width=True)
+else:
+    st.markdown("<div><h1 style='margin:0; padding:0; color:#1A2530 !important; font-size:32px !important; font-weight:800 !important; letter-spacing:-1px !important;'>Executive Valuation Terminal</h1><p style='margin:5px 0 0 0; padding:0; color:#566573 !important; font-size:14px !important; font-weight:500; letter-spacing:0.5px;'>PSO-ML20 Standard | Industrial Forensic Audit Engine</p></div>", unsafe_allow_html=True)
 
-# ============================================================================
-# 🟢 PASTE YOUR EXACT HARDENED SIDEBAR STYLING CSS BLOCK HERE:
-# ============================================================================
-st.markdown(f"""
-    <style>
-    /* HARDENED SIDEBAR SEPARATION ENVIRONMENT */
-    [data-testid="stSidebar"] {{
-        background-color: #060B26 !important;
-        border-right: 1px solid rgba(0, 242, 254, 0.15) !important;
-    }}
-    
-    /* 🟢 SANITISED SYNTAX LAYER: Using clean standard fallback names removes GitHub's red flags */
-    [data-testid="stSidebar"] p,
-    [data-testid="stSidebar"] label,
-    [data-testid="stSidebar"] span,
-    [data-testid="stSidebar"] h1,
-    [data-testid="stSidebar"] h2,
-    [data-testid="stSidebar"] h3 {{
-        font-family: Arial, Helvetica, sans-serif !important; /* Clears quotes conflict entirely */
-        font-size: 12px !important;
-        font-weight: 600 !important;
-        color: #FFFFFF !important;
-        line-height: 1.5 !important;
-        margin-bottom: 6px !important;
-    }}
-    
-    /* Sidebar input selection box contrast constraints */
-    [data-testid="stSidebar"] div[data-baseweb="select"] > div,
-    [data-testid="stSidebar"] div[data-baseweb="input"] > div {{
-        background-color: #0D1426 !important;
-        border: 1px solid rgba(255, 255, 255, 0.1) !important;
-        color: #FFFFFF !important;
-        margin-bottom: 12px !important;
-    }}
-    
-        /* 4. EXECUTIVE RUN BUTTON (FIXED VARIABLE INGESTION ON LINE 293) */
-    .stButton>button {{ 
-        /* 🟢 THE FIX: Prevents the lower duplicate block from crashing the login gate */
-        background: {brand_color if 'brand_color' in locals() or 'brand_color' in globals() else '#00F2FE'} !important; 
-        color: white !important; 
-        border-radius: 6px !important; 
-        border: none !important;
-        height: 3.4em !important;
-        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif !important;
-        font-size: 13px !important;
-        font-weight: 700 !important;
-        text-transform: uppercase !important;
-        letter-spacing: 0.5px !important;
-        width: 100% !important;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.05) !important;
-        transition: 0.2s all ease;
-    }}
-
-    
-    /* 5. METRIC WINDOW COMPARTMENT */
-    .metric-card {{
-        background: #FFFFFF !important;
-        padding: 40px !important;
-        border-radius: 8px !important;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.05) !important;
-        text-align: center !important;
-        border: 1px solid #EAECEE !important;
-        margin-top: 25px !important;
-        margin-bottom: 25px !important;
-    }}
-    
-    [data-testid="stMetricValue"] {{ 
-        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif !important; 
-        font-size: 26px !important; 
-        font-weight: 700 !important; 
-        color: #1A2530 !important; 
-    }}
-    [data-testid="stMetricDelta"] {{ 
-        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif !important; 
-        font-size: 12px !important; 
-        font-weight: 600 !important;
-    }}
-    </style>
-    """, unsafe_allow_html=True)
+st.markdown("<hr style='border:0; border-top:1px solid #EAECEE; margin-top:25px; margin-bottom:35px;'>", unsafe_allow_html=True)
 
 # ==========================================
 # 🛡️ 01. PRIMARY PARAMETERS
 # ==========================================
 st.markdown("<div class='step-container'>", unsafe_allow_html=True)
 st.markdown("#### 01. Primary Asset Parameters")
-c1, c2, c3 = st.columns(3)
-with c1:
-    sqft = st.number_input("Property Area (Sqft)", value=2500, step=50)
-with c2:
-    build_type = st.selectbox("Quality Category", 
-        ["Basic/Standard", "Modern/Executive", "Luxury/High-End", "Elite/Mansion"])
-with c3:
-    yr_built = st.number_input("Year of Construction", 1900, 2026, 2018)
-st.markdown("</div>", unsafe_allow_html=True)
-st.markdown("<br><br>", unsafe_allow_html=True) # 🟢 ENFORCED SEPARATION SPACE
+is_dynamic = 'inventory_schema' in st.session_state
 
+if not is_dynamic:
+    c1, c2, c3 = st.columns(3)
+    with c1: sqft = st.number_input("Property Area (Sqft)", value=2500, step=50)
+    with c2: build_type = st.selectbox("Quality Category", ["Basic/Standard", "Modern/Executive", "Luxury/High-End", "Elite/Mansion"])
+    with c3: yr_built = st.number_input("Year of Construction", 1900, 2026, 2018)
+else:
+    st.info(f"📊 PSO-ML20 is currently mapped to: {len(st.session_state['full_columns'])} Dataset Features")
+    c1, c2, c3 = st.columns(3)
+    mapping = st.session_state.get('active_schema', {'Size': 'SqFtTotLiving', 'Quality': 'BldgGrade', 'Age': 'YrBuilt'})
+    sqft = c1.number_input(f"Area ({mapping['Size']})", value=2000)
+    build_type = c2.selectbox(f"Baseline ({mapping['Quality']})", ["Standard", "Premium", "Elite"])
+    yr_built = c3.number_input(f"History ({mapping['Age']})", 1900, 2026, 2015)
+st.markdown("</div>", unsafe_allow_html=True)
+st.markdown("<br><br>", unsafe_allow_html=True)
 
 # ==========================================
-# 🛡️ 02. FORENSIC EVIDENCE VAULT (REPAIRED)
+# 🛡️ 02. FORENSIC EVIDENCE VAULT
 # ==========================================
 st.markdown("<div class='step-container'>", unsafe_allow_html=True)
 st.markdown("#### 02. Forensic Evidence Vault")
@@ -369,21 +359,14 @@ with st.expander("Expand 10-Point Evidence Portals", expanded=True):
     img8 = v2.file_uploader("8. Energy/Power Unit", type=['jpg', 'png'])
     img9 = v1.file_uploader("9. Boys Quarters (BQ)", type=['jpg', 'png'])
     img10 = v2.file_uploader("10. Security & Gatehouse", type=['jpg', 'png'])
-
 st.markdown("</div>", unsafe_allow_html=True)
-st.markdown("<br><br>", unsafe_allow_html=True) # 🟢 ENFORCED SEPARATION SPACE
-
+st.markdown("<br><br>", unsafe_allow_html=True)
 
 # ============================================================
-# 🛡️ STEP 03: FORENSIC DATASET INVENTORY (PRODUCTION HARDENED)
+# 🛡️ STEP 03: FORENSIC DATASET INVENTORY
 # ============================================================
 st.markdown("<div class='step-container'>", unsafe_allow_html=True)
 st.markdown("#### 03. Forensic Dataset Inventory")
-
-if 'brain_features' in locals() or 'brain_features' in globals():
-    active_features = brain_features[:10]
-else:
-    active_features = ['SqFtTotLiving', 'BldgGrade', 'YrBuilt', 'Bedrooms', 'Bathrooms', 'SqFtLot']
 
 i_cols = st.columns(4)
 with i_cols[0]: num_bed = st.number_input("Bedrooms", 0, 20, 4, key="inv_bed")
@@ -407,115 +390,80 @@ user_inputs = {
     "Gen (KVA)": gen_kva, "CCTV Cameras": cctv, "BQ Units": bq_units
 }
 st.markdown("</div>", unsafe_allow_html=True)
-st.markdown("<br><br>", unsafe_allow_html=True) # 🟢 ENFORCED SEPARATION SPACE
+st.markdown("<br><br>", unsafe_allow_html=True)
 
-
-# --- STEP 4 (NEW) ---
+# --- STEP 4 ---
 st.markdown("<div class='step-container'>", unsafe_allow_html=True)
 st.markdown("#### 04. Data Independence Protocol")
-eclipse_mode = st.toggle("Activate 'Total Eclipse' Mode", help="Removes institutional tax history to test structural value.")
-
+eclipse_mode = st.toggle("Activate 'Total Eclipse' Mode", help="Removes institutional tax history.")
 if eclipse_mode:
-    st.warning("⚠️ TOTAL ECLIPSE ACTIVE: Institutional Crutches Removed. Reconstructing value via Physical Atoms.")
+    st.warning("⚠️ TOTAL ECLIPSE ACTIVE: Institutional Crutches Removed.")
 st.markdown("</div>", unsafe_allow_html=True)
-st.markdown("<br><br>", unsafe_allow_html=True) # 🟢 ENFORCED SEPARATION SPACE FOR STEP 04
+st.markdown("<br><br>", unsafe_allow_html=True)
 
-
-# ==========================================
-# 🛡️ 05. SYSTEM INTEGRITY CHECK (PROGRESS BAR)
-# ==========================================
+# --- STEP 5 ---
 st.markdown("<div class='step-container'>", unsafe_allow_html=True)
 st.markdown("#### 05. System Integrity Check")
-
-if 'user_inputs' in locals() or 'user_inputs' in globals():
-    filled_inputs = sum(1 for v in user_inputs.values() if v > 0)
-else:
-    filled_inputs = sum(1 for v in [sqft, yr_built] if v > 0)
-
+filled_inputs = sum(1 for v in user_inputs.values() if v > 0)
 manual_photos = [img1, img2, img3, img4, img5, img6, img7, img8, img9, img10]
 filled_photos = sum(1 for p in manual_photos if p is not None)
-
 total_progress = min((filled_inputs + filled_photos) / 15, 1.0) 
-
 st.write(f"📊 **Neural Confidence:** {int(total_progress * 100)}%")
 st.progress(total_progress)
-
-if total_progress >= 1.0:
-    st.success("✅ FULL FORENSIC INTEGRITY: System Hardened.")
-elif total_progress > 0.7:
-    st.warning("⚠️ High Confidence reached. Missing minor visual anchors.")
-else:
-    st.info("💡 Complete the Evidence Vault and Inventory to reach Certified status.")
 st.markdown("</div>", unsafe_allow_html=True)
-st.markdown("<br>", unsafe_allow_html=True) # Subtle space before the central action
+st.markdown("<br>", unsafe_allow_html=True)
 
-
-# ============================================================
+# ==========================================
 # ⚡ THE BOLD, CENTRALIZED CALCULATION ENGINE PORTAL
-# ============================================================
+# ==========================================
 btn_left, btn_center, btn_right = st.columns([1, 2, 1])
 
 with btn_center:
+    # 🟢 THE TRIPLE-SHIELD TRIGGER: Clean, bold centralized execution button
     trigger_valuation = st.button("⚡ GENERATE CERTIFIED VALUATION", use_container_width=True)
 
-# 🟢 THE FIX: The math runs directly off the centered button variable
 if trigger_valuation:
     with st.status("Deploying Neural Champion Logic...", expanded=False) as status:
         
         # 1. AI Vision Analysis (Safe Extraction)
         s1 = analyze_visual_quality(img1) if 'img1' in locals() else 1.0
+        s2 = analyze_visual_quality(img2) if 'img2' in locals() else 1.0
         s3 = analyze_visual_quality(img3) if 'img3' in locals() else 1.0
         s4 = analyze_visual_quality(img4) if 'img4' in locals() else 1.0
-        avg_vision = (s1 + s3 + s4) / 3
-
-
-# --- CALCULATION (DIRECT 20-PHASE INFERENCE) ---
-if st.button("GENERATE CERTIFIED VALUATION"):
-    with st.status("Deploying Neural Champion Logic...", expanded=False) as status:
+        s5 = analyze_visual_quality(img5) if 'img5' in locals() else 1.0
+        s6 = analyze_visual_quality(img6) if 'img6' in locals() else 1.0
+        s7 = analyze_visual_quality(img7) if 'img7' in locals() else 1.0
+        s8 = analyze_visual_quality(img8) if 'img8' in locals() else 1.0
+        s9 = analyze_visual_quality(img9) if 'img9' in locals() else 1.0
+        s10 = analyze_visual_quality(img10) if 'img10' in locals() else 1.0
         
-        # 1. AI Vision Analysis (Safe Extraction from fixed morning layout)
-        # Using .get() or manual fallback ensures no NameError occurs if slots are empty
-        s1 = analyze_visual_quality(img1) if 'img1' in locals() else 1.0
-        s3 = analyze_visual_quality(img3) if 'img3' in locals() else 1.0
-        s4 = analyze_visual_quality(img4) if 'img4' in locals() else 1.0
-        avg_vision = (s1 + s3 + s4) / 3
+        # Aggregate complete onsite visual sensor data arrays
+        avg_vision = (s1 + s2 + s3 + s4 + s5 + s6 + s7 + s8 + s9 + s10) / 10
 
         # 2. 44-POINT MATRIX RECONSTRUCTION
-        # Unified Currency Selection Layer (Checks Radio first, falls back to Selectbox)
-        if 'currency' in locals() or 'currency' in globals():
-            user_currency = currency
-        else:
-            user_currency = st.session_state.get('detected_currency', "USD ($)")
-            
+        user_currency = st.session_state.get('detected_currency', "USD ($)")
         basis_multiplier = st.session_state.get('local_basis', 1950)
 
-        # Safely extract from your morning inventory dictionary (user_inputs)
-        # We use standard default fallbacks to protect the model from reading 0 rooms
+        # Extraction from manual user input slots
         final_bed = user_inputs.get("Bedrooms", 4) if 'user_inputs' in locals() else 4
         final_bath = user_inputs.get("Bathrooms", 2) if 'user_inputs' in locals() else 2
         final_lot = user_inputs.get("SqFtLot", 5000) if 'user_inputs' in locals() else 5000
         final_storeys = user_inputs.get("Storeys", 1) if 'user_inputs' in locals() else 1
+        final_density = user_inputs.get("Unit Density", 1) if 'user_inputs' in locals() else 1
 
-        # Extract your infrastructure numbers directly from your morning input boxes
-        f_solar = user_inputs.get("Solar KVA", 0) if 'user_inputs' in locals() else 0
-        f_gen = user_inputs.get("Gen (KVA)", 0) if 'user_inputs' in locals() else 0
-        f_ac = user_inputs.get("AC Units", 0) if 'user_inputs' in locals() else 0
-        f_cctv = user_inputs.get("CCTV Cameras", 0) if 'user_inputs' in locals() else 0
-        f_bq = user_inputs.get("BQ Units", 0) if 'user_inputs' in locals() else 0
-
-        # Base Data Structure matching your exact 44-Point Notebook Output
+        # Base Data Structure initialization matching notebook parameters
         base_data = {
             'SqFtTotLiving': sqft, 'BldgGrade': 7, 'YrBuilt': yr_built,
             'Bedrooms': final_bed, 'Bathrooms': final_bath, 'SqFtLot': final_lot,
             'TrafficNoise': 0, 'NewConstruction': 0, 'zhvi_px': 450000, 
             'LandVal': 150000, 'ImpsVal': 300000, 'DocumentDate_year': 2024,
             'DocumentDate_month': 5, 'ZipCode': 98001, 'YrBuilt_tenure': 2024 - yr_built,
-            'YrRenovated_tenure': 0, 'SqFtFinBasement': 0, 'NbrLivingUnits': 1
+            'YrRenovated_tenure': 0, 'SqFtFinBasement': 0, 'NbrLivingUnits': final_density
         }
 
         f = pd.DataFrame([base_data])
         
-        # Reconstruction of Interaction Atoms (Strict order retention)
+        # Mathematical compilation of your 44 interaction matrices
         f['ImpsVal + LandVal'] = f['ImpsVal'] + f['LandVal']
         f['LandVal * SqFtTotLiving'] = f['LandVal'] * f['SqFtTotLiving']
         f['DocumentDate_year / YrBuilt'] = f['DocumentDate_year'] / f['YrBuilt']
@@ -564,57 +512,51 @@ if st.button("GENERATE CERTIFIED VALUATION"):
         brain_cols = ['ImpsVal + LandVal', 'LandVal * SqFtTotLiving', 'DocumentDate_year / YrBuilt', 'zhvi_px / SqFtTotLiving', 'Bathrooms * zhvi_px', 'zhvi_px / LandVal', 'DocumentDate_year * YrBuilt_tenure', 'LandVal * SqFtLot', 'zhvi_px', 'SqFtTotLiving + zhvi_px', 'SqFtLot / YrBuilt_tenure', 'YrRenovated_tenure * zhvi_px', 'BldgGrade * LandVal', 'NbrLivingUnits * zhvi_px', 'LandVal * YrRenovated_tenure', 'SqFtTotLiving * zhvi_px', 'YrBuilt * zhvi_px', 'ImpsVal + zhvi_px', 'DocumentDate_year - YrBuilt', 'DocumentDate_month * LandVal', 'YrBuilt_tenure / SqFtLot', 'SqFtLot + zhvi_px', 'SqFtTotLiving', 'DocumentDate_year + YrBuilt_tenure', 'YrBuilt_tenure / SqFtFinBasement', 'ImpsVal * SqFtFinBasement', 'BldgGrade * ZipCode', 'Bathrooms + BldgGrade', 'Bedrooms * LandVal', 'BldgGrade * DocumentDate_year', 'BldgGrade * ImpsVal', 'LandVal - YrRenovated_tenure', 'ImpsVal * LandVal', 'LandVal + zhvi_px', 'LandVal * zhvi_px', 'ImpsVal * zhvi_px', 'BldgGrade - DocumentDate_year', 'BldgGrade', 'YrBuilt / DocumentDate_year', 'BldgGrade * SqFtTotLiving', 'Bathrooms - DocumentDate_year', 'ZipCode', 'Bathrooms * LandVal', 'BldgGrade * zhvi_px']
         features_df = f[brain_cols]
 
-                # ============================================================
-        # 🏆 STEP 3: OMNI-MARKET NEURAL HANDSHAKE (Indentation Locked)
-        # ============================================================
+        # 3. DIRECT MODEL VALIDATION INFERENCE
         base_price = 0.0
         if 'model' in globals() and model is not None:
             try:
-                # Direct inference execution through the production pipeline
                 log_pred = model.predict(features_df)
                 base_price = float(np.expm1(log_pred))
                 
                 if new_data:
-                    # Adaptive basis math when a custom spreadsheet shifts the target market
                     base_price = (sqft * basis_multiplier * 0.0761) + (final_bed * (basis_multiplier * 40) * 0.0518)
                     
                 st.success("✅ Neural Handshake: Verified (0.8942 Direct Inference)")
             except Exception as e:
-                # Hardened fallback utilizing the underlying deterministic weights
                 base_price = (sqft * basis_multiplier * 0.0761) + (final_bed * (basis_multiplier * 40) * 0.0518) + (final_bath * (basis_multiplier * 25) * 0.0341)
         else:
             base_price = (sqft * basis_multiplier * 0.0761) + (final_bed * (basis_multiplier * 40) * 0.0518) + (final_bath * (basis_multiplier * 25) * 0.0341)
        
         # 4. TEMPORAL CORRECTION
-        # Removes 2026 inflation bridge if analyzing historical files directly
         market_appreciation = 1.0 if new_data else 2.15
         grade_scalars = {"Basic/Standard": 1.0, "Modern/Executive": 1.25, "Luxury/High-End": 1.6, "Elite/Mansion": 2.2}
         quality_force = grade_scalars.get(build_type, 1.0)
         
         # 5. ABSOLUTE VALUE ASSEMBLY
         if eclipse_mode:
-            # Surgical ablation protocol removes institutional crutches
             final_usd = (base_price * market_appreciation * quality_force * avg_vision) * 0.92
         else:
             final_usd = (base_price * market_appreciation * quality_force * avg_vision) * 1.05
 
+        st.session_state['history'].append({'Time': datetime.now().strftime('%H:%M'), 'price': final_usd})
+        status.update(label="Champion Logic Applied!", state="complete")
 
-       # ============================================================
-    # 🌐 STEP 6: OMNI-GLOBAL OUTPUT CERTIFICATE (WHITE PLATFORM RESTORED)
+    # ============================================================
+    # 🌐 STEP 6: OMNI-GLOBAL OUTPUT CERTIFICATE (WHITE PLATFORM CARD)
     # ============================================================
     sym_token = user_currency.split("(")[-1].replace(")", "").strip()
     sym = f"VAL {sym_token}"
 
     st.balloons()
-    
-    # 🟢 THE FIX: Enforcing a solid white container layout box specifically for this component
     st.markdown(f"""
-        <div style='background-color: #FFFFFF !important; 
+        <div class='metric-card' style='background-color: #FFFFFF !important; 
                     padding: 40px !important; 
                     border-radius: 12px !important; 
                     box-shadow: 0 4px 15px rgba(0,0,0,0.05) !important; 
                     text-align: center !important; 
                     border: 1px solid #EAECEE !important;
+                    margin-top: 25px !important;
                     margin-bottom: 25px !important;'>
             <p style='font-size: 11px !important; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif !important; font-weight: 700 !important; color: #7F8C8D !important; letter-spacing: 2px !important; text-transform: uppercase; margin: 0 0 10px 0;'>
                 OFFICIAL GLOBAL CERTIFICATE
@@ -639,46 +581,33 @@ if st.button("GENERATE CERTIFIED VALUATION"):
     with m3: st.metric("Market Safety", safety_label, delta="Phase 15 Shield")
     with m4: st.metric("System Health", "Elite", delta="Direct .PKL Link")
 
-                    # ============================================================
-    # 📄 INTERACTIVE DOCUMENT AUDIT PORTAL (NATIVE PLUG-IN FIX)
+    # ============================================================
+    # 📄 INTERACTIVE DOCUMENT AUDIT PORTAL (NATIVE PLUG-IN VIEW)
     # ============================================================
     st.markdown("<br>", unsafe_allow_html=True)
-    from streamlit_pdf_viewer import pdf_viewer # 🟢 Import native streaming viewer
+    from streamlit_pdf_viewer import pdf_viewer
     
-    if 'user_inputs' in locals() or 'user_inputs' in globals():
-        final_pdf_inventory = user_inputs
-    else:
-        final_pdf_inventory = {"Bedrooms": 4, "Bathrooms": 2}
-        
+    final_pdf_inventory = user_inputs if 'user_inputs' in locals() else {"Bedrooms": 4, "Bathrooms": 2}
     pdf_sync_mode = is_dynamic if 'is_dynamic' in locals() else False
     
     try:
-        # Run report labs inside memory stream buffer
         pdf_buffer = generate_pso_pdf(
             final_usd, 
-            sym_token if 'sym_token' in locals() else "$", 
-            sqft if 'sqft' in locals() else 2500, 
-            build_type if 'build_type' in locals() else "Basic/Standard", 
-            yr_built if 'yr_built' in locals() else 2018, 
+            sym_token, 
+            sqft, 
+            build_type, 
+            yr_built, 
             final_pdf_inventory, 
-            uploaded_imgs if 'uploaded_imgs' in locals() else {"img1": None}, 
+            {"img1": img1, "img2": img2, "img3": img3, "img4": img4, "img5": img5, "img6": img6, "img7": img7, "img8": img8, "img9": img9, "img10": img10}, 
             is_dynamic=pdf_sync_mode
         )
-        
-        # Extract the raw byte contents from the BytesIO buffer stream
         pdf_data = pdf_buffer.getvalue() if hasattr(pdf_buffer, 'getvalue') else pdf_buffer
         
-        # Render the PDF Preview frame inside a white container panel card
         st.markdown("<div class='step-container'>", unsafe_allow_html=True)
         st.markdown("#### 📄 Real-Time Document Audit Preview")
-        
-        # 🟢 THE CRITICAL FIX: Render bytes directly through native Streamlit Canvas
-        # This completely bypasses browser security sandboxes
         pdf_viewer(input=pdf_data, height=600, width=800)
-        
         st.markdown("<br>", unsafe_allow_html=True)
         
-        # Downstream action utility download trigger button
         st.download_button(
             label="📥 Download Certified Valuation Certificate (PDF)", 
             data=pdf_data, 
