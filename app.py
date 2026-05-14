@@ -231,15 +231,14 @@ st.markdown(f"""
     <style>
         /* MAIN CANVAS TYPOGRAPHY SCOPING */
     
-            /* 🟢 RE-ESTABLISHING CRISP HEADERS VISIBILITY (FIXED DEPLOYMENT SYNTAX) */
+                /* RE-ESTABLISHING CRISP HEADERS VISIBILITY (FIXED DEPLOYMENT SYNTAX) */
     .main h1, .main h2, .main h3, .main h4 {{
         font-family: Arial, Helvetica, sans-serif !important;
         color: #1A2530 !important;
         font-weight: 700 !important;
-        letter-spacing: 0px !important; /* Fixed: Clears decimal compilation parsing errors */
+        letter-spacing: 0px !important;
         display: block !important;
     }}
-
 
 
     /* WHITE RECTANGULAR BOX DIVIDERS */
