@@ -428,26 +428,24 @@ if eclipse_mode:
 st.markdown("</div>", unsafe_allow_html=True)
 st.markdown("<br><br>", unsafe_allow_html=True)
 
-# --- STEP 5 ---
-st.markdown("<div class='step-container'>", unsafe_allow_html=True)
-st.markdown("#### 05. System Integrity Check")
-filled_inputs = sum(1 for v in user_inputs.values() if v > 0)
-manual_photos = [img1, img2, img3, img4, img5, img6, img7, img8, img9, img10]
-filled_photos = sum(1 for p in manual_photos if p is not None)
-total_progress = min((filled_inputs + filled_photos) / 15, 1.0) 
-st.write(f"📊 **Neural Confidence:** {int(total_progress * 100)}%")
-st.progress(total_progress)
+# --- 05. SYSTEM INTEGRITY CHECK (PROGRESS COMPLETED) ---
+if total_progress >= 1.0:
+    st.success("✅ FULL FORENSIC INTEGRITY: System Hardened.")
+elif total_progress > 0.7:
+    st.warning("⚠️ High Confidence reached. Missing minor visual anchors.")
+else:
+    st.info("💡 Complete the Evidence Vault and Inventory to reach Certified status.")
 st.markdown("</div>", unsafe_allow_html=True)
 st.markdown("<br>", unsafe_allow_html=True)
 
-# ==========================================
+# ============================================================
 # ⚡ THE BOLD, CENTRALIZED CALCULATION ENGINE PORTAL
-# ==========================================
-btn_left, btn_center, btn_right = st.columns([1, 2, 1])
+# ============================================================
+btn_left, btn_center, btn_right = st.columns()
 
 with btn_center:
-    # 🟢 THE TRIPLE-SHIELD TRIGGER: Clean, bold centralized execution button
     trigger_valuation = st.button("⚡ GENERATE CERTIFIED VALUATION", use_container_width=True)
+
 
 if trigger_valuation:
     with st.status("Deploying Neural Champion Logic...", expanded=False) as status:
