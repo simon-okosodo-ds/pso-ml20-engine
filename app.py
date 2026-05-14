@@ -222,12 +222,14 @@ with st.sidebar:
         </div>
     """, unsafe_allow_html=True)
 
+    """, unsafe_allow_html=True)
+
 # ============================================================================
-# 🛡️ GLOBAL SCOPED UI STYLING (Restores Headers, Fonts, and Spacing)
+# 🛡️ GLOBAL SCOPED UI STYLING & GHOST ELIMINATOR
 # ============================================================================
 st.markdown(f"""
     <style>
-    /* 1. MAIN APERITIF CANVAS (Crisp, High-Readability Fonts) */
+    /* MAIN CANVAS TYPOGRAPHY SCOPING */
     .main .block-container p, 
     .main .block-container span, 
     .main .block-container label,
@@ -238,7 +240,6 @@ st.markdown(f"""
         line-height: 1.5 !important;
     }}
     
-    /* RE-ESTABLISHING CRISP HEADERS VISIBILITY */
     .main h1, .main h2, .main h3, .main h4 {{
         font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif !important;
         color: #1A2530 !important;
@@ -247,13 +248,13 @@ st.markdown(f"""
         display: block !important;
     }}
 
-    /* 2. THE CLASSIC SIGNATURE WHITE RECTANGULAR BOX DIVIDERS */
+    /* WHITE RECTANGULAR BOX DIVIDERS */
     .step-container {{ 
         margin-bottom: 40px !important; 
         padding: 30px !important; 
         border-radius: 12px !important; 
-        background-color: #FFFFFF !important; /* Pure white rectangle container back */
-        border: 1px solid #EAECEE !important; /* Thin architectural perimeter frame */
+        background-color: #FFFFFF !important; 
+        border: 1px solid #EAECEE !important; 
         box-shadow: 0 4px 15px rgba(0,0,0,0.03) !important;
     }}
     
@@ -267,10 +268,19 @@ st.markdown(f"""
         margin-bottom: 22px !important;
     }}
 
-    /* 3. HARDENED SIDEBAR ENVIRONMENT (Enforces Spacing & White Text Only) */
+    /* HARDENED SIDEBAR ENVIRONMENT & SPACING SHIELD */
     [data-testid="stSidebar"] {{
         background-color: #060B26 !important;
         border-right: 1px solid rgba(0, 242, 254, 0.15) !important;
+    }}
+    
+    /* THE CRITICAL OVERLAP SHIELD: Forces 28px vertical distance between widgets */
+    [data-testid="stSidebar"] [data-testid="stVerticalBlock"] {{
+        gap: 28px !important; 
+    }}
+    
+    [data-testid="stSidebar"] .element-container {{
+        margin-bottom: 15px !important; 
     }}
     
     [data-testid="stSidebar"] p,
@@ -283,7 +293,8 @@ st.markdown(f"""
         font-size: 12px !important;
         font-weight: 600 !important;
         color: #FFFFFF !important;
-        line-height: 1.5 !important;
+        line-height: 1.6 !important;
+        display: block !important;
     }}
     
     [data-testid="stSidebar"] div[data-baseweb="select"] > div,
@@ -291,9 +302,11 @@ st.markdown(f"""
         background-color: #0D1426 !important;
         border: 1px solid rgba(0, 242, 254, 0.15) !important;
         color: #FFFFFF !important;
+        margin-top: 6px !important;
+        margin-bottom: 6px !important;
     }}
 
-    /* 4. EXECUTIVE RUN BUTTON CONFIG */
+    /* REGULAR RUN BUTTON */
     .stButton>button {{ 
         background: {brand_color if 'brand_color' in locals() or 'brand_color' in globals() else '#00F2FE'} !important; 
         color: white !important; 
@@ -311,6 +324,58 @@ st.markdown(f"""
     }}
     </style>
     """, unsafe_allow_html=True)
+
+# 🛑 THE TOTAL CLEANUP ZONE: The ghost text block was captured and deleted right here.
+
+
+# --- 7. HEADER & LOGO INJECTION (PERMANENT SYSTEM STATE & LAYOUT SYNC) ---
+st.markdown("<br>", unsafe_allow_html=True)
+import os
+
+base_dir = os.path.dirname(__file__) if '__file__' in locals() else "."
+repo_logo = os.path.join(base_dir, "branding", "logo.png")
+repo_qr = os.path.join(base_dir, "branding", "qr.png")
+
+if "persistent_logo_bytes" in st.session_state:
+    col_l1, col_l2, col_l3 = st.columns()
+    with col_l2:
+        st.image(st.session_state["persistent_logo_bytes"], use_container_width=True)
+    st.markdown("<br>", unsafe_allow_html=True)
+elif os.path.exists(repo_logo):
+    col_l1, col_l2, col_l3 = st.columns()
+    with col_l2:
+        st.image(repo_logo, use_container_width=True)
+    st.markdown("<br>", unsafe_allow_html=True)
+
+if os.path.exists(repo_qr):
+    col_text, col_qr = st.columns()
+    with col_text:
+        st.markdown("""
+            <div style='display: flex; flex-direction: column; justify-content: center; height: 100%;'>
+                <h1 style='margin: 0; padding: 0; color: #1A2530 !important; font-size: 32px !important; font-weight: 800 !important; letter-spacing: -1px !important; opacity: 1 !important;'>
+                    Executive Valuation Terminal
+                </h1>
+                <p style='margin: 5px 0 0 0; padding: 0; color: #566573 !important; font-size: 14px !important; font-weight: 500 !important; opacity: 1 !important; letter-spacing: 0.5px;'>
+                    PSO-ML20 Standard | Industrial Forensic Audit Engine
+                </p>
+            </div>
+        """, unsafe_allow_html=True)
+    with col_qr:
+        st.image(repo_qr, use_container_width=True)
+else:
+    st.markdown("""
+        <div>
+            <h1 style='margin: 0; padding: 0; color: #1A2530 !important; font-size: 32px !important; font-weight: 800 !important; letter-spacing: -1px !important; opacity: 1 !important;'>
+                Executive Valuation Terminal
+            </h1>
+            <p style='margin: 5px 0 0 0; padding: 0; color: #566573 !important; font-size: 14px !important; font-weight: 500 !important; opacity: 1 !important; letter-spacing: 0.5px;'>
+                    PSO-ML20 Standard | Industrial Forensic Audit Engine
+            </p>
+        </div>
+    """, unsafe_allow_html=True)
+
+st.markdown("<hr style='border: 0; border-top: 1px solid #EAECEE; margin-top: 25px; margin-bottom: 35px;'>", unsafe_allow_html=True)
+
 
 # ==========================================
 # 🛡️ 01. PRIMARY PARAMETERS
