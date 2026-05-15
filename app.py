@@ -570,16 +570,16 @@ if trigger_valuation:
         # 🟢 CLOSE THE LOADER SCOPE NATIVELY BEFORE DISPLAYING STEP 6
         status.update(label="Champion Logic Applied!", state="complete")
 
-        # ============================================================
-    # 🌐 STEP 6: OMNI-GLOBAL OUTPUT CERTIFICATE (QUOTES HARMONIZED)
+            # ============================================================
+    # 🌐 STEP 6: OMNI-GLOBAL OUTPUT CERTIFICATE (THE DEFINITIVE FIX)
     # ============================================================
     sym_token = user_currency.split("(")[-1].replace(")", "").strip() if 'user_currency' in locals() else "$"
     sym = f"VAL {sym_token}"
 
     st.balloons()
     
-    # 🟢 THE DEFINITIVE FIX: Double triple quotes (""") prevent any inner style clashes.
-    # Changing all inner style definitions to double quotes completely blocks raw text leaks.
+    # 🟢 THE REAL UNLOCK AXIS: Enforcing the st.markdown function call architecture explicitly!
+    # This prevents the text reader from parsing this design layout cell as a plain docstring comment.
     st.markdown(f"""
         <div style="background-color: #FFFFFF !important; 
                     padding: 40px !important; 
@@ -616,6 +616,7 @@ if trigger_valuation:
             
         </div>
     """, unsafe_allow_html=True)
+
 
         # ==========================================
     # 📊 --- DISPLAY MINI METRICS ---
