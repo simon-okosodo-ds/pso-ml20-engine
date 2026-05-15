@@ -562,57 +562,56 @@ if trigger_valuation:
         else:
             final_usd = (base_price * market_appreciation * quality_force * avg_vision) * 1.05
 
-        st.session_state['history'].append({'Time': datetime.now().strftime('%H:%M'), 'price': final_usd})
+                st.session_state['history'].append({'Time': datetime.now().strftime('%H:%M'), 'price': final_usd})
         
-        # 🟢 CLOSE THE LOADER SCOPE NATIVELY BEFORE DISPLAYING STEP 6
+        # 🟢 CLOSE THE PIPELINE LOGIC: Signal completion inside your 8-space indentation layer
         status.update(label="Champion Logic Applied!", state="complete")
 
-            # ============================================================
-    # 🌐 STEP 6: OMNI-GLOBAL OUTPUT CERTIFICATE (THE DEFINITIVE FIX)
-    # ============================================================
-    sym_token = user_currency.split("(")[-1].replace(")", "").strip() if 'user_currency' in locals() else "$"
-    sym = f"VAL {sym_token}"
+# ============================================================
+# 🌐 STEP 6: OMNI-GLOBAL OUTPUT CERTIFICATE (LEFT-ALIGNED ENCLOSURE)
+# ============================================================
+# 🟢 THE MASTER FIX: Pushed back exactly to 0 spaces of indentation relative to the main block.
+# This forces Streamlit to compile the markdown function natively on your main white canvas page canvas!
+sym_token = user_currency.split("(")[-1].replace(")", "").strip() if 'user_currency' in locals() else "$"
+sym = f"VAL {sym_token}"
 
-    st.balloons()
-    
-    # 🟢 THE REAL UNLOCK AXIS: Enforcing the st.markdown function call architecture explicitly!
-    # This prevents the text reader from parsing this design layout cell as a plain docstring comment.
-    st.markdown(f"""
-        <div style="background-color: #FFFFFF !important; 
-                    padding: 40px !important; 
-                    border-radius: 12px !important; 
-                    box-shadow: 0 4px 15px rgba(0,0,0,0.06) !important; 
-                    text-align: center !important; 
-                    border: 1px solid #EAECEE !important;
-                    margin-top: 25px !important;
-                    margin-bottom: 25px !important;
-                    display: block !important;
+st.balloons()
+st.markdown(f"""
+    <div style="background-color: #FFFFFF !important; 
+                padding: 40px !important; 
+                border-radius: 12px !important; 
+                box-shadow: 0 4px 15px rgba(0,0,0,0.06) !important; 
+                text-align: center !important; 
+                border: 1px solid #EAECEE !important;
+                margin-top: 25px !important;
+                margin-bottom: 25px !important;
+                display: block !important;
+                visibility: visible !important;
+                opacity: 1.0 !important;">
+        
+        <p style="font-size: 11px !important; font-family: Arial, Helvetica, sans-serif !important; font-weight: 700 !important; color: #7F8C8D !important; letter-spacing: 2px !important; text-transform: uppercase !important; margin: 0 0 15px 0; padding: 0 !important; display: block !important; visibility: visible !important; opacity: 1.0 !important;">
+            OFFICIAL GLOBAL CERTIFICATE
+        </p>
+        
+        <div style="color: #000000 !important; 
+                    font-family: Arial, Helvetica, sans-serif !important; 
+                    font-size: 44px !important; 
+                    font-weight: 900 !important; 
+                    margin: 0 !important; 
+                    padding: 0 !important; 
+                    display: block !important; 
                     visibility: visible !important;
-                    opacity: 1.0 !important;">
-            
-            <p style="font-size: 11px !important; font-family: Arial, Helvetica, sans-serif !important; font-weight: 700 !important; color: #7F8C8D !important; letter-spacing: 2px !important; text-transform: uppercase !important; margin: 0 0 15px 0; padding: 0 !important; display: block !important; visibility: visible !important; opacity: 1.0 !important;">
-                OFFICIAL GLOBAL CERTIFICATE
-            </p>
-            
-            <div style="color: #000000 !important; 
-                        font-family: Arial, Helvetica, sans-serif !important; 
-                        font-size: 44px !important; 
-                        font-weight: 900 !important; 
-                        margin: 0 !important; 
-                        padding: 0 !important; 
-                        display: block !important; 
-                        visibility: visible !important;
-                        opacity: 1.0 !important;
-                        line-height: 1.1 !important;">
-                {sym} {final_usd:,.2f}
-            </div>
-            
-            <p style="font-size: 13px !important; font-family: Arial, Helvetica, sans-serif !important; color: #2C3E50 !important; margin-top: 20px !important; font-weight: 600; padding: 0 !important; display: block !important; visibility: visible !important; opacity: 1.0 !important;">
-                <b>Target Framework Accuracy: 89.42%</b> | Model Footprint: 5.4MB
-            </p>
-            
+                    opacity: 1.0 !important;
+                    line-height: 1.1 !important;">
+            {{sym}} {{final_usd:,.2f}}
         </div>
-    """, unsafe_allow_html=True)
+        
+        <p style="font-size: 13px !important; font-family: Arial, Helvetica, sans-serif !important; color: #2C3E50 !important; margin-top: 20px !important; font-weight: 600; padding: 0 !important; display: block !important; visibility: visible !important; opacity: 1.0 !important;">
+            <b>Target Framework Accuracy: 89.42%</b> | Model Footprint: 5.4MB
+        </p>
+        
+    </div>
+""", unsafe_allow_html=True)
 
 
         # ==========================================
