@@ -562,58 +562,55 @@ if trigger_valuation:
         else:
             final_usd = (base_price * market_appreciation * quality_force * avg_vision) * 1.05
 
-        # 🟢 FIXED: Moved back to match the exact 8-space indentation grid alignment
+                # 🟢 INDENTATION LOCKED ROW: Moves back inside the active model status loop container scope layer
         st.session_state['history'].append({'Time': datetime.now().strftime('%H:%M'), 'price': final_usd})
-        
-        # 🟢 FIXED: Aligned perfectly to close your active status loop window smoothly
-        status.update(label="Champion Logic Applied!", state="complete")
+        status.update(label="Champion Logic Applied!", state="complete", expanded=False)
 
+        # ============================================================
+        # 🌐 STEP 6: OMNI-GLOBAL OUTPUT CERTIFICATE (INDENTATION HARMONIZED)
+        # ============================================================
+        # 🟢 THE REAL FIX: Indented by exactly 8 spaces to keep it inside the button loop.
+        # Single curly brackets used on variables so the f-string evaluates them natively!
+        sym_token = user_currency.split("(")[-1].replace(")", "").strip() if 'user_currency' in locals() else "$"
+        sym = f"VAL {sym_token}"
 
-# ============================================================
-# 🌐 STEP 6: OMNI-GLOBAL OUTPUT CERTIFICATE (LEFT-ALIGNED ENCLOSURE)
-# ============================================================
-# 🟢 THE MASTER FIX: Pushed back exactly to 0 spaces of indentation relative to the main block.
-# This forces Streamlit to compile the markdown function natively on your main white canvas page canvas!
-sym_token = user_currency.split("(")[-1].replace(")", "").strip() if 'user_currency' in locals() else "$"
-sym = f"VAL {sym_token}"
-
-st.balloons()
-st.markdown(f"""
-    <div style="background-color: #FFFFFF !important; 
-                padding: 40px !important; 
-                border-radius: 12px !important; 
-                box-shadow: 0 4px 15px rgba(0,0,0,0.06) !important; 
-                text-align: center !important; 
-                border: 1px solid #EAECEE !important;
-                margin-top: 25px !important;
-                margin-bottom: 25px !important;
-                display: block !important;
-                visibility: visible !important;
-                opacity: 1.0 !important;">
-        
-        <p style="font-size: 11px !important; font-family: Arial, Helvetica, sans-serif !important; font-weight: 700 !important; color: #7F8C8D !important; letter-spacing: 2px !important; text-transform: uppercase !important; margin: 0 0 15px 0; padding: 0 !important; display: block !important; visibility: visible !important; opacity: 1.0 !important;">
-            OFFICIAL GLOBAL CERTIFICATE
-        </p>
-        
-        <div style="color: #000000 !important; 
-                    font-family: Arial, Helvetica, sans-serif !important; 
-                    font-size: 44px !important; 
-                    font-weight: 900 !important; 
-                    margin: 0 !important; 
-                    padding: 0 !important; 
-                    display: block !important; 
-                    visibility: visible !important;
-                    opacity: 1.0 !important;
-                    line-height: 1.1 !important;">
-            {{sym}} {{final_usd:,.2f}}
-        </div>
-        
-        <p style="font-size: 13px !important; font-family: Arial, Helvetica, sans-serif !important; color: #2C3E50 !important; margin-top: 20px !important; font-weight: 600; padding: 0 !important; display: block !important; visibility: visible !important; opacity: 1.0 !important;">
-            <b>Target Framework Accuracy: 89.42%</b> | Model Footprint: 5.4MB
-        </p>
-        
-    </div>
-""", unsafe_allow_html=True)
+        st.balloons()
+        st.markdown(f"""
+            <div style="background-color: #FFFFFF !important; 
+                        padding: 40px !important; 
+                        border-radius: 12px !important; 
+                        box-shadow: 0 4px 15px rgba(0,0,0,0.06) !important; 
+                        text-align: center !important; 
+                        border: 1px solid #EAECEE !important;
+                        margin-top: 25px !important;
+                        margin-bottom: 25px !important;
+                        display: block !important;
+                        visibility: visible !important;
+                        opacity: 1.0 !important;">
+                
+                <p style="font-size: 11px !important; font-family: Arial, Helvetica, sans-serif !important; font-weight: 700 !important; color: #7F8C8D !important; letter-spacing: 2px !important; text-transform: uppercase !important; margin: 0 0 15px 0; padding: 0 !important; display: block !important; visibility: visible !important; opacity: 1.0 !important;">
+                    OFFICIAL GLOBAL CERTIFICATE
+                </p>
+                
+                <div style="color: #000000 !important; 
+                            font-family: Arial, Helvetica, sans-serif !important; 
+                            font-size: 44px !important; 
+                            font-weight: 900 !important; 
+                            margin: 0 !important; 
+                            padding: 0 !important; 
+                            display: block !important; 
+                            visibility: visible !important;
+                            opacity: 1.0 !important;
+                            line-height: 1.1 !important;">
+                    {sym} {final_usd:,.2f}
+                </div>
+                
+                <p style="font-size: 13px !important; font-family: Arial, Helvetica, sans-serif !important; color: #2C3E50 !important; margin-top: 20px !important; font-weight: 600; padding: 0 !important; display: block !important; visibility: visible !important; opacity: 1.0 !important;">
+                    <b>Target Framework Accuracy: 89.42%</b> | Model Footprint: 5.4MB
+                </p>
+                
+            </div>
+        """, unsafe_allow_html=True)
 
 
         # ============================================================
