@@ -556,16 +556,18 @@ if trigger_valuation:
         grade_scalars = {"Basic/Standard": 1.0, "Modern/Executive": 1.25, "Luxury/High-End": 1.6, "Elite/Mansion": 2.2}
         quality_force = grade_scalars.get(build_type, 1.0)
         
-        # 5. ABSOLUTE VALUE ASSEMBLY
+                # 5. ABSOLUTE VALUE ASSEMBLY (INDENTATION HARMONIZED)
         if eclipse_mode:
             final_usd = (base_price * market_appreciation * quality_force * avg_vision) * 0.92
         else:
             final_usd = (base_price * market_appreciation * quality_force * avg_vision) * 1.05
 
-                st.session_state['history'].append({'Time': datetime.now().strftime('%H:%M'), 'price': final_usd})
+        # 🟢 FIXED: Moved back to match the exact 8-space indentation grid alignment
+        st.session_state['history'].append({'Time': datetime.now().strftime('%H:%M'), 'price': final_usd})
         
-        # 🟢 CLOSE THE PIPELINE LOGIC: Signal completion inside your 8-space indentation layer
+        # 🟢 FIXED: Aligned perfectly to close your active status loop window smoothly
         status.update(label="Champion Logic Applied!", state="complete")
+
 
 # ============================================================
 # 🌐 STEP 6: OMNI-GLOBAL OUTPUT CERTIFICATE (LEFT-ALIGNED ENCLOSURE)
