@@ -566,10 +566,13 @@ if trigger_valuation:
         brain_cols = ['ImpsVal + LandVal', 'LandVal * SqFtTotLiving', 'DocumentDate_year / YrBuilt', 'zhvi_px / SqFtTotLiving', 'Bathrooms * zhvi_px', 'zhvi_px / LandVal', 'DocumentDate_year * YrBuilt_tenure', 'LandVal * SqFtLot', 'zhvi_px', 'SqFtTotLiving + zhvi_px', 'SqFtLot / YrBuilt_tenure', 'YrRenovated_tenure * zhvi_px', 'BldgGrade * LandVal', 'NbrLivingUnits * zhvi_px', 'LandVal * YrRenovated_tenure', 'SqFtTotLiving * zhvi_px', 'YrBuilt * zhvi_px', 'ImpsVal + zhvi_px', 'DocumentDate_year - YrBuilt', 'DocumentDate_month * LandVal', 'YrBuilt_tenure / SqFtLot', 'SqFtLot + zhvi_px', 'SqFtTotLiving', 'DocumentDate_year + YrBuilt_tenure', 'YrBuilt_tenure / SqFtFinBasement', 'ImpsVal * SqFtFinBasement', 'BldgGrade * ZipCode', 'Bathrooms + BldgGrade', 'Bedrooms * LandVal', 'BldgGrade * DocumentDate_year', 'BldgGrade * ImpsVal', 'LandVal - YrRenovated_tenure', 'ImpsVal * LandVal', 'LandVal + zhvi_px', 'LandVal * zhvi_px', 'ImpsVal * zhvi_px', 'BldgGrade - DocumentDate_year', 'BldgGrade', 'YrBuilt / DocumentDate_year', 'BldgGrade * SqFtTotLiving', 'Bathrooms - DocumentDate_year', 'ZipCode', 'Bathrooms * LandVal', 'BldgGrade * zhvi_px']
         features_df = f[brain_cols]
 
-        # 3. DIRECT MODEL VALIDATION INFERENCE
+                # ============================================================
+        # 🏆 STEP 3: OMNI-MARKET NEURAL HANDSHAKE (CLEAN MATRIX)
+        # ============================================================
         base_price = 0.0
         if 'model' in globals() and model is not None:
             try:
+                # Direct inference execution through the production pipeline
                 log_pred = model.predict(features_df)
                 base_price = float(np.expm1(log_pred))
                 
@@ -581,6 +584,7 @@ if trigger_valuation:
                 base_price = (sqft * basis_multiplier * 0.0761) + (final_bed * (basis_multiplier * 40) * 0.0518) + (final_bath * (basis_multiplier * 25) * 0.0341)
         else:
             base_price = (sqft * basis_multiplier * 0.0761) + (final_bed * (basis_multiplier * 40) * 0.0518) + (final_bath * (basis_multiplier * 25) * 0.0341)
+
        
         # 4. TEMPORAL CORRECTION
         market_appreciation = 1.0 if new_data else 2.15
