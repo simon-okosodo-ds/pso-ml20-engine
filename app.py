@@ -604,7 +604,7 @@ if trigger_valuation:
         # 🟢 THE FIRST STATUS TERMINATION CHASSIS:
         status.update(label="Champion Logic Applied!", state="complete", expanded=False)
 
-    # ============================================================
+        # ============================================================
     # 🌐 STEP 6: OMNI-GLOBAL OUTPUT CERTIFICATE (PRODUCTION READY)
     # ============================================================
     # Extract structural currency tokens natively out of your session baseline records
@@ -651,8 +651,10 @@ if trigger_valuation:
             
         </div>
     """, unsafe_allow_html=True)
-    
-       # --- DISPLAY MINI METRICS ---
+
+    # ==========================================
+    # 📊 --- DISPLAY MINI METRICS ---
+    # ==========================================
     finish_label = "Ultra-Luxury" if avg_vision > 1.18 else "High-End" if avg_vision > 1.08 else "Standard"
     safety_label = "Secure" if final_usd < 5000000 else "Volatile"
     
@@ -702,11 +704,11 @@ if trigger_valuation:
     except Exception as pdf_error:
         st.error(f"⚠️ PDF Compiler Layout Hold: {pdf_error}")
 
-# ==========================================
-# --- FOOTER (OUTSIDE THE BUTTON) ---
-# ==========================================
+# ============================================================
+# 🛡️ SOVEREIGN FRAMEWORK FOOTER (SITUATED OUTSIDE THE BUTTON LOOP)
+# ============================================================
 st.markdown("<br><br>", unsafe_allow_html=True)
 st.divider()
 st.caption("© 2026 PSO-ML20 Framework | Industrial Data Science Lifecycle")
 st.caption("Intelligence Source: Phases 01-20 (Tournament Champion: LightGBM V2)")
-st.write(f"Architect: **Patrick Simon Okosodo** | AI Architect | MLOps Specialist | B.Eng (Chem)")
+st.write("Architect: **Patrick Simon Okosodo** | AI Architect | MLOps Specialist | B.Eng (Chem)")
