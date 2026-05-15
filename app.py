@@ -650,7 +650,7 @@ if trigger_valuation:
         </div>
     """, unsafe_allow_html=True)
 
-    # ==========================================
+        # ==========================================
     # 📊 --- DISPLAY MINI METRICS ---
     # ==========================================
     finish_label = "Ultra-Luxury" if avg_vision > 1.18 else "High-End" if avg_vision > 1.08 else "Standard"
@@ -673,6 +673,7 @@ if trigger_valuation:
     pdf_sync_mode = is_dynamic if 'is_dynamic' in locals() else False
     
     try:
+        # Compile report lab document objects inside a memory bytes array stream
         pdf_buffer = generate_pso_pdf(
             final_usd, 
             sym_token, 
@@ -685,11 +686,13 @@ if trigger_valuation:
         )
         pdf_data = pdf_buffer.getvalue() if hasattr(pdf_buffer, 'getvalue') else pdf_buffer
         
+        # Draw the native viewing framework inside your classic white container box panels
         st.markdown("<div class='step-container'>", unsafe_allow_html=True)
         st.markdown("#### 📄 Real-Time Document Audit Preview")
         pdf_viewer(input=pdf_data, height=600, width=800)
         st.markdown("<br>", unsafe_allow_html=True)
         
+        # Corporate download trigger script action utility
         st.download_button(
             label="📥 Download Certified Valuation Certificate (PDF)", 
             data=pdf_data, 
@@ -703,7 +706,7 @@ if trigger_valuation:
         st.error(f"⚠️ PDF Compiler Layout Hold: {pdf_error}")
 
 # ============================================================
-# 🛡️ SOVEREIGN FRAMEWORK FOOTER (SITUATED OUTSIDE THE BUTTON LOOP)
+# 🛡️ SOVEREIGN FRAMEWORK FOOTER (SITUATED COMPLETELY OUTSIDE THE BUTTON LOOP)
 # ============================================================
 st.markdown("<br><br>", unsafe_allow_html=True)
 st.divider()
