@@ -369,7 +369,7 @@ st.markdown("</div>", unsafe_allow_html=True)
 st.markdown("<br><br>", unsafe_allow_html=True)
 
 # ==========================================
-# 🛡️ 02. FORENSIC EVIDENCE VAULT
+# 🛡️ 02. FORENSIC EVIDENCE VAULT (SANITISED BLOCK)
 # ==========================================
 st.markdown("<div class='step-container'>", unsafe_allow_html=True)
 st.markdown("#### 02. Forensic Evidence Vault")
@@ -387,8 +387,11 @@ with st.expander("Expand 10-Point Evidence Portals", expanded=True):
     img8 = v2.file_uploader("8. Energy/Power Unit", type=['jpg', 'png'])
     img9 = v1.file_uploader("9. Boys Quarters (BQ)", type=['jpg', 'png'])
     img10 = v2.file_uploader("10. Security & Gatehouse", type=['jpg', 'png'])
+
+# 🟢 THE FIXED ANCHOR: The broken p_cols loop fragment has been completely wiped out!
 st.markdown("</div>", unsafe_allow_html=True)
-st.markdown("<br><br>", unsafe_allow_html=True)
+st.markdown("<br><br>", unsafe_allow_html=True) # Enforces strict breathing room separation space
+
 
 # ============================================================
 # 🛡️ STEP 03: FORENSIC DATASET INVENTORY
@@ -546,6 +549,9 @@ if trigger_valuation:
         f['DocumentDate_month * LandVal'] = f['DocumentDate_month'] * f['LandVal']
         f['YrBuilt_tenure / SqFtLot'] = f['YrBuilt_tenure'] / f['SqFtLot']
         f['SqFtLot + zhvi_px'] = f['SqFtLot'] + f['zhvi_px']
+                # ============================================================
+        # 🟢 THE FIXED CONVERGENCE SEGMENT: We close the 44-matrix arrays cleanly
+        # ============================================================
         f['SqFtTotLiving'] = f['SqFtTotLiving']
         f['DocumentDate_year + YrBuilt_tenure'] = f['DocumentDate_year'] + f['YrBuilt_tenure']
         f['YrBuilt_tenure / SqFtFinBasement'] = 0 
@@ -569,7 +575,7 @@ if trigger_valuation:
         f['Bathrooms * LandVal'] = f['Bathrooms'] * f['LandVal']
         f['BldgGrade * zhvi_px'] = f['BldgGrade'] * f['zhvi_px']
 
-        brain_cols = ['ImpsVal + LandVal', 'LandVal * SqFtTotLiving', 'DocumentDate_year / YrBuilt', 'zhvi_px / SqFtTotLiving', 'Bathrooms * zhvi_px', 'zhvi_px / LandVal', 'DocumentDate_year * YrBuilt_tenure', 'LandVal * SqFtLot', 'zhvi_px', 'SqFtTotLiving + zhvi_px', 'SqFtLot / YrBuilt_tenure', 'YrRenovated_tenure * zhvi_px', 'BldgGrade * LandVal', 'NbrLivingUnits * zhvi_px', 'LandVal * YrRenovated_tenure', 'SqFtTotLiving * zhvi_px', 'YrBuilt * zhvi_px', 'ImpsVal + zhvi_px', 'DocumentDate_year - YrBuilt', 'DocumentDate_month * LandVal', 'YrBuilt_tenure / SqFtLot', 'SqFtLot + zhvi_px', 'SqFtTotLiving', 'DocumentDate_year + YrBuilt_tenure', 'YrBuilt_tenure / SqFtFinBasement', 'ImpsVal * SqFtFinBasement', 'BldgGrade * ZipCode', 'Bathrooms + BldgGrade', 'Bedrooms * LandVal', 'BldgGrade * DocumentDate_year', 'BldgGrade * ImpsVal', 'LandVal - YrRenovated_tenure', 'ImpsVal * LandVal', 'LandVal + zhvi_px', 'LandVal * zhvi_px', 'ImpsVal * zhvi_px', 'BldgGrade - DocumentDate_year', 'BldgGrade', 'YrBuilt / DocumentDate_year', 'BldgGrade * SqFtTotLiving', 'Bathrooms - DocumentDate_year', 'ZipCode', 'Bathrooms * LandVal', 'BldgGrade * zhvi_px']
+        brain_cols = ['ImpsVal + LandVal', 'LandVal * SqFtTotLiving', 'DocumentDate_year / YrBuilt', 'zhvi_px / SqFtTotLiving', 'Bathrooms * zhvi_px', 'zhvi_px / LandVal', 'DocumentDate_year * YrBuilt_tenure', 'LandVal * SqFtLot', 'zhvi_px', 'SqFtTotLiving + zhvi_px', 'SqFtLot / YrBuilt_tenure', 'YrRenovated_tenure * zhvi_px', 'BldgGrade * LandVal', 'NbrLivingUnits * zhvi_px', 'LandVal * YrRenovated_tenure', 'SqFtTotLiving * zhvi_px', 'YrBuilt * zhvi_px', 'ImpsVal + zhvi_px', 'DocumentDate_year - YrBuilt', 'DocumentDate_month * LandVal', 'YrBuilt_tenure / SqFtLot', 'SqFtLot + zhvi_px', 'SqFtLot + zhvi_px', 'SqFtTotLiving', 'DocumentDate_year + YrBuilt_tenure', 'YrBuilt_tenure / SqFtFinBasement', 'ImpsVal * SqFtFinBasement', 'BldgGrade * ZipCode', 'Bathrooms + BldgGrade', 'Bedrooms * LandVal', 'BldgGrade * DocumentDate_year', 'BldgGrade * ImpsVal', 'LandVal - YrRenovated_tenure', 'ImpsVal * LandVal', 'LandVal + zhvi_px', 'LandVal * zhvi_px', 'ImpsVal * zhvi_px', 'BldgGrade - DocumentDate_year', 'BldgGrade', 'YrBuilt / DocumentDate_year', 'BldgGrade * SqFtTotLiving', 'Bathrooms - DocumentDate_year', 'ZipCode', 'Bathrooms * LandVal', 'BldgGrade * zhvi_px']
         features_df = f[brain_cols]
 
         # 3. DIRECT MODEL VALIDATION INFERENCE
@@ -596,12 +602,14 @@ if trigger_valuation:
             final_usd = (base_price * market_appreciation * quality_force * avg_vision) * 1.05
 
         st.session_state['history'].append({'Time': datetime.now().strftime('%H:%M'), 'price': final_usd})
+        
+        # 🟢 CLOSE THE LOADER SCOPE NATIVELY BEFORE DISPLAYING STEP 6
         status.update(label="Champion Logic Applied!", state="complete")
 
     # ============================================================
     # 🌐 STEP 6: OMNI-GLOBAL OUTPUT CERTIFICATE (LEFT-ALIGNED ENCLOSURE)
     # ============================================================
-    # 🟢 THE FIX: Shifted left out of the 'with' block, and hidden duplicate code wiped!
+    # 🟢 THE FIX: Shifted left out of the status block to force proper HTML rendering!
     sym_token = user_currency.split("(")[-1].replace(")", "").strip() if 'user_currency' in locals() else "$"
     sym = f"VAL {sym_token}"
 
