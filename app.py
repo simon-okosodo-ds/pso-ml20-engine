@@ -204,15 +204,12 @@ with st.sidebar:
 
 
 # --- EXECUTIVE UI PREMIUM STYLING (World-Class Scoped Classic & Safe Variables) ---
-# 🟢 THE DEFINITIVE FIX: Using standard markdown strings with direct variable injection variables
-# This permanently prevents the 'invalid decimal literal' syntax crashes and strips out raw text leakage.
 st.markdown(f"""
     <style>
-    /* 1. MAIN CANVAS TYPOGRAPHY SCOPING */
+    /* 1. MAIN CANVAS TYPOGRAPHY SCOPING (FIXED TARGET SHIELD) */
+    /* We strictly target text elements and labels, bypassing system layout structures */
     .main .block-container p, 
-    .main .block-container span, 
-    .main .block-container label,
-    .main .block-container div:not([data-baseweb="input"]):not([data-baseweb="select"]) {{
+    .main .block-container label {{
         font-family: Arial, Helvetica, sans-serif !important;
         font-size: 14px !important;
         color: #2C3E50 !important;
