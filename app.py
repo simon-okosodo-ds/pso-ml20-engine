@@ -490,20 +490,19 @@ if trigger_valuation:
         s9 = analyze_visual_quality(img9) if 'img9' in locals() else 1.0
         s10 = analyze_visual_quality(img10) if 'img10' in locals() else 1.0
         
+        # Aggregate complete onsite visual sensor data arrays smoothly
         avg_vision = (s1 + s2 + s3 + s4 + s5 + s6 + s7 + s8 + s9 + s10) / 10
 
         # 2. 44-POINT MATRIX RECONSTRUCTION
         user_currency = st.session_state.get('detected_currency', "USD ($)")
         basis_multiplier = st.session_state.get('local_basis', 1950)
 
+        # Secure extraction from active user input data fields
         final_bed = user_inputs.get("Bedrooms", 4) if 'user_inputs' in locals() else 4
         final_bath = user_inputs.get("Bathrooms", 2) if 'user_inputs' in locals() else 2
         final_lot = user_inputs.get("SqFtLot", 5000) if 'user_inputs' in locals() else 5000
         final_storeys = user_inputs.get("Storeys", 1) if 'user_inputs' in locals() else 1
         final_density = user_inputs.get("Unit Density", 1) if 'user_inputs' in locals() else 1
-
-
-
 
         # Base Data Structure initialization matching notebook parameters
         base_data = {
@@ -566,53 +565,40 @@ if trigger_valuation:
         brain_cols = ['ImpsVal + LandVal', 'LandVal * SqFtTotLiving', 'DocumentDate_year / YrBuilt', 'zhvi_px / SqFtTotLiving', 'Bathrooms * zhvi_px', 'zhvi_px / LandVal', 'DocumentDate_year * YrBuilt_tenure', 'LandVal * SqFtLot', 'zhvi_px', 'SqFtTotLiving + zhvi_px', 'SqFtLot / YrBuilt_tenure', 'YrRenovated_tenure * zhvi_px', 'BldgGrade * LandVal', 'NbrLivingUnits * zhvi_px', 'LandVal * YrRenovated_tenure', 'SqFtTotLiving * zhvi_px', 'YrBuilt * zhvi_px', 'ImpsVal + zhvi_px', 'DocumentDate_year - YrBuilt', 'DocumentDate_month * LandVal', 'YrBuilt_tenure / SqFtLot', 'SqFtLot + zhvi_px', 'SqFtTotLiving', 'DocumentDate_year + YrBuilt_tenure', 'YrBuilt_tenure / SqFtFinBasement', 'ImpsVal * SqFtFinBasement', 'BldgGrade * ZipCode', 'Bathrooms + BldgGrade', 'Bedrooms * LandVal', 'BldgGrade * DocumentDate_year', 'BldgGrade * ImpsVal', 'LandVal - YrRenovated_tenure', 'ImpsVal * LandVal', 'LandVal + zhvi_px', 'LandVal * zhvi_px', 'ImpsVal * zhvi_px', 'BldgGrade - DocumentDate_year', 'BldgGrade', 'YrBuilt / DocumentDate_year', 'BldgGrade * SqFtTotLiving', 'Bathrooms - DocumentDate_year', 'ZipCode', 'Bathrooms * LandVal', 'BldgGrade * zhvi_px']
         features_df = f[brain_cols]
 
-                # ============================================================
-        # 🏆 STEP 3: OMNI-MARKET NEURAL HANDSHAKE (CLEAN MATRIX)
-        # ============================================================
+        # 3. DIRECT MODEL VALIDATION INFERENCE
         base_price = 0.0
         if 'model' in globals() and model is not None:
             try:
-                # Direct inference execution through the production pipeline
                 log_pred = model.predict(features_df)
                 base_price = float(np.expm1(log_pred))
-                
-                if new_data:
-                    base_price = (sqft * basis_multiplier * 0.0761) + (final_bed * (basis_multiplier * 40) * 0.0518)
-                    
                 st.success("✅ Neural Handshake: Verified (0.8942 Direct Inference)")
             except Exception as e:
                 base_price = (sqft * basis_multiplier * 0.0761) + (final_bed * (basis_multiplier * 40) * 0.0518) + (final_bath * (basis_multiplier * 25) * 0.0341)
         else:
             base_price = (sqft * basis_multiplier * 0.0761) + (final_bed * (basis_multiplier * 40) * 0.0518) + (final_bath * (basis_multiplier * 25) * 0.0341)
-
        
         # 4. TEMPORAL CORRECTION
         market_appreciation = 1.0 if new_data else 2.15
         grade_scalars = {"Basic/Standard": 1.0, "Modern/Executive": 1.25, "Luxury/High-End": 1.6, "Elite/Mansion": 2.2}
         quality_force = grade_scalars.get(build_type, 1.0)
         
-                # 5. ABSOLUTE VALUE ASSEMBLY (INDENTED STEP COMPLETED)
+        # 5. ABSOLUTE VALUE ASSEMBLY
         if eclipse_mode:
             final_usd = (base_price * market_appreciation * quality_force * avg_vision) * 0.92
         else:
             final_usd = (base_price * market_appreciation * quality_force * avg_vision) * 1.05
 
         st.session_state['history'].append({'Time': datetime.now().strftime('%H:%M'), 'price': final_usd})
-        
-        # 🟢 THE FIRST STATUS TERMINATION CHASSIS:
-        status.update(label="Champion Logic Applied!", state="complete", expanded=False)
+        status.update(label="Champion Logic Applied!", state="complete")
 
-        # ============================================================
-    # 🌐 STEP 6: OMNI-GLOBAL OUTPUT CERTIFICATE (PRODUCTION READY)
     # ============================================================
-    # Extract structural currency tokens natively out of your session baseline records
+    # 🌐 STEP 6: OMNI-GLOBAL OUTPUT CERTIFICATE (LEFT-ALIGNED ENCLOSURE)
+    # ============================================================
+    # 🟢 THE FIX: Shifted left out of the 'with' block, and hidden duplicate code wiped!
     sym_token = user_currency.split("(")[-1].replace(")", "").strip() if 'user_currency' in locals() else "$"
     sym = f"VAL {sym_token}"
 
     st.balloons()
-    
-    # 🟢 THE UNBREAKABLE PLATFORM CORRECTION: Forced to use double triple quotes (""")
-    # This prevents the inner single quotes from breaking string compilation limits.
     st.markdown(f"""
         <div style="background-color: #FFFFFF !important; 
                     padding: 40px !important; 
@@ -649,6 +635,7 @@ if trigger_valuation:
             
         </div>
     """, unsafe_allow_html=True)
+
 
         # ==========================================
     # 📊 --- DISPLAY MINI METRICS ---
