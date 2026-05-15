@@ -566,15 +566,15 @@ if trigger_valuation:
         st.session_state['history'].append({'Time': datetime.now().strftime('%H:%M'), 'price': final_usd})
         status.update(label="Champion Logic Applied!", state="complete", expanded=False)
 
+                # ============================================================
+        # 🌐 STEP 6: OMNI-GLOBAL OUTPUT CERTIFICATE (FULLY LOCKED INTERFACE)
         # ============================================================
-        # 🌐 STEP 6: OMNI-GLOBAL OUTPUT CERTIFICATE (INDENTATION HARMONIZED)
-        # ============================================================
-        # 🟢 THE REAL FIX: Indented by exactly 8 spaces to keep it inside the button loop.
-        # Single curly brackets used on variables so the f-string evaluates them natively!
         sym_token = user_currency.split("(")[-1].replace(")", "").strip() if 'user_currency' in locals() else "$"
         sym = f"VAL {sym_token}"
 
         st.balloons()
+        
+        # 🟢 RESTORED: Beautiful white rectangle container panel featuring solid black typography
         st.markdown(f"""
             <div style="background-color: #FFFFFF !important; 
                         padding: 40px !important; 
@@ -612,11 +612,9 @@ if trigger_valuation:
             </div>
         """, unsafe_allow_html=True)
 
-
-                # ============================================================
-        # 📊 --- DISPLAY MINI METRICS (NESTING & SCOPE HARMONIZED)
-        # ============================================================
-        # 🟢 THE REAL FIX: Indented by 8 spaces to run ONLY after calculation triggers successfully
+        # ==========================================
+        # 📊 --- DISPLAY MINI METRICS ---
+        # ==========================================
         finish_label = "Ultra-Luxury" if avg_vision > 1.18 else "High-End" if avg_vision > 1.08 else "Standard"
         safety_label = "Secure" if final_usd < 5000000 else "Volatile"
         
@@ -628,7 +626,7 @@ if trigger_valuation:
         with m4: st.metric("System Health", "Elite", delta="Direct .PKL Link")
 
         # ============================================================
-        # 📄 INTERACTIVE DOCUMENT AUDIT PORTAL (NESTING HARMONIZED)
+        # 📄 INTERACTIVE DOCUMENT AUDIT PORTAL (RESTORED PREVIEW)
         # ============================================================
         st.markdown("<br>", unsafe_allow_html=True)
         from streamlit_pdf_viewer import pdf_viewer
@@ -654,6 +652,7 @@ if trigger_valuation:
             pdf_viewer(input=pdf_data, height=600, width=800)
             st.markdown("<br>", unsafe_allow_html=True)
             
+            # RESTORED: Clean, full-width high-contrast download trigger utility action element
             st.download_button(
                 label="📥 Download Certified Valuation Certificate (PDF)", 
                 data=pdf_data, 
