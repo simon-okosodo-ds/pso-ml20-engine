@@ -143,33 +143,27 @@ if not st.session_state['authenticated']:
 
 # --- 6. SIDEBAR: CONTROL & INTELLIGENCE ---
 with st.sidebar:
-    st.title("🛡️ System Control")
+    st.markdown("<h3 style='margin-bottom: 0px;'>🛡️ System Control</h3>", unsafe_allow_html=True)
     
-            # --- PORTAL 1: SESSION-STATE INTEL BRANDING LAYER ---
     with st.expander("🎨 Custom Branding", expanded=False):
-        # 1. LOGO INGESTION: Encapsulates image file bytes directly into session memory
         uploaded_logo = st.file_uploader("Change Company Logo", type=['png', 'jpg'], key="logo_up")
         if uploaded_logo:
-            # Read the raw byte data stream completely
             st.session_state["persistent_logo_bytes"] = uploaded_logo.read()
-            st.success("✅ Logo locked into active session cache.")
+            st.success("✅ Logo locked to active cache.")
             
-        # 2. QR CODE INGESTION: Encapsulates image file bytes directly into session memory
         uploaded_qr = st.file_uploader("Change System QR", type=['png', 'jpg'], key="qr_up")
         if uploaded_qr:
             st.session_state["persistent_qr_bytes"] = uploaded_qr.read()
-            st.success("✅ QR Code locked into active session cache.")
+            st.success("✅ QR Code locked to active cache.")
             
         brand_color = st.color_picker("Pick your Brand Color", "#00F2FE")
-                                      
 
-    
-        # --- PORTAL 2: MARKET LEARNER (THE CSV UPLOADER) ---
+    st.markdown("<br><br>", unsafe_allow_html=True)
     st.divider()
+
     st.write("📂 **Market Knowledge Portal**")
     new_data = st.file_uploader("Upload local market data (CSV)", type=['csv'])
     
-    # 🟢 THE FIX: If a new dataset is uploaded, show ALL 5 currencies in the selectbox
     if new_data:
         df_raw = pd.read_csv(new_data)
         st.session_state['full_columns'] = df_raw.columns.tolist()
@@ -191,7 +185,6 @@ with st.sidebar:
             st.warning("⚠️ Defaulting to baseline scaling coefficients.")
             
     else:
-        # 🟢 THE FIX: If NO file is uploaded, keep a clean baseline selector that supports all currencies manually
         detected_currency = st.selectbox(
             "Select Active Terminal Currency",
             ["USD ($)", "EUR (€)", "CNY (¥)", "NGN (₦)", "GBP (£)"],
@@ -200,14 +193,20 @@ with st.sidebar:
         st.session_state['detected_currency'] = detected_currency
         st.session_state['local_basis'] = 1950
 
-    # 🟢 THE REMOVAL: PORTAL 3 (The old radio button that was forcing only USD and NGN) is completely deleted here.
-
-    # --- PORTAL 4: ARCHITECT CREDENTIALS ---
+    st.markdown("<br><br><br><br><br><br>", unsafe_allow_html=True)
     st.divider()
-    st.write("**System Architect**")
-    st.write("Patrick Simon Okosodo")
-    st.caption("AI Lead | MLOps Specialist | B.Eng (Chem)")
-    st.info("🧠 **Engine:** PSO-ML20 Standard")
+
+    st.markdown("""
+        <div style='background-color: #0B1120; padding: 10px 14px; border: 1px solid #1E293B; border-radius: 6px; margin-top: 5px; box-shadow: 0 4px 10px rgba(0,0,0,0.2);'>
+            <p style='margin: 0 !important; padding: 0 !important; color: #64748B !important; font-size: 9px !important; text-transform: uppercase !important; letter-spacing: 1.2px !important; font-weight: 700 !important; line-height: 1.0 !important;'>System Architect</p>
+            <h6 style='margin: 3px 0 0 0 !important; padding: 0 !important; color: #FFFFFF !important; font-size: 13px !important; font-weight: 700 !important; letter-spacing: -0.2px !important; line-height: 1.1 !important;'>Patrick Simon Okosodo</h6>
+            <p style='margin: 1px 0 0 0 !important; padding: 0 !important; color: #38BDF8 !important; font-size: 10px !important; font-weight: 600 !important; line-height: 1.2 !important;'>AI Lead | MLOps Specialist | B.Eng (Chem)</p>
+                        <div style='margin-top: 6px; padding-top: 6px; border-top: 1px solid #1E293B; display: flex; align-items: center; gap: 5px;'>
+                <span style='font-size: 11px;'>🧠</span>
+                <span style='color: #475569 !important; font-size: 10px !important; font-weight: 600 !important;'>Engine: <span style='color: #00F2FE !important;'>PSO-ML20 Standard</span></span>
+            </div>
+        </div>
+    """, unsafe_allow_html=True)
 
 # --- EXECUTIVE UI STYLING (World-Class Classic Institutional Standard) ---
 st.markdown(f"""
