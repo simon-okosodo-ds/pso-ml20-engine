@@ -386,7 +386,8 @@ with c2:
 with c3:
     yr_built = st.number_input("Year of Construction", 1900, 2026, 2018)
 st.markdown("</div>", unsafe_allow_html=True)
-
+# 🟢 EXTRA BREATHING ROOM SPACE FOR STEP 01
+st.markdown("<br><br><br>", unsafe_allow_html=True) 
 
 # ==========================================
 # 🛡️ 02. FORENSIC EVIDENCE VAULT
@@ -408,7 +409,8 @@ with st.expander("Expand 10-Point Evidence Portals", expanded=True):
     img9 = v1.file_uploader("9. Boys Quarters (BQ)", type=['jpg', 'png'])
     img10 = v2.file_uploader("10. Security & Gatehouse", type=['jpg', 'png'])
 st.markdown("</div>", unsafe_allow_html=True)
-
+# 🟢 EXTRA BREATHING ROOM SPACE FOR STEP 02
+st.markdown("<br><br><br>", unsafe_allow_html=True) 
 
 # ============================================================
 # 🛡️ STEP 03: FORENSIC DATASET INVENTORY (PRODUCTION HARDENED)
@@ -446,7 +448,8 @@ user_inputs = {
     "Gen (KVA)": gen_kva, "CCTV Cameras": cctv, "BQ Units": bq_units
 }
 st.markdown("</div>", unsafe_allow_html=True)
-
+# 🟢 EXTRA BREATHING ROOM SPACE FOR STEP 03
+st.markdown("<br><br><br>", unsafe_allow_html=True) 
 
 # --- STEP 4 (NEW) ---
 st.markdown("<div class='step-container'>", unsafe_allow_html=True)
@@ -456,6 +459,8 @@ eclipse_mode = st.toggle("Activate 'Total Eclipse' Mode", help="Removes institut
 if eclipse_mode:
     st.warning("⚠️ TOTAL ECLIPSE ACTIVE: Institutional Crutches Removed. Reconstructing value via Physical Atoms.")
 st.markdown("</div>", unsafe_allow_html=True)
+# 🟢 EXTRA BREATHING ROOM SPACE FOR STEP 04
+st.markdown("<br><br><br>", unsafe_allow_html=True) 
 
 # --- 05. SYSTEM INTEGRITY CHECK (MASTER 20-POINT SYNC) ---
 st.markdown("<br>", unsafe_allow_html=True)
@@ -482,6 +487,9 @@ elif total_progress > 0.7:
     st.warning("⚠️ High Confidence reached. Missing minor visual anchors.")
 else:
     st.info("💡 Complete the Evidence Vault and Inventory to reach Certified status.")
+st.markdown("</div>", unsafe_allow_html=True)
+# 🟢 EXTRA BREATHING ROOM SPACE PRIOR TO GENERATE VALUATION
+st.markdown("<br><br><br>", unsafe_allow_html=True) 
 
 
 # --- CALCULATION (DIRECT 20-PHASE INFERENCE) ---
