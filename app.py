@@ -613,58 +613,58 @@ if trigger_valuation:
         """, unsafe_allow_html=True)
 
 
+                # ============================================================
+        # 📊 --- DISPLAY MINI METRICS (NESTING & SCOPE HARMONIZED)
         # ============================================================
-# 📊 --- DISPLAY MINI METRICS (INDENTATION FIXED) ---
-# ============================================================
-# 🟢 THE FIX: Moved completely to the left margin to match the Step 6 execution layer
-finish_label = "Ultra-Luxury" if avg_vision > 1.18 else "High-End" if avg_vision > 1.08 else "Standard"
-safety_label = "Secure" if final_usd < 5000000 else "Volatile"
+        # 🟢 THE REAL FIX: Indented by 8 spaces to run ONLY after calculation triggers successfully
+        finish_label = "Ultra-Luxury" if avg_vision > 1.18 else "High-End" if avg_vision > 1.08 else "Standard"
+        safety_label = "Secure" if final_usd < 5000000 else "Volatile"
+        
+        st.markdown("<br>", unsafe_allow_html=True)
+        m1, m2, m3, m4 = st.columns(4)
+        with m1: st.metric("Calculation Trust", "89.3%", delta="Tournament Champion")
+        with m2: st.metric("Material Finish", finish_label, delta="AI Visual Scan")
+        with m3: st.metric("Market Safety", safety_label, delta="Phase 15 Shield")
+        with m4: st.metric("System Health", "Elite", delta="Direct .PKL Link")
 
-st.markdown("<br>", unsafe_allow_html=True)
-m1, m2, m3, m4 = st.columns(4)
-with m1: st.metric("Calculation Trust", "89.3%", delta="Tournament Champion")
-with m2: st.metric("Material Finish", finish_label, delta="AI Visual Scan")
-with m3: st.metric("Market Safety", safety_label, delta="Phase 15 Shield")
-with m4: st.metric("System Health", "Elite", delta="Direct .PKL Link")
-
-# ============================================================
-# 📄 INTERACTIVE DOCUMENT AUDIT PORTAL (NATIVE PLUG-IN VIEW)
-# ============================================================
-st.markdown("<br>", unsafe_allow_html=True)
-from streamlit_pdf_viewer import pdf_viewer
-
-final_pdf_inventory = user_inputs if 'user_inputs' in locals() else {"Bedrooms": 4, "Bathrooms": 2}
-pdf_sync_mode = is_dynamic if 'is_dynamic' in locals() else False
-
-try:
-    pdf_buffer = generate_pso_pdf(
-        final_usd, 
-        sym_token, 
-        sqft, 
-        build_type, 
-        yr_built, 
-        final_pdf_inventory, 
-        {"img1": img1, "img2": img2, "img3": img3, "img4": img4, "img5": img5, "img6": img6, "img7": img7, "img8": img8, "img9": img9, "img10": img10}, 
-        is_dynamic=pdf_sync_mode
-    )
-    pdf_data = pdf_buffer.getvalue() if hasattr(pdf_buffer, 'getvalue') else pdf_buffer
-    
-    st.markdown("<div class='step-container'>", unsafe_allow_html=True)
-    st.markdown("#### 📄 Real-Time Document Audit Preview")
-    pdf_viewer(input=pdf_data, height=600, width=800)
-    st.markdown("<br>", unsafe_allow_html=True)
-    
-    st.download_button(
-        label="📥 Download Certified Valuation Certificate (PDF)", 
-        data=pdf_data, 
-        file_name=f"PSO_ML20_Report_{datetime.now().strftime('%Y%m%d')}.pdf", 
-        mime="application/pdf",
-        use_container_width=True
-    )
-    st.markdown("</div>", unsafe_allow_html=True)
-    
-except Exception as pdf_error:
-    st.error(f"⚠️ PDF Compiler Layout Hold: {pdf_error}")
+        # ============================================================
+        # 📄 INTERACTIVE DOCUMENT AUDIT PORTAL (NESTING HARMONIZED)
+        # ============================================================
+        st.markdown("<br>", unsafe_allow_html=True)
+        from streamlit_pdf_viewer import pdf_viewer
+        
+        final_pdf_inventory = user_inputs if 'user_inputs' in locals() else {"Bedrooms": 4, "Bathrooms": 2}
+        pdf_sync_mode = is_dynamic if 'is_dynamic' in locals() else False
+        
+        try:
+            pdf_buffer = generate_pso_pdf(
+                final_usd, 
+                sym_token, 
+                sqft, 
+                build_type, 
+                yr_built, 
+                final_pdf_inventory, 
+                {"img1": img1, "img2": img2, "img3": img3, "img4": img4, "img5": img5, "img6": img6, "img7": img7, "img8": img8, "img9": img9, "img10": img10}, 
+                is_dynamic=pdf_sync_mode
+            )
+            pdf_data = pdf_buffer.getvalue() if hasattr(pdf_buffer, 'getvalue') else pdf_buffer
+            
+            st.markdown("<div class='step-container'>", unsafe_allow_html=True)
+            st.markdown("#### 📄 Real-Time Document Audit Preview")
+            pdf_viewer(input=pdf_data, height=600, width=800)
+            st.markdown("<br>", unsafe_allow_html=True)
+            
+            st.download_button(
+                label="📥 Download Certified Valuation Certificate (PDF)", 
+                data=pdf_data, 
+                file_name=f"PSO_ML20_Report_{datetime.now().strftime('%Y%m%d')}.pdf", 
+                mime="application/pdf",
+                use_container_width=True
+            )
+            st.markdown("</div>", unsafe_allow_html=True)
+            
+        except Exception as pdf_error:
+            st.error(f"⚠️ PDF Compiler Layout Hold: {pdf_error}")
 
 # ============================================================
 # 🛡️ SOVEREIGN FRAMEWORK FOOTER (SITUATED COMPLETELY OUTSIDE THE BUTTON LOOP)
