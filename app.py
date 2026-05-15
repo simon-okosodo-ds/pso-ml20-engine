@@ -187,7 +187,7 @@ with st.sidebar:
             <p style='margin: 0 !important; padding: 0 !important; color: #64748B !important; font-size: 9px !important; text-transform: uppercase !important; letter-spacing: 1.2px !important; font-weight: 700 !important; line-height: 1.0 !important;'>System Architect</p>
             <h6 style='margin: 3px 0 0 0 !important; padding: 0 !important; color: #FFFFFF !important; font-size: 13px !important; font-weight: 700 !important; letter-spacing: -0.2px !important; line-height: 1.1 !important;'>Patrick Simon Okosodo</h6>
             <p style='margin: 1px 0 0 0 !important; padding: 0 !important; color: #38BDF8 !important; font-size: 10px !important; font-weight: 600 !important; line-height: 1.2 !important;'>AI Lead | MLOps Specialist | B.Eng (Chem)</p>
-            <div style='margin-top: 6px; padding-top: 6px; border-top: 1px solid #1E293B; display: flex; align-items: center; gap: 5px;'>
+                        <div style='margin-top: 6px; padding-top: 6px; border-top: 1px solid #1E293B; display: flex; align-items: center; gap: 5px;'>
                 <span style='font-size: 11px;'>🧠</span>
                 <span style='color: #475569 !important; font-size: 10px !important; font-weight: 600 !important;'>Engine: <span style='color: #00F2FE !important;'>PSO-ML20 Standard</span></span>
             </div>
@@ -195,7 +195,7 @@ with st.sidebar:
     """, unsafe_allow_html=True)
 
 
-# --- EXECUTIVE UI PREMIUM STYLING (World-Class Classic Scoped) ---
+# --- EXECUTIVE UI PREMIUM STYLING (World-Class Scoped Classic) ---
 st.markdown("""
     <style>
     /* 1. MAIN CANVAS TYPOGRAPHY SCOPING */
@@ -234,18 +234,16 @@ st.markdown("""
         margin-top: 0px !important;
     }
     
-    /* 2. SOLID BLACK OBSIDIAN SIDEBAR (ICON SHIELD ACTIVE) */
+    /* 2. SOLID BLACK SIDEBAR ENVIRONMENT HOUSING */
     [data-testid="stSidebar"] {
         background-color: #060B26 !important;
         border-right: 1px solid rgba(0, 242, 254, 0.15) !important;
     }
     
     [data-testid="stSidebar"] [data-testid="stVerticalBlock"] {
-        gap: 24px !important; /* Insulates widget categories vertically */
+        gap: 24px !important; 
     }
     
-    /* 🟢 THE ICON FIX: We strictly target ONLY human text elements inside the sidebar,
-       explicitly bypassing Streamlit's inner icon codes, buttons, and sub-labels */
     [data-testid="stSidebar"] p,
     [data-testid="stSidebar"] div[data-testid="stMarkdownContainer"] p,
     [data-testid="stSidebar"] .stExpander details summary {
@@ -256,14 +254,12 @@ st.markdown("""
         line-height: 1.5 !important;
     }
 
-    /* Target sidebar input labels specifically without breaking internal structural tags */
     [data-testid="stSidebar"] label p {
         font-size: 12px !important;
         color: #94A3B8 !important;
         font-weight: 600 !important;
     }
     
-    /* Input field container framing contrast settings */
     [data-testid="stSidebar"] div[data-baseweb="select"] > div,
     [data-testid="stSidebar"] div[data-baseweb="input"] > div {
         background-color: #0D1426 !important;
@@ -272,7 +268,7 @@ st.markdown("""
         margin-top: 4px !important;
     }
 
-    /* CENTRAL EXECUTIVE RUN BUTTON STYLE */
+    /* CENTRAL RUN BUTTON */
     .stButton>button { 
         background: #00F2FE !important; 
         color: white !important; 
@@ -285,13 +281,12 @@ st.markdown("""
         text-transform: uppercase !important;
         width: 100% !important;
         transition: 0.3s all ease;
-    }}
+    }
     .stButton>button:hover {
         opacity: 0.85;
         transform: scale(0.99);
     }
     
-    /* VALUATION RESULT CERTIFICATE WHITE COMPARTMENT CARD */
     .metric-card {
         background: #FFFFFF !important;
         padding: 40px !important;
@@ -342,7 +337,6 @@ else:
     """, unsafe_allow_html=True)
 
 st.markdown("<hr style='border: 0; border-top: 1px solid #EAECEE; margin-top: 25px; margin-bottom: 35px;'>", unsafe_allow_html=True)
-
 
 
 # ==========================================
