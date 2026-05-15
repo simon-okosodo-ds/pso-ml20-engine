@@ -203,164 +203,111 @@ with st.sidebar:
     """, unsafe_allow_html=True)
 
 
-# --- EXECUTIVE UI PREMIUM STYLING (SAFE SCOPED ENTERPRISE ENGINE) ---
-st.markdown("""
-<style>
+# --- EXECUTIVE UI PREMIUM STYLING (World-Class Scoped Classic & Safe Variables) ---
+# 🟢 THE DEFINITIVE FIX: Using standard markdown strings with direct variable injection variables
+# This permanently prevents the 'invalid decimal literal' syntax crashes and strips out raw text leakage.
+st.markdown(f"""
+    <style>
+    /* 1. MAIN CANVAS TYPOGRAPHY SCOPING */
+    .main .block-container p, 
+    .main .block-container span, 
+    .main .block-container label,
+    .main .block-container div:not([data-baseweb="input"]):not([data-baseweb="select"]) {{
+        font-family: Arial, Helvetica, sans-serif !important;
+        font-size: 14px !important;
+        color: #2C3E50 !important;
+        line-height: 1.5 !important;
+    }}
+    
+    .main h1, .main h2, .main h3, .main h4 {{
+        font-family: Arial, Helvetica, sans-serif !important;
+        color: #1A2530 !important;
+        font-weight: 700 !important;
+        letter-spacing: 0px !important;
+        display: block !important;
+    }}
 
-/* =========================================================
-   1. SAFE TYPOGRAPHY SCOPING
-========================================================= */
+    /* THE SIGNATURE WHITE RECTANGULAR DIVIDER CONTAINERS */
+    .step-container {{ 
+        margin-bottom: 40px !important; 
+        padding: 30px !important; 
+        border-radius: 12px !important; 
+        background-color: #FFFFFF !important; 
+        border: 1px solid #EAECEE !important; 
+        box-shadow: 0 4px 15px rgba(0,0,0,0.03) !important;
+    }}
+    
+    .step-container h4 {{
+        color: #2C3E50 !important;
+        font-size: 16px !important;
+        font-weight: 700 !important;
+        margin-bottom: 20px !important;
+        margin-top: 0px !important;
+    }}
+    
+    /* 2. SOLID BLACK SIDEBAR ENVIRONMENT HOUSING */
+    [data-testid="stSidebar"] {{
+        background-color: #060B26 !important;
+        border-right: 1px solid rgba(0, 242, 254, 0.15) !important;
+    }}
+    
+    [data-testid="stSidebar"] [data-testid="stVerticalBlock"] {{
+        gap: 24px !important; 
+    }}
+    
+    [data-testid="stSidebar"] p,
+    [data-testid="stSidebar"] div[data-testid="stMarkdownContainer"] p,
+    [data-testid="stSidebar"] .stExpander details summary {{
+        font-family: Arial, Helvetica, sans-serif !important;
+        font-size: 13px !important;
+        font-weight: 600 !important;
+        color: #FFFFFF !important;
+        line-height: 1.5 !important;
+    }}
 
-.step-container p,
-.step-container span,
-.step-container label {
-    font-family: Arial, Helvetica, sans-serif !important;
-    color: #2C3E50 !important;
-    line-height: 1.5 !important;
-}
+    [data-testid="stSidebar"] label p {{
+        font-size: 12px !important;
+        color: #94A3B8 !important;
+        font-weight: 600 !important;
+    }}
+    
+    [data-testid="stSidebar"] div[data-baseweb="select"] > div,
+    [data-testid="stSidebar"] div[data-baseweb="input"] > div {{
+        background-color: #0D1426 !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        color: #FFFFFF !important;
+        margin-top: 4px !important;
+    }}
 
-/* Scoped heading protection */
-.step-container h1,
-.step-container h2,
-.step-container h3,
-.step-container h4 {
-    font-family: Arial, Helvetica, sans-serif !important;
-    color: #1A2530 !important;
-    font-weight: 700 !important;
-    margin-top: 0px !important;
-}
-
-/* =========================================================
-   2. SIGNATURE WHITE CONTAINER PANELS
-========================================================= */
-
-.step-container {
-    margin-bottom: 40px !important;
-    padding: 30px !important;
-    border-radius: 12px !important;
-    background-color: #FFFFFF !important;
-    border: 1px solid #EAECEE !important;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.03) !important;
-}
-
-.step-container h4 {
-    font-size: 16px !important;
-    margin-bottom: 20px !important;
-}
-
-/* =========================================================
-   3. SIDEBAR ENVIRONMENT
-========================================================= */
-
-[data-testid="stSidebar"] {
-    background-color: #060B26 !important;
-    border-right: 1px solid rgba(0,242,254,0.15) !important;
-}
-
-[data-testid="stSidebar"] [data-testid="stVerticalBlock"] {
-    gap: 24px !important;
-}
-
-[data-testid="stSidebar"] p,
-[data-testid="stSidebar"] label,
-[data-testid="stSidebar"] .stExpander details summary {
-    font-family: Arial, Helvetica, sans-serif !important;
-    color: #FFFFFF !important;
-    font-size: 13px !important;
-    font-weight: 600 !important;
-}
-
-[data-testid="stSidebar"] label p {
-    font-size: 12px !important;
-    color: #94A3B8 !important;
-}
-
-/* Sidebar inputs */
-[data-testid="stSidebar"] div[data-baseweb="select"] > div,
-[data-testid="stSidebar"] div[data-baseweb="input"] > div {
-    background-color: #0D1426 !important;
-    border: 1px solid rgba(255,255,255,0.1) !important;
-    color: #FFFFFF !important;
-    margin-top: 4px !important;
-}
-
-/* =========================================================
-   4. PRIMARY BUTTON ENGINE
-========================================================= */
-
-.stButton > button {
-    background: #00F2FE !important;
-    color: white !important;
-    border-radius: 8px !important;
-    border: none !important;
-    height: 3.5em !important;
-    font-family: Arial, Helvetica, sans-serif !important;
-    font-size: 14px !important;
-    font-weight: 700 !important;
-    text-transform: uppercase !important;
-    width: 100% !important;
-    transition: 0.3s ease !important;
-}
-
-.stButton > button:hover {
-    opacity: 0.85 !important;
-    transform: scale(0.99) !important;
-}
-
-/* =========================================================
-   5. METRIC CARD ENGINE
-========================================================= */
-
-.metric-card {
-    background: #FFFFFF !important;
-    padding: 40px !important;
-    border-radius: 12px !important;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.05) !important;
-    text-align: center !important;
-    border: 1px solid #EAECEE !important;
-}
-
-</style>
+    /* CENTRAL RUN BUTTON */
+    .stButton>button {{ 
+        background: {brand_color if 'brand_color' in locals() or 'brand_color' in globals() else '#00F2FE'} !important; 
+        color: white !important; 
+        border-radius: 8px !important; 
+        border: none !important;
+        height: 3.5em !important;
+        font-family: Arial, Helvetica, sans-serif !important;
+        font-size: 14px !important;
+        font-weight: 700 !important;
+        text-transform: uppercase !important;
+        width: 100% !important;
+        transition: 0.3s all ease;
+    }}
+    .stButton>button:hover {{
+        opacity: 0.85;
+        transform: scale(0.99);
+    }}
+    
+    .metric-card {{
+        background: #FFFFFF !important;
+        padding: 40px !important;
+        border-radius: 12px !important;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05) !important;
+        text-align: center !important;
+        border: 1px solid #EAECEE !important;
+    }}
+    </style>
 """, unsafe_allow_html=True)
-
-# --- 7. HEADER & LOGO INJECTION (RESOLVED DIRECTORY STANDARD) ---
-st.markdown("<br>", unsafe_allow_html=True)
-
-base_dir = os.path.dirname(__file__) if '__file__' in locals() else "."
-repo_logo = os.path.join(base_dir, "branding", "logo.png")
-repo_qr = os.path.join(base_dir, "branding", "qr.png")
-
-if "persistent_logo_bytes" in st.session_state:
-    col_l1, col_l2, col_l3 = st.columns(3)
-    with col_l2:
-        st.image(st.session_state["persistent_logo_bytes"], use_container_width=True)
-    st.markdown("<br>", unsafe_allow_html=True)
-elif os.path.exists(repo_logo):
-    col_l1, col_l2, col_l3 = st.columns(3)
-    with col_l2:
-        st.image(repo_logo, use_container_width=True)
-    st.markdown("<br>", unsafe_allow_html=True)
-
-if os.path.exists(repo_qr):
-    col_text, col_qr = st.columns([5, 1])
-    with col_text:
-        st.markdown("""
-            <div style='display: flex; flex-direction: column; justify-content: center; height: 100%;'>
-                <h1 style='margin: 0; padding: 0; color: #1A2530 !important; font-size: 32px !important; font-weight: 800 !important; letter-spacing: -1px !important;'>Executive Valuation Terminal</h1>
-                <p style='margin: 5px 0 0 0; padding: 0; color: #566573 !important; font-size: 14px !important; font-weight: 500; letter-spacing: 0.5px;'>PSO-ML20 Standard | Industrial Forensic Audit Engine</p>
-            </div>
-        """, unsafe_allow_html=True)
-    with col_qr:
-        st.image(repo_qr, use_container_width=True)
-else:
-    st.markdown("""
-        <div>
-            <h1 style='margin: 0; padding: 0; color: #1A2530 !important; font-size: 32px !important; font-weight: 800 !important; letter-spacing: -1px !important;'>Executive Valuation Terminal</h1>
-            <p style='margin: 5px 0 0 0; padding: 0; color: #566573 !important; font-size: 14px !important; font-weight: 500; letter-spacing: 0.5px;'>PSO-ML20 Standard | Industrial Forensic Audit Engine</p>
-        </div>
-    """, unsafe_allow_html=True)
-
-st.markdown("<hr style='border: 0; border-top: 1px solid #EAECEE; margin-top: 25px; margin-bottom: 35px;'>", unsafe_allow_html=True)
 
 
 # ==========================================
