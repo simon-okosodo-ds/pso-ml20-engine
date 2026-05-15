@@ -604,16 +604,17 @@ if trigger_valuation:
         # 🟢 THE FIRST STATUS TERMINATION CHASSIS:
         status.update(label="Champion Logic Applied!", state="complete", expanded=False)
 
-    # 🟢 THE CRITICAL ALIGNMENT BREAKPOINT: Shifting left to exactly 4 spaces closes the 'with' scope!
     # ============================================================
-    # 🌐 STEP 6: OMNI-GLOBAL OUTPUT CERTIFICATE (PRODUCTION HARDENED)
+    # 🌐 STEP 6: OMNI-GLOBAL OUTPUT CERTIFICATE (PRODUCTION READY)
     # ============================================================
+    # Extract structural currency tokens natively out of your session baseline records
     sym_token = user_currency.split("(")[-1].replace(")", "").strip() if 'user_currency' in locals() else "$"
     sym = f"VAL {sym_token}"
 
     st.balloons()
     
-    # Render component outside status boundaries to stop plain text strings rendering
+    # 🟢 THE UNBREAKABLE PLATFORM CORRECTION: Forced to use double triple quotes (""")
+    # This prevents the inner single quotes from breaking string compilation limits.
     st.markdown(f"""
         <div style="background-color: #FFFFFF !important; 
                     padding: 40px !important; 
