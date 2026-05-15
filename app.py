@@ -11,9 +11,10 @@ from reportlab.lib.utils import ImageReader
 from datetime import datetime
 
 # ============================================================
-# 🛡️ GLOBAL PropTech TERMINOLOGY CONVERTER 
+# 🛡️ GLOBAL PropTech TERMINOLOGY CONVERTER (CLEANED)
 # ============================================================
 def clean_label(name):
+    # 🟢 THE REAL FIX: Wiped the hidden raw HTML duplicate lines out of this function memory scope!
     mapping = {
         'SqFtTotLiving': 'Total Living Area (Sqft)',
         'BldgGrade': 'Construction Grade (1-12)',
@@ -40,18 +41,16 @@ def analyze_visual_quality(uploaded_file):
     except:
         return 1.0
 
-# --- 2. PROFESSIONAL PDF GENERATOR (HTML SYNTAX PURGED) ---
+# --- 2. PROFESSIONAL PDF GENERATOR ---
 def generate_pso_pdf(val, sym, sqft, build_type, yr, inventory, images, is_dynamic=False):
     buffer = io.BytesIO()
     p = canvas.Canvas(buffer, pagesize=letter)
     currency_label = sym.strip()
     
-    # Draw secure boundary layout box perimeter frame lines
     p.setStrokeColorRGB(0.8, 0.8, 0.8)
     p.setLineWidth(1)
     p.rect(30, 30, 552, 732, fill=0)
 
-    # Ingest background watermark structure
     p.saveState()
     p.setFont("Helvetica-Bold", 50)
     p.setFillColorRGB(0.97, 0.97, 0.97)
@@ -60,7 +59,6 @@ def generate_pso_pdf(val, sym, sqft, build_type, yr, inventory, images, is_dynam
     p.drawCentredString(0, 0, "PSO-ML20 CERTIFIED")
     p.restoreState()
 
-    # 🟢 FIXED: Swapped raw HTML tags for pure standard ReportLab typography definitions
     p.setFont("Helvetica-Bold", 11)
     p.setFillColorRGB(0.5, 0.5, 0.5)
     p.drawString(60, 720, "OFFICIAL GLOBAL CERTIFICATE")
@@ -69,9 +67,8 @@ def generate_pso_pdf(val, sym, sqft, build_type, yr, inventory, images, is_dynam
     p.drawString(60, 705, f"Date: {datetime.now().strftime('%Y-%m-%d')} | System: PSO-ML20-GLOBAL")
     p.line(60, 700, 540, 700) 
     
-    # 🟢 FIXED: Massive bold text properties handled via setFont natively, blocking raw text leakage
     p.setFont("Helvetica-Bold", 32)
-    p.setFillColorRGB(0.0, 0.0, 0.0) # Absolute pitch black printing inks
+    p.setFillColorRGB(0.0, 0.0, 0.0)
     p.drawString(60, 655, f"{currency_label} {val:,.2f}")
     
     p.setFillColorRGB(0, 0, 0)
@@ -87,7 +84,6 @@ def generate_pso_pdf(val, sym, sqft, build_type, yr, inventory, images, is_dynam
             p.drawString(70, y_text, f"• {key}: {value}")
             y_text -= 15
 
-    # AI Visual proof matrix extraction
     first_img = next((img for img in images.values() if img is not None), None)
     if first_img:
         try:
@@ -98,7 +94,6 @@ def generate_pso_pdf(val, sym, sqft, build_type, yr, inventory, images, is_dynam
             p.drawString(60, 345, "Fig 1: Primary Evidence Scan")
         except: pass
 
-    # 🟢 FIXED: Methodology disclosures text block
     p.setFont("Helvetica-Oblique", 7)
     p.setFillColorRGB(0.4, 0.4, 0.4)
     y_pos = 100
@@ -116,6 +111,7 @@ def generate_pso_pdf(val, sym, sqft, build_type, yr, inventory, images, is_dynam
     p.save()
     buffer.seek(0)
     return buffer
+
 
 # --- 3. SYSTEM CONFIG & AUTH (HARDENED CACHE PURGE ENGINE) ---
 st.set_page_config(page_title="PSO-ML20 Executive", page_icon="🛡️", layout="wide")
