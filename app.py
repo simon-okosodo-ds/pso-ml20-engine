@@ -117,10 +117,15 @@ def generate_pso_pdf(val, sym, sqft, build_type, yr, inventory, images, is_dynam
     buffer.seek(0)
     return buffer
 
-# --- 3. SYSTEM CONFIG & AUTH ---
+# --- 3. SYSTEM CONFIG & AUTH (HARDENED CACHE PURGE ENGINE) ---
 st.set_page_config(page_title="PSO-ML20 Executive", page_icon="🛡️", layout="wide")
-if 'authenticated' not in st.session_state: st.session_state['authenticated'] = False
-if 'history' not in st.session_state: st.session_state['history'] = []
+
+# 🟢 THE ACTIVE OVERRIDE: Wipes out memory state corruption instantly on startup 
+if 'authenticated' not in st.session_state: 
+    st.session_state['authenticated'] = False
+
+# Force-clear the history array to completely scrub out the old trapped layout string
+st.session_state['history'] = [] 
 
 # --- 5. ACCESS GATE (PROTECTING ENTIRE INFRASTRUCTURE) ---
 if not st.session_state['authenticated']:
