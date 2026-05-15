@@ -209,126 +209,101 @@ with st.sidebar:
     """, unsafe_allow_html=True)
 
 
-# --- EXECUTIVE UI STYLING (World-Class Classic Institutional Standard) ---
+# --- EXECUTIVE UI PREMIUM STYLING (World-Class Scoped Classic) ---
 st.markdown(f"""
     <style>
-    /* 1. MAIN APERITIF CANVAS (Muted, Precise, Highly Legible) */
+    /* 1. MAIN CANVAS TYPOGRAPHY SCOPING */
     .main .block-container p, 
-    .main .block-container span, 
-    .main .block-container label,
-    .main .block-container div {{
-        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif !important;
-        font-size: 13px !important; /* Slightly smaller, crisper font size */
+    .main .block-container label {{
+        font-family: Arial, Helvetica, sans-serif !important;
+        font-size: 14px !important;
         color: #2C3E50 !important;
-        letter-spacing: -0.1px !important;
-        line-height: 1.4 !important;
+        line-height: 1.5 !important;
     }}
     
-    /* INSTITUTIONAL BOLD HEADERS */
     .main h1, .main h2, .main h3, .main h4 {{
-        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif !important;
+        font-family: Arial, Helvetica, sans-serif !important;
         color: #1A2530 !important;
-        font-weight: 700 !important; /* Bold classic weight */
-        letter-spacing: -0.6px !important;
+        font-weight: 700 !important;
+        display: block !important;
     }}
 
-    /* 2. SOLID WHITE RECTANGULAR CARD DIVIDERS */
+    /* THE SIGNATURE WHITE RECTANGULAR DIVIDER CONTAINERS */
     .step-container {{ 
-        margin-bottom: 35px !important; 
+        margin-bottom: 40px !important; 
         padding: 30px !important; 
-        border-radius: 8px !important; /* Classic tight corner radius */
+        border-radius: 12px !important; 
         background-color: #FFFFFF !important; 
         border: 1px solid #EAECEE !important; 
-        box-shadow: 0 2px 10px rgba(0,0,0,0.02) !important;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.03) !important;
     }}
     
-    .step-container h4 {{
+    /* 2. SOLID BLACK SIDEBAR ENVIRONMENT HOUSING (ICON SHIELD ACTIVE) */
+    [data-testid="stSidebar"] {{
+        background-color: #060B26 !important;
+        border-right: 1px solid rgba(0, 242, 254, 0.15) !important;
+    }}
+    
+    [data-testid="stSidebar"] [data-testid="stVerticalBlock"] {{
+        gap: 24px !important; 
+    }}
+    
+    /* 🟢 THE PRECISE SHIELD FIX: Target text lines while explicitly skipping Streamlit's inner icon tracking engine strings */
+    [data-testid="stSidebar"] div[data-testid="stMarkdownContainer"] p,
+    [data-testid="stSidebar"] h3 {{
+        font-family: Arial, Helvetica, sans-serif !important;
+        font-size: 13px !important;
+        font-weight: 600 !important;
+        color: #FFFFFF !important;
+        line-height: 1.5 !important;
+    }}
+
+    /* Scopes specific file upload title text elements perfectly to prevent duplicating sub-labels */
+    [data-testid="stSidebar"] label p {{
+        font-family: Arial, Helvetica, sans-serif !important;
+        font-size: 12px !important;
+        color: #FFFFFF !important;
+        font-weight: 600 !important;
+    }}
+    
+    /* Input field container framing contrast configurations */
+    [data-testid="stSidebar"] div[data-baseweb="select"] > div,
+    [data-testid="stSidebar"] div[data-baseweb="input"] > div {{
+        background-color: #0D1426 !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        color: #FFFFFF !important;
+        margin-top: 4px !important;
+    }}
+
+    /* CENTRAL EXECUTIVE RUN BUTTON STYLE */
+    .stButton>button {{ 
+        background: #00F2FE !important; 
+        color: white !important; 
+        border-radius: 8px !important; 
+        border: none !important;
+        height: 3.5em !important;
+        font-family: Arial, Helvetica, sans-serif !important;
         font-size: 14px !important;
         font-weight: 700 !important;
         text-transform: uppercase !important;
-        border-bottom: 2px solid #F4F6F6 !important;
-        padding-bottom: 10px !important;
-        margin-top: 0px !important;
-        margin-bottom: 20px !important;
-    }}
-
-    /* 3. HARDENED SIDEBAR ENVIRONMENT (FIXES OVERLAPPING PERMANENTLY) */
-    [data-testid="stSidebar"] {{
-        background-color: #000000 !important;
-        border-right: 1px solid #222222 !important;
-    }}
-    
-    /* Target sidebar text layout rows with clean padding separation rules */
-    [data-testid="stSidebar"] p,
-    [data-testid="stSidebar"] label,
-    [data-testid="stSidebar"] span,
-    [data-testid="stSidebar"] h1,
-    [data-testid="stSidebar"] h2,
-    [data-testid="stSidebar"] h3,
-    [data-testid="stSidebar"] .stMarkdown div {{
-        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif !important;
-        font-size: 12px !important; /* Smaller, sharper executive layout text */
-        font-weight: 600 !important; /* Bold, professional emphasis */
-        color: #FFFFFF !important;
-        line-height: 1.8 !important; /* 🟢 ENFORCED SEPARATION: Guarantees space between lines */
-        margin-bottom: 8px !important; /* Forces breathing room between widgets */
-    }}
-    
-    /* Ensure input selection boxes don't compress */
-    [data-testid="stSidebar"] div[data-baseweb="select"] > div,
-    [data-testid="stSidebar"] div[data-baseweb="input"] > div,
-    [data-testid="stSidebar"] div[data-baseweb="radio"] label {{
-        background-color: #1A1A1A !important;
-        border: 1px solid #333333 !important;
-        color: #FFFFFF !important;
-        font-size: 12px !important;
-    }}
-
-    /* 4. EXECUTIVE RUN BUTTON */
-    .stButton>button {{ 
-        background: {brand_color} !important; 
-        color: white !important; 
-        border-radius: 6px !important; 
-        border: none !important;
-        height: 3.4em !important;
-        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif !important;
-        font-size: 13px !important;
-        font-weight: 700 !important;
-        text-transform: uppercase !important;
-        letter-spacing: 0.5px !important;
         width: 100% !important;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.05) !important;
-        transition: 0.2s all ease;
+        transition: 0.3s all ease;
     }}
     .stButton>button:hover {{
-        opacity: 0.90;
+        opacity: 0.85;
         transform: scale(0.99);
     }}
     
-    /* 5. METRIC WINDOW COMPARTMENT */
     .metric-card {{
         background: #FFFFFF !important;
         padding: 40px !important;
-        border-radius: 8px !important;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.05) !important;
+        border-radius: 12px !important;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05) !important;
         text-align: center !important;
         border: 1px solid #EAECEE !important;
-        margin-top: 25px !important;
-    }}
-    
-    [data-testid="stMetricValue"] {{ 
-        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif !important; 
-        font-size: 26px !important; 
-        font-weight: 700 !important; 
-        color: #1A2530 !important; 
-    }}
-    [data-testid="stMetricDelta"] {{ 
-        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif !important; 
-        font-size: 12px !important; 
-        font-weight: 600 !important;
     }}
     </style>
-    """, unsafe_allow_html=True)
+""", unsafe_allow_html=True)
 
 
 # --- 7. HEADER & LOGO INJECTION (INDUSTRIAL SEEDED REPO STANDARD) ---
