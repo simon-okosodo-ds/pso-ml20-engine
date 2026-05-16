@@ -1,175 +1,90 @@
-# ============================================================
-# 🧠 REAL ESTATE VALUATION SAAS ARCHITECTURE (PRODUCTION READY)
-# ============================================================
-
-# =========================
-# 📦 IMPORTS
-# =========================
 import streamlit as st
 import pandas as pd
 import numpy as np
 import joblib
 import os
-import sqlite3
-from datetime import datetime
-from fastapi import FastAPI
-from pydantic import BaseModel
-import uvicorn
-import threading
 
-# =========================
-# 🧠 LOAD MODEL PIPELINE (SINGLE SOURCE OF TRUTH)
-# =========================
-PIPELINE_PATH = "valuation_pipeline.pkl"
+# ============================================================
+# 🧠 LOAD TRAINED PIPELINE
+# ============================================================
+MODEL_PATH = "models/valuation_pipeline.pkl"
 
 @st.cache_resource
-def load_pipeline():
-    if not os.path.exists(PIPELINE_PATH):
-        raise FileNotFoundError("Pipeline not found")
-    return joblib.load(PIPELINE_PATH)
+def load_model():
+    if not os.path.exists(MODEL_PATH):
+        return None
+    return joblib.load(MODEL_PATH)
 
-pipeline = load_pipeline()
+model = load_model()
 
-# Detect log model safely
-LOG_MODEL = True  # set this from notebook metadata if available
+if model is None:
+    st.error("❌ Model not found. Check valuation_pipeline.pkl path.")
+    st.stop()
 
-# =========================
-# 🗄️ LIGHTWEIGHT DATABASE (SQLITE)
-# =========================
-conn = sqlite3.connect("predictions.db", check_same_thread=False)
-cursor = conn.cursor()
-
-cursor.execute("""
-CREATE TABLE IF NOT EXISTS predictions (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    timestamp TEXT,
-    sqft REAL,
-    grade REAL,
-    yr_built REAL,
-    bedrooms REAL,
-    bathrooms REAL,
-    zip INTEGER,
-    prediction REAL
-)
-""")
-conn.commit()
-
-def log_prediction(inputs, prediction):
-    cursor.execute("""
-        INSERT INTO predictions (
-            timestamp, sqft, grade, yr_built, bedrooms, bathrooms, zip, prediction
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-    """, (
-        str(datetime.now()),
-        inputs["SqFtTotLiving"],
-        inputs["BldgGrade"],
-        inputs["YrBuilt"],
-        inputs["Bedrooms"],
-        inputs["Bathrooms"],
-        inputs["ZipCode"],
-        prediction
-    ))
-    conn.commit()
-
-# =========================
-# ⚙️ FASTAPI BACKEND (MODEL SERVICE)
-# =========================
-app = FastAPI(title="Valuation API")
-
-class HouseInput(BaseModel):
-    SqFtTotLiving: float
-    BldgGrade: float
-    YrBuilt: float
-    Bedrooms: int
-    Bathrooms: int
-    SqFtLot: float
-    ZipCode: int
-    NbrLivingUnits: int
-    DocumentDate_year: int
-    DocumentDate_month: int
-
-@app.post("/predict")
-def predict(data: HouseInput):
-
-    df = pd.DataFrame([data.dict()])
-
-    pred = pipeline.predict(df)[0]
-
-    if LOG_MODEL:
-        pred = np.expm1(pred)
-
-    return {"prediction": float(pred)}
-
-def run_api():
-    uvicorn.run(app, host="0.0.0.0", port=8000)
-
-# Run API in background thread (for Streamlit integration)
-threading.Thread(target=run_api, daemon=True).start()
-
-# =========================
-# 🖥️ STREAMLIT FRONTEND (UI ONLY)
-# =========================
-st.title("🏠 Real Estate Valuation SaaS")
-
-st.markdown("### Enter Property Details")
-
-sqft = st.number_input("SqFtTotLiving", 200, 25000, 1200)
-grade = st.number_input("BldgGrade", 1, 13, 7)
-yr_built = st.number_input("YrBuilt", 1800, 2026, 2005)
-bed = st.number_input("Bedrooms", 0, 10, 3)
-bath = st.number_input("Bathrooms", 0, 10, 2)
-lot = st.number_input("SqFtLot", 500, 50000, 5000)
-zipcode = st.number_input("ZipCode", 10000, 99999, 98001)
-units = st.number_input("NbrLivingUnits", 1, 10, 1)
-
-if st.button("Predict Value"):
-
-    # =========================
-    # 🟢 RAW INPUT ONLY (NO ENGINEERING)
-    # =========================
-    user_df = pd.DataFrame([{
-        "SqFtTotLiving": sqft,
-        "BldgGrade": grade,
-        "YrBuilt": yr_built,
-        "Bedrooms": bed,
-        "Bathrooms": bath,
-        "SqFtLot": lot,
-        "ZipCode": zipcode,
-        "NbrLivingUnits": units,
-        "DocumentDate_year": datetime.now().year,
-        "DocumentDate_month": datetime.now().month
-    }])
-
-    # =========================
-    # 🧠 DIRECT PIPELINE INFERENCE
-    # =========================
-    prediction = pipeline.predict(user_df)[0]
-
-    if LOG_MODEL:
-        prediction = np.expm1(prediction)
-
-    prediction = max(prediction, 10000)  # safety floor
-
-    # =========================
-    # 💾 LOG RESULT (SAAS FEATURE)
-    # =========================
-    log_prediction(user_df.iloc[0].to_dict(), prediction)
-
-    # =========================
-    # 📊 OUTPUT
-    # =========================
-    st.success(f"Estimated Property Value: ${prediction:,.2f}")
-
-    st.write("Logged to database ✔")
-
-# =========================
-# 📈 OPTIONAL: SIMPLE ANALYTICS PANEL
-# =========================
-if st.checkbox("Show prediction history"):
-
-    df_logs = pd.read_sql_query("SELECT * FROM predictions", conn)
-    st.dataframe(df_logs)
+st.title("🏠 Property Valuation Engine")
+st.write("ML Pipeline Inference (Notebook-Exact Behavior)")
 
 # ============================================================
-# 🧠 END OF SAAS ARCHITECTURE
+# 🧾 INPUT FORM (MUST MATCH TRAINING FEATURES)
 # ============================================================
+sqft = st.number_input("SqFt Living", 200, 25000, 1500)
+grade = st.selectbox("Grade", ["Basic/Standard", "Modern/Executive", "Luxury/High-End", "Elite/Mansion"])
+yr_built = st.number_input("Year Built", 1800, 2026, 2005)
+bedrooms = st.number_input("Bedrooms", 0, 30, 3)
+bathrooms = st.number_input("Bathrooms", 0, 20, 2)
+sqft_lot = st.number_input("Lot Size", 500, 50000, 5000)
+zipcode = st.number_input("ZipCode", 98001)
+
+# ============================================================
+# 🧠 ENCODING (ONLY IF YOU USED IT IN TRAINING)
+# ============================================================
+grade_map = {
+    "Basic/Standard": 5,
+    "Modern/Executive": 7,
+    "Luxury/High-End": 9,
+    "Elite/Mansion": 11
+}
+
+bldg_grade = grade_map[grade]
+
+# ============================================================
+# 🧾 BUILD INPUT DATAFRAME (NO FEATURE ENGINEERING)
+# ============================================================
+input_df = pd.DataFrame([{
+    "SqFtTotLiving": sqft,
+    "BldgGrade": bldg_grade,
+    "YrBuilt": yr_built,
+    "Bedrooms": bedrooms,
+    "Bathrooms": bathrooms,
+    "SqFtLot": sqft_lot,
+    "ZipCode": zipcode
+}])
+
+# ============================================================
+# 🔮 PREDICTION
+# ============================================================
+if st.button("Predict Price"):
+
+    try:
+        pred = model.predict(input_df)
+
+        # Handle log models safely
+        pred_value = pred[0]
+
+        # Only convert if model was trained on log scale
+        if pred_value < 20:
+            price = np.expm1(pred_value)
+        else:
+            price = pred_value
+
+        st.success(f"🏡 Estimated Price: ${price:,.2f}")
+
+    except Exception as e:
+        st.error("❌ Prediction failed")
+        st.exception(e)
+
+# ============================================================
+# 🔍 DEBUG VIEW (VERY IMPORTANT FOR CLIENT TRUST)
+# ============================================================
+with st.expander("View Model Input"):
+    st.dataframe(input_df)
