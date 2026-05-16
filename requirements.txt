@@ -6,3 +6,4 @@ reportlab
 joblib
 lightgbm
 streamlit-pdf-viewer
+scikit-learn==1.8.0
