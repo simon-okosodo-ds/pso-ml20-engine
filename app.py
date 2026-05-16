@@ -7,7 +7,7 @@ import os
 # ============================================================
 # 🧠 LOAD TRAINED PIPELINE
 # ============================================================
-MODEL_PATH = "models/valuation_pipeline.pkl"
+MODEL_PATH = "valuation_pipeline.pkl"
 
 @st.cache_resource
 def load_model():
