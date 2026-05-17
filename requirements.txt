@@ -4,7 +4,7 @@ numpy
 Pillow
 reportlab
 joblib
-lightgbm==4.6.0
-scikit-learn==1.8.0
-xgboost==3.2.0
+lightgbm
+xgboost
 streamlit-pdf-viewer
+scikit-learn
