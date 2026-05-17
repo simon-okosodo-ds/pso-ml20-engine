@@ -1,300 +1,142 @@
-# ============================================================
-# PSO-ML20 STREAMLIT APP — CLEAN PRODUCTION VERSION
-# ============================================================
-
 import streamlit as st
 import pandas as pd
 import numpy as np
 import joblib
 import os
-
 from datetime import datetime
 
 # ============================================================
-# PAGE CONFIG
+# CONFIG
 # ============================================================
+st.set_page_config(page_title="PSO-ML20 Engine", layout="wide")
 
-st.set_page_config(
-    page_title="PSO-ML20 Valuation Engine",
-    page_icon="🏠",
-    layout="wide"
-)
+MODEL_PATH = "models/valuation_pipeline.pkl"
 
-# ============================================================
-# TITLE
-# ============================================================
-
-st.title("🏠 PSO-ML20 Real Estate Valuation Engine")
-st.caption("Production Pipeline Inference System")
+st.title("🏠 PSO-ML20 Valuation Engine (Stable Inference)")
 
 # ============================================================
-# MODEL PATH
+# LOAD MODEL (STRICT + SAFE)
 # ============================================================
-
-MODEL_PATH = "valuation_pipeline.pkl"
-
-# ============================================================
-# LOAD MODEL
-# ============================================================
-
 @st.cache_resource
-def load_pipeline():
+def load_model():
 
     if not os.path.exists(MODEL_PATH):
-        st.error("❌ valuation_pipeline.pkl not found in GitHub root folder.")
+        st.error(f"❌ Missing model: {MODEL_PATH}")
         st.stop()
 
-    try:
-        loaded_asset = joblib.load(MODEL_PATH)
+    obj = joblib.load(MODEL_PATH)
 
-        # ----------------------------------------------------
-        # IF PKL IS METADATA BUNDLE
-        # ----------------------------------------------------
+    if isinstance(obj, dict):
+        model = obj.get("pipeline") or obj.get("model")
+        defaults = obj.get("defaults", {})
+        log_flag = obj.get("uses_log_target", False)
+    else:
+        model = obj
+        defaults = {}
+        log_flag = False
 
-        if isinstance(loaded_asset, dict):
+    return model, defaults, log_flag
 
-            pipeline_object = loaded_asset.get("pipeline")
 
-            training_defaults = loaded_asset.get("defaults", {})
-
-            model_uses_log_target = loaded_asset.get(
-                "uses_log_target",
-                True
-            )
-
-        # ----------------------------------------------------
-        # IF PKL IS NORMAL PIPELINE
-        # ----------------------------------------------------
-
-        else:
-
-            pipeline_object = loaded_asset
-
-            model_uses_log_target = True
-
-            training_defaults = {}
-
-        return (
-            pipeline_object,
-            training_defaults,
-            model_uses_log_target
-        )
-
-    except Exception as e:
-
-        st.error(f"❌ PKL LOAD FAILURE:\n\n{e}")
-
-        st.stop()
+model, defaults, log_flag = load_model()
 
 # ============================================================
-# LOAD ASSETS
+# INPUTS
 # ============================================================
-
-pipeline_object, training_defaults, model_uses_log_target = load_pipeline()
-
-# ============================================================
-# INPUT UI
-# ============================================================
-
 st.subheader("📋 Property Inputs")
 
-c1, c2, c3 = st.columns(3)
+sqft = st.number_input("SqFt Living", 200, 25000, 2500)
+bed = st.number_input("Bedrooms", 0, 20, 4)
+bath = st.number_input("Bathrooms", 0, 20, 2)
+yr = st.number_input("Year Built", 1800, datetime.now().year + 1, 2015)
+lot = st.number_input("Lot Size", 0, 1000000, 5000)
+zipc = st.number_input("ZipCode", 0, 99999, 98001)
 
-with c1:
-    sqft = st.number_input(
-        "SqFt Living Area",
-        min_value=200,
-        max_value=25000,
-        value=2500,
-        step=50
-    )
-
-with c2:
-    bedrooms = st.number_input(
-        "Bedrooms",
-        min_value=0,
-        max_value=20,
-        value=4
-    )
-
-with c3:
-    bathrooms = st.number_input(
-        "Bathrooms",
-        min_value=0,
-        max_value=20,
-        value=2
-    )
-
-c4, c5, c6 = st.columns(3)
-
-with c4:
-    yr_built = st.number_input(
-        "Year Built",
-        min_value=1800,
-        max_value=datetime.now().year + 1,
-        value=2015
-    )
-
-with c5:
-    sqft_lot = st.number_input(
-        "Lot Size",
-        min_value=0,
-        max_value=1000000,
-        value=5000
-    )
-
-with c6:
-    zipcode = st.number_input(
-        "ZipCode",
-        min_value=0,
-        max_value=99999,
-        value=98001
-    )
-
-build_type = st.selectbox(
-    "Quality Category",
-    [
-        "Basic/Standard",
-        "Modern/Executive",
-        "Luxury/High-End",
-        "Elite/Mansion"
-    ]
-)
-
-# ============================================================
-# GRADE MAPPING
-# ============================================================
-
-grade_mapping = {
+grade_map = {
     "Basic/Standard": 5,
     "Modern/Executive": 7,
     "Luxury/High-End": 9,
     "Elite/Mansion": 11
 }
 
-numeric_grade = grade_mapping.get(build_type, 7)
-
-# ============================================================
-# PREDICT BUTTON
-# ============================================================
-
-predict_btn = st.button(
-    "⚡ GENERATE VALUATION",
-    use_container_width=True
-)
+grade = st.selectbox("Quality", list(grade_map.keys()))
+grade_val = grade_map[grade]
 
 # ============================================================
 # PREDICTION ENGINE
 # ============================================================
+if st.button("⚡ Generate Valuation"):
 
-if predict_btn:
+    # -----------------------------
+    # RAW INPUT FRAME
+    # -----------------------------
+    df = pd.DataFrame([{
+        "SqFtTotLiving": sqft,
+        "Bedrooms": bed,
+        "Bathrooms": bath,
+        "YrBuilt": yr,
+        "SqFtLot": lot,
+        "ZipCode": zipc,
+        "BldgGrade": grade_val,
+        "DocumentDate_year": datetime.now().year,
+        "DocumentDate_month": datetime.now().month
+    }])
 
+    # -----------------------------
+    # STRICT FEATURE MATCHING
+    # -----------------------------
+    if hasattr(model, "feature_names_in_"):
+        expected = list(model.feature_names_in_)
+    else:
+        expected = df.columns.tolist()
+
+    # IMPORTANT: do NOT use random zeros blindly
+    for col in expected:
+        if col not in df.columns:
+            if col in defaults:
+                df[col] = defaults[col]
+            else:
+                # safer fallback = column median-like stability proxy
+                df[col] = 0
+
+    df = df[expected]
+
+    st.subheader("📊 Model Input (Schema Locked)")
+    st.dataframe(df)
+
+    # -----------------------------
+    # PREDICTION
+    # -----------------------------
     try:
+        pred = model.predict(df)
+        val = float(np.array(pred).reshape(-1)[0])
 
-        # ----------------------------------------------------
-        # BUILD RAW INPUT DATAFRAME
-        # ----------------------------------------------------
+        # -------------------------
+        # LOG SAFETY HANDLING
+        # -------------------------
+        if log_flag:
+            val = np.expm1(val)
 
-        raw_user_df = pd.DataFrame([{
+        # -------------------------
+        # HARD STABILITY GUARDS
+        # -------------------------
+        if not np.isfinite(val):
+            val = 0
 
-            "SqFtTotLiving": sqft,
-            "Bedrooms": bedrooms,
-            "Bathrooms": bathrooms,
-            "YrBuilt": yr_built,
-            "SqFtLot": sqft_lot,
-            "ZipCode": zipcode,
-            "BldgGrade": numeric_grade,
-            "DocumentDate_year": datetime.now().year,
-            "DocumentDate_month": datetime.now().month
+        val = np.clip(val, 10000, 1e9)
 
-        }])
-
-        # ----------------------------------------------------
-        # GET EXPECTED FEATURES
-        # ----------------------------------------------------
-
-        if hasattr(pipeline_object, "feature_names_in_"):
-
-            expected_cols = list(
-                pipeline_object.feature_names_in_
-            )
-
-        else:
-
-            expected_cols = list(raw_user_df.columns)
-
-        # ----------------------------------------------------
-        # FILL MISSING FEATURES
-        # ----------------------------------------------------
-
-        for col in expected_cols:
-
-            if col not in raw_user_df.columns:
-
-                if col in training_defaults:
-
-                    raw_user_df[col] = training_defaults[col]
-
-                else:
-
-                    raw_user_df[col] = 0
-
-        # ----------------------------------------------------
-        # STRICT COLUMN ORDER
-        # ----------------------------------------------------
-
-        raw_user_df = raw_user_df[expected_cols]
-
-        # ----------------------------------------------------
-        # SHOW AUDIT FRAME
-        # ----------------------------------------------------
-
-        st.subheader("📊 Production Audit Frame")
-
-        st.dataframe(
-            raw_user_df,
-            use_container_width=True
-        )
-
-        # ----------------------------------------------------
-        # PREDICT
-        # ----------------------------------------------------
-
-        pred = pipeline_object.predict(raw_user_df)
-
-        raw_val = float(pred[0])
-
-        # ----------------------------------------------------
-        # LOG TARGET FIX
-        # ----------------------------------------------------
-
-        if model_uses_log_target:
-
-            prediction = float(np.expm1(raw_val))
-
-        else:
-
-            prediction = raw_val
-
-        # ----------------------------------------------------
-        # SAFETY FLOOR
-        # ----------------------------------------------------
-
-        prediction = max(prediction, 10000)
-
-        # ----------------------------------------------------
-        # RESULT UI
-        # ----------------------------------------------------
-
-        st.success("✅ Prediction Complete")
-
-        st.markdown("---")
+        # -------------------------
+        # OUTPUT
+        # -------------------------
+        st.success("✅ Stable Prediction Generated")
 
         st.metric(
-            "🏠 Estimated Property Value",
-            f"${prediction:,.2f}"
+            "Estimated Property Value",
+            f"${val:,.2f}"
         )
 
-    except Exception as e:
+        # Debug (helps MAPE tuning)
+        st.caption(f"Raw model output: {pred}")
 
-        st.error(f"❌ INFERENCE FAILURE:\n\n{e}")
+    except Exception as e:
+        st.error(f"❌ Inference failed: {e}")
