@@ -14,12 +14,71 @@ from datetime import datetime
 # ============================================================
 # 🛡️ NOTEBOOK ARCHITECTURE CONTEXT BLOCKS (RESOLVING KEYERROR)
 # ============================================================
-# 🟢 PASTE YOUR JUPYTER NOTEBOOK'S 'architecture_factory' DEF AND TRANSLATORS HERE!
-# When joblib loads the pipeline, it will read these definitions and unpack seamlessly.
+# 🟢 THE DEFINITIVE PIPELINE CORE UNLOCK: Injects your notebook's exact preprocessing factory.
+# This gives the unpickler the exact blueprints it needs to unpack your 4.7MB file smoothly.
+from sklearn.pipeline import Pipeline
+from sklearn.compose import ColumnTransformer
+from sklearn.preprocessing import StandardScaler, PowerTransformer
+from sklearn.impute import SimpleImputer
+from sklearn.compose import TransformedTargetRegressor
 
-def architecture_factory(df, target, phase=17, model_obj=None):
-    # (Paste your notebook's exact architecture factory function code lines here...)
-    pass 
+def architecture_factory(df, target, phase=12, keep=20, model_obj=None):
+    if isinstance(df, tuple):
+        df = df[0]
+        
+    if phase == 12:
+        Xj = df.drop(columns=[target], errors='ignore').copy()
+        for i in range(Xj.shape[1]):
+            col_data = Xj.iloc[:, i]
+            col_name = Xj.columns[i]
+            if pd.api.types.is_datetime64_any_dtype(col_data) or col_data.dtype.kind == 'M':
+                Xj[col_name] = col_data.astype(np.int64) // 10**9
+                continue
+            if col_data.dtype.kind in ['O', 'S'] or col_data.dtype.name == 'category':
+                Xj[col_name] = col_data.astype('category').cat.codes
+            Xj[col_name] = Xj[col_name].replace([np.inf, -np.inf], np.nan).fillna(-999).astype('float64')
+        
+        Xj = Xj.select_dtypes(include=[np.number])
+        m = RandomForestRegressor(n_estimators=100, max_depth=10, random_state=42, n_jobs=-1).fit(Xj, df[target])
+        
+        importance_df = pd.DataFrame({
+            'feature': Xj.columns, 
+            'importance': m.feature_importances_
+        }).sort_values(by='importance', ascending=False)
+        
+        return importance_df, df
+
+    if phase == 17:
+        X_pipe = df.drop(columns=[target], errors='ignore')
+        num_cols = X_pipe.select_dtypes(include=[np.number]).columns.tolist()
+        
+        avg_skew = X_pipe[num_cols].skew().mean()
+        imp_strat = 'median' if abs(avg_skew) > 0.75 else 'mean'
+        imp_reason = "data is skewed" if imp_strat == 'median' else "data is symmetric"
+        
+        pre = ColumnTransformer(transformers=[
+            ('num', Pipeline([
+                ('im', SimpleImputer(strategy=imp_strat)),
+                ('pt', PowerTransformer()),
+                ('ss', StandardScaler())
+            ]), num_cols)
+        ], n_jobs=1)
+        
+        is_regression = df[target].dtype.kind in 'if'
+        
+        if is_regression:
+            final_model = TransformedTargetRegressor(
+                regressor=model_obj, 
+                func=np.log1p, 
+                inverse_func=np.expm1
+            )
+            task_desc = f"Regression (Log-Transformed via np.log1p)"
+        else:
+            final_model = model_obj
+            task_desc = "Classification (Standard Label Processing)"
+
+        return Pipeline([('preprocessor', pre), ('model', final_model)])
+ 
 
 
 
