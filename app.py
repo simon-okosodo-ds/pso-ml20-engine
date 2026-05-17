@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-import joblib
+import json
 import os
 from datetime import datetime
 from xgboost import XGBRegressor
@@ -17,11 +17,11 @@ if not os.path.exists(repo_pkl):
     st.error("Missing core asset file: models/valuation_pipeline.pkl")
     st.stop()
 
-# Unpack the metadata bundle envelope directly
-loaded_asset = joblib.load(repo_pkl)
-
-if isinstance(loaded_asset, dict) and "native_json_payload" in loaded_asset:
-    # 🟢 THE NATIVE SHIELD UNLOCK: Re-instantiate a pure model and inject the JSON text trees
+try:
+    # 🟢 THE NATIVE TEXT UNLOCK: Read the file as a plain text string, parsing with native json
+    with open(repo_pkl, "r") as f:
+        loaded_asset = json.load(f)
+        
     json_text = loaded_asset.get("native_json_payload")
     metadata = loaded_asset.get("metadata", {})
     
@@ -36,9 +36,11 @@ if isinstance(loaded_asset, dict) and "native_json_payload" in loaded_asset:
     expected_features = metadata.get("features", [])
     training_defaults = metadata.get("defaults", {})
     model_uses_log_target = metadata.get("uses_log_target", True)
-else:
-    st.error("❌ REGULATORY FAULT: Asset file binary mismatch. Re-generate the pipeline bundle using the native JSON script cell.")
+    
+except Exception as parse_err:
+    st.error(f"❌ MLOps SEVERE CONFIGURATION ERROR: Failed to parse native text bundle. Trace: {parse_err}")
     st.stop()
+
 
 # ============================================================
 # 📄 2. DYNAMIC FRONTEND GENERATOR (NO HARDCODED INPUT BOXES)
