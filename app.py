@@ -4,25 +4,26 @@ import numpy as np
 import joblib
 import io
 import os
+import sys
 from PIL import Image, ImageOps, ImageFilter
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter
 from reportlab.lib.utils import ImageReader
 from datetime import datetime
 
-
 # ============================================================
 # 🛡️ NOTEBOOK ARCHITECTURE CONTEXT BLOCKS (RESOLVING KEYERROR)
 # ============================================================
-# 🟢 THE DEFINITIVE PIPELINE CORE UNLOCK: Injects your notebook's exact preprocessing factory.
-# This gives the unpickler the exact blueprints it needs to unpack your 4.7MB file smoothly.
+# 🟢 THE REAL UNLOCK: Clean imports with explicit namespace patching
 from sklearn.pipeline import Pipeline
 from sklearn.compose import ColumnTransformer
 from sklearn.preprocessing import StandardScaler, PowerTransformer
 from sklearn.impute import SimpleImputer
 from sklearn.compose import TransformedTargetRegressor
+from sklearn.ensemble import RandomForestRegressor
 
 def architecture_factory(df, target, phase=12, keep=20, model_obj=None):
+    # Surgical Unpacking: If df is a tuple (df, report), take the dataframe
     if isinstance(df, tuple):
         df = df[0]
         
@@ -78,10 +79,11 @@ def architecture_factory(df, target, phase=12, keep=20, model_obj=None):
             task_desc = "Classification (Standard Label Processing)"
 
         return Pipeline([('preprocessor', pre), ('model', final_model)])
+
+# 🟢 STRUCTURAL NAMESPACE LOCK: Maps the app memory straight to your notebook container
+sys.modules['__main__'].architecture_factory = architecture_factory
+
  
-
-
-
 # ============================================================
 # 🛡️ GLOBAL PropTech TERMINOLOGY CONVERTER (CLEANED)
 # ============================================================
