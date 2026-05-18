@@ -9,7 +9,7 @@ from xgboost import XGBRegressor
 st.title("PSO-ML20 Automated Inference Engine")
 
 # ============================================================
-# 🛡️ 1. AUTOMATED TEXT-CORE PIPELINE INGESTION (0% PICKLE RISK)
+# 🛡️ 1. AUTOMATED TEXT-CORE PIPELINE INGESTION (0% PARSING RISK)
 # ============================================================
 repo_pkl = os.path.join(os.path.dirname(__file__) if '__file__' in locals() else ".", "models", "valuation_pipeline.pkl")
 
@@ -18,27 +18,32 @@ if not os.path.exists(repo_pkl):
     st.stop()
 
 try:
-    # 🟢 THE REAL UNLOCK: Reads your file strictly as a clean, raw text JSON payload string
+    # 🟢 THE REAL UNLOCK: Reads your file strictly as a safe alphanumeric text string layout
     with open(repo_pkl, "r", encoding="utf-8") as f:
-        loaded_asset = json.load(f)
+        armor_text_string = f.read().strip()
         
-    json_text = loaded_asset.get("native_json_payload")
-    metadata = loaded_asset.get("metadata", {})
+    # Unpack the Base64 layer straight back into a binary memory stream
+    decoded_binary_bytes = base64.b64decode(armor_text_string.encode("utf-8"))
     
-    # Temporarily drop JSON file to disk for native booster loading sequence
-    temp_json_path = "temp_model_weights.json"
-    with open(temp_json_path, "w", encoding="utf-8") as f:
-        f.write(json_text)
+    # Temporarily drop payload bytes to a safe cache file to allow joblib loading sequence
+    temp_cache_path = "temp_runtime_asset.pkl"
+    with open(temp_cache_path, "wb") as f:
+        f.write(decoded_binary_bytes)
         
-    production_pipeline = XGBRegressor()
-    production_pipeline.load_model(temp_json_path)
+    loaded_asset = joblib.load(temp_cache_path)
     
-    expected_features = metadata.get("features", [])
-    training_defaults = metadata.get("defaults", {})
-    model_uses_log_target = metadata.get("uses_log_target", True)
+    production_pipeline = loaded_asset.get("pipeline")
+    training_defaults = loaded_asset.get("defaults", {})
+    model_uses_log_target = loaded_asset.get("uses_log_target", True)
+    
+    # Clean up the cache file immediately to maintain data purity
+    if os.path.exists(temp_cache_path):
+        os.remove(temp_cache_path)
+        
+    expected_features = list(production_pipeline.feature_names_in_)
     
 except Exception as parse_err:
-    st.error(f"❌ MLOps SEVERE CONFIGURATION ERROR: Failed to parse native text bundle. Trace: {parse_err}")
+    st.error(f"❌ MLOps SEVERE CONFIGURATION ERROR: Failed to decode text armor bundle. Trace: {parse_err}")
     st.stop()
 
 
