@@ -18,8 +18,8 @@ if not os.path.exists(repo_pkl):
     st.stop()
 
 try:
-    # 🟢 THE NATIVE TEXT UNLOCK: Read the file as a plain text string, parsing with native json
-    with open(repo_pkl, "r") as f:
+    # 🟢 THE REAL UNLOCK: Reads your file strictly as a clean, raw text JSON payload string
+    with open(repo_pkl, "r", encoding="utf-8") as f:
         loaded_asset = json.load(f)
         
     json_text = loaded_asset.get("native_json_payload")
@@ -27,7 +27,7 @@ try:
     
     # Temporarily drop JSON file to disk for native booster loading sequence
     temp_json_path = "temp_model_weights.json"
-    with open(temp_json_path, "w") as f:
+    with open(temp_json_path, "w", encoding="utf-8") as f:
         f.write(json_text)
         
     production_pipeline = XGBRegressor()
